@@ -1,10 +1,10 @@
 import {describe, it, expect} from 'vitest';
 import {apiSpec} from './api.spec';
-import {pkgName} from '../src';
+import {hotkey} from '../src';
 
-describe('pkgName', () => {
+describe('hotkey', () => {
 	it('is ok', () => {
-		expect(pkgName).to.be.ok;
+		expect(hotkey).to.be.ok;
 	});
 
 	describe('API', apiSpec);

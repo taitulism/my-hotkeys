@@ -1,1 +1,1 @@
-export {pkgName} from './pkg-name';
+export {hotkey} from './hotkey';

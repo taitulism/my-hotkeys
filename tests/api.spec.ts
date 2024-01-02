@@ -1,6 +1,6 @@
 import * as jsdom from 'jsdom';
 import {it, expect, beforeAll, afterAll} from 'vitest';
-import {pkgName} from '../src/index';
+import {hotkey} from '../src/index';
 
 export function apiSpec () {
 	let doc: Document | undefined;
@@ -17,6 +17,6 @@ export function apiSpec () {
 
 	it('is ok', () => {
 		expect(doc).to.be.ok;
-		expect(pkgName).to.be.a('function');
+		expect(hotkey).to.be.a('function');
 	});
 }
