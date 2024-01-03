@@ -25,30 +25,32 @@ import {hotkey} from '../src';
 
 try {
 	// startBenchmark()
-	console.log('hotkeys1');
+	console.log('hotkeys');
 
 	// document.addEventListener('keypress', keyPressHandler);
 	// document.addEventListener('keydown', keyDownHandler);
 	// document.addEventListener('keyup', keyUpHandler);
 
 
-	const hk = hotkey();
+	const kb = hotkey();
 
-	hk.bindKey('a', (/* ev: KeyboardEvent */) => {
+	kb.debugMode = true;
+
+	kb.bindKey('a', () => {
 		console.log('WORKS! A');
 	});
-	hk.bindKey('ctrl-a', (/* ev: KeyboardEvent */) => {
+	kb.bindKey('ctrl-a', () => {
 		console.log('WORKS! CTRL-A');
 	});
-	hk.bindKey('ctrl', (/* ev: KeyboardEvent */) => {
+	kb.bindKey('ctrl', () => {
 		console.log('WORKS! CTRL');
 	});
 
-	console.log(hk.plainKeyBindingsMap);
-	console.log(hk.keyBindingsMap);
+	console.log(kb.plainKeyBindingsMap);
+	console.log(kb.keyBindingsMap);
 
 
-	hk.mountKeyupHook();
+	kb.mountKeyupHook();
 
 
 

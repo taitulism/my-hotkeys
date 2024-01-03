@@ -1,4 +1,4 @@
-import {KeyNames} from '~key-names-map';
+import {KeyNames} from './key-names-map';
 import {
 	BgKeyValues,
 	ResolvedBgKeyValues,
@@ -8,7 +8,7 @@ import {
 	type ParsedKey,
 	type RealKey,
 	EventBgKeyValues,
-} from '~types';
+} from './types';
 
 export function getRealKeyName (keyName: string): RealKey {
 	const realName = KeyNames[keyName as KeyAlias]; // TODO: use .hasOwnProperty ?
@@ -25,6 +25,7 @@ function parseBgKeys (...bgKeys: Array<BgKeys>): ParsedKey['bgKey'] {
 }
 
 export function parseHotKey (hotkey: string): ParsedKey {
+	// TODO: it looks like the uppercasing better be in the getRealName fn (also used by tests)
 	const keys = hotkey.toUpperCase().split(/\s?-\s?/).map(getRealKeyName) as Array<RealKey>;
 	// const len = segments.length;
 

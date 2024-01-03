@@ -1,13 +1,14 @@
-import type {ContextElement, KeyBindings, KeyHandler} from '~types';
-import {getBgKey, isBgKeyDown, parseHotKey} from '~internals';
+import type {ContextElement, KeyBindings, KeyHandler} from './types';
+import {getBgKey, isBgKeyDown, parseHotKey} from './internals';
 
 export const hotkey = function hotkey (ctxElm: ContextElement = document) {
 	return new Hotkey(ctxElm);
 };
 
 class Hotkey {
-	plainKeyBindingsMap = new Map<string, KeyHandler>();
-	keyBindingsMap = new Map<string, KeyBindings>();
+	public plainKeyBindingsMap = new Map<string, KeyHandler>();
+	public keyBindingsMap = new Map<string, KeyBindings>();
+	public debugMode: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -29,7 +30,9 @@ class Hotkey {
 		}
 	}
 
-	private keyupHook = (ev: KeyboardEvent) => {
+	private keyupHandler = (ev: KeyboardEvent) => {
+		this.debugMode && console.log(ev);
+
 		const keyName = ev.code;
 
 		if (isBgKeyDown(ev)) {
@@ -48,10 +51,10 @@ class Hotkey {
 	};
 
 	public mountKeyupHook () {
-		this.ctxElm.addEventListener('keyup', this.keyupHook as EventListener);
+		this.ctxElm.addEventListener('keyup', this.keyupHandler as EventListener);
 	}
 
 	public unmountKeyupHook () {
-		this.ctxElm.removeEventListener('keyup', this.keyupHook as EventListener);
+		this.ctxElm.removeEventListener('keyup', this.keyupHandler as EventListener);
 	}
 }

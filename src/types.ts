@@ -1,4 +1,4 @@
-import {KeyNames} from '~key-names-map';
+import {KeyNames} from './key-names-map';
 
 export type ContextElement = HTMLElement | Document;
 

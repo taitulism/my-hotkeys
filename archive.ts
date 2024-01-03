@@ -1,37 +1,3 @@
-/*
-	TODO:
-
-	* bool arg preventDefault (changes data struct)
-		bindKey('up', focusThumbs, true);
-
-	* Support of one binding obj
-		bindKey({
-			key: handler,
-			key2: handler2
-		})
-
-	* unbindKey
-
-	* hold keydown - call once
-
-	* Support of multi keys - same handler
-		bindKey(['up', 'pgUp'], focusThumbs);
-		bindKey(['down', 'pgDown'], focusBigPic);
-
-	* bind context elm (document is default)
-
-	* Keyboard namespace
-		kb.bindKey()
-
-	* higher level funcs
-		kb.ctrl("A")
-		kb.ctrlShift("A")
-		kb.shift("A")
-
-	* disable hotkey
-
-*/
-
 const PressKeys = {
 	A: 'KeyA',
 	B: 'KeyB',
