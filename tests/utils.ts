@@ -36,11 +36,3 @@ export function simulateKeyPress (ctxElm: ContextElement, code: string, ...bgKey
 	ctxElm.dispatchEvent(kbEvDown);
 	ctxElm.dispatchEvent(kbEvUp);
 }
-
-export function simulateCombinedKeyPress (ctxElm: ContextElement, code: string) {
-	const kbEvDown = new KeyboardEvent('keydown', {code});
-	const kbEvUp = new KeyboardEvent('keyup', {code});
-
-	ctxElm.dispatchEvent(kbEvDown);
-	ctxElm.dispatchEvent(kbEvUp);
-}

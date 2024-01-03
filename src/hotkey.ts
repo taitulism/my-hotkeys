@@ -30,6 +30,12 @@ class Hotkey {
 		}
 	}
 
+	public bindKeys (hotkeysObj: Record<string, KeyHandler>) {
+		for (const [hotkey, keyHandler] of Object.entries(hotkeysObj)) {
+			this.bindKey(hotkey, keyHandler);
+		}
+	}
+
 	private keyupHandler = (ev: KeyboardEvent) => {
 		this.debugMode && console.log(ev);
 

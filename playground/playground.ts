@@ -36,14 +36,16 @@ try {
 
 	kb.debugMode = true;
 
-	kb.bindKey('a', () => {
-		console.log('WORKS! A');
-	});
-	kb.bindKey('ctrl-a', () => {
-		console.log('WORKS! CTRL-A');
-	});
-	kb.bindKey('ctrl', () => {
-		console.log('WORKS! CTRL');
+	kb.bindKeys({
+		'a': () => {
+			console.log('WORKS! A');
+		},
+		'ctrl-a': () => {
+			console.log('WORKS! CTRL-A');
+		},
+		'ctrl': () => {
+			console.log('WORKS! CTRL');
+		},
 	});
 
 	console.log(kb.plainKeyBindingsMap);
