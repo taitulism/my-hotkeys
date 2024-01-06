@@ -42,11 +42,11 @@ try {
 		'ctrl': () => console.log('WORKS! CTRL'),
 	});
 
-	console.log(kb.plainKeyBindingsMap);
-	console.log(kb.keyBindingsMap);
+	console.log(kb.plainHotkeys);
+	console.log(kb.combinedHotkeys);
 
 
-	kb.mountKeyupHook();
+	kb.mount();
 
 
 

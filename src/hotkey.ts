@@ -1,4 +1,4 @@
-import type {BgKeyShortName, ContextElement, KeyBindings, KeyHandler, RealKey} from './types';
+import type {BgKeyShortName, ContextElement, BgKeyBindings, KeyHandler, RealKey} from './types';
 import {getBgKey, isBgKeyDown, parseHotKey} from './internals';
 
 export const hotkey = function hotkey (ctxElm: ContextElement = document) {
@@ -27,8 +27,8 @@ function isBgKey (keyName: RealKey) {
 }
 
 class Hotkey {
-	public plainKeyBindingsMap = new Map<string, KeyHandler>();
-	public keyBindingsMap = new Map<string, KeyBindings>();
+	public plainHotkeys = new Map<string, KeyHandler>();
+	public combinedHotkeys = new Map<string, BgKeyBindings>();
 	public debugMode: boolean = false;
 	public didUseBgKey: boolean = false;
 
@@ -38,16 +38,16 @@ class Hotkey {
 		const {key, bgKey} = parseHotKey(hotkey);
 
 		if (!bgKey) {
-			this.plainKeyBindingsMap.set(key, handlerFn);
+			this.plainHotkeys.set(key, handlerFn);
 		}
 		else {
-			const keyBindingsObj = this.keyBindingsMap.get(key);
+			const bgKeyBindings = this.combinedHotkeys.get(key);
 
-			if (keyBindingsObj) {
-				keyBindingsObj[bgKey] = handlerFn;
+			if (bgKeyBindings) {
+				bgKeyBindings[bgKey] = handlerFn;
 			}
 			else {
-				this.keyBindingsMap.set(key, {[bgKey]: handlerFn});
+				this.combinedHotkeys.set(key, {[bgKey]: handlerFn});
 			}
 		}
 	}
@@ -58,29 +58,44 @@ class Hotkey {
 		}
 	}
 
+	private keydownHandler = (ev: KeyboardEvent) => {
+		this.debugMode && console.log(ev);
+
+		const keyName = ev.code;
+
+		// TODO: will need to change this when the hotkey is 2 bg keys (e.g. "ctrl-alt")
+		if (isBgKey(keyName as RealKey)) return;
+
+		if (isBgKeyDown(ev)) {
+			const bgKey = getBgKey(ev);
+
+			if (this.combinedHotkeys.has(keyName)) {
+				const handler = this.combinedHotkeys.get(keyName)![bgKey];
+
+				handler?.(ev);
+			}
+
+			if (hasPlainBgKeypress(bgKey, this.plainHotkeys)) {
+				this.didUseBgKey = true;
+			}
+		}
+		else {
+			const handler = this.plainHotkeys.get(keyName);
+
+			handler?.(ev);
+		}
+	};
+
 	private keyupHandler = (ev: KeyboardEvent) => {
 		this.debugMode && console.log(ev);
 
 		const keyName = ev.code;
 
-		if (isBgKeyDown(ev)) {
-			const bgKey = getBgKey(ev);
-
-			if (this.keyBindingsMap.has(keyName)) {
-				const handler = this.keyBindingsMap.get(keyName)![bgKey];
-
-				handler?.(ev);
-			}
-
-			if (hasPlainBgKeypress(bgKey, this.plainKeyBindingsMap)) {
-				this.didUseBgKey = true;
-			}
-		}
-		else {
-			const handler = this.plainKeyBindingsMap.get(keyName);
+		if (isBgKey(keyName as RealKey)) {
+			const handler = this.plainHotkeys.get(keyName);
 
 			if (handler) {
-				if (isBgKey(keyName as RealKey) && this.didUseBgKey) {
+				if (this.didUseBgKey) {
 					this.didUseBgKey = false;
 				}
 				else {
@@ -90,11 +105,13 @@ class Hotkey {
 		}
 	};
 
-	public mountKeyupHook () {
+	public mount () {
+		this.ctxElm.addEventListener('keydown', this.keydownHandler as EventListener);
 		this.ctxElm.addEventListener('keyup', this.keyupHandler as EventListener);
 	}
 
-	public unmountKeyupHook () {
+	public unmount () {
+		this.ctxElm.removeEventListener('keydown', this.keydownHandler as EventListener);
 		this.ctxElm.removeEventListener('keyup', this.keyupHandler as EventListener);
 	}
 }

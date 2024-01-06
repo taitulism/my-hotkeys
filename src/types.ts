@@ -61,7 +61,7 @@ export type BgKeys =
 	typeof KeyNames['SHIFT'] |
 	typeof KeyNames['ALT']
 
-export type KeyBindings = {
+export type BgKeyBindings = {
 	[K in typeof ResolvedBgKeyValues[BgKeySum]]?: KeyHandler
 }
 
