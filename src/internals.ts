@@ -55,7 +55,6 @@ export function isBgKeyDown (ev: KeyboardEvent) {
 export function getBgKey (ev: KeyboardEvent) {
 	const {ctrlKey, altKey, shiftKey, metaKey} = ev;
 
-	// const bgKeysSum = bgKeys.reduce((acc, bgKey) => acc + BgKeyValues[bgKey], 0);
 	let bgKeysSum = 0;
 
 	if (ctrlKey) bgKeysSum += EventBgKeyValues.ctrlKey;

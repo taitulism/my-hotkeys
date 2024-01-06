@@ -1,14 +1,36 @@
-import type {ContextElement, KeyBindings, KeyHandler} from './types';
+import type {BgKeyShortName, ContextElement, KeyBindings, KeyHandler, RealKey} from './types';
 import {getBgKey, isBgKeyDown, parseHotKey} from './internals';
 
 export const hotkey = function hotkey (ctxElm: ContextElement = document) {
 	return new Hotkey(ctxElm);
 };
 
+// TODO: obj as const
+function hasPlainBgKeypress (bgKey: BgKeyShortName, map: Map<string, KeyHandler>) {
+	return (
+		bgKey === 'C' && map.has('ControlLeft') ||
+		bgKey === 'S' && map.has('ShiftLeft') ||
+		bgKey === 'A' && map.has('AltLeft') ||
+		bgKey === 'CS' && map.has('ControlLeft') && map.has('ShiftLeft') ||
+		bgKey === 'CA' && map.has('ControlLeft') && map.has('AltLeft') ||
+		bgKey === 'AS' && map.has('AltLeft') && map.has('ShiftLeft') ||
+		bgKey === 'CAS' && map.has('ControlLeft') && map.has('AltLeft') && map.has('ShiftLeft')
+	);
+}
+
+function isBgKey (keyName: RealKey) {
+	return (
+		keyName === 'ControlLeft' ||
+		keyName === 'ShiftLeft' ||
+		keyName === 'AltLeft'
+	);
+}
+
 class Hotkey {
 	public plainKeyBindingsMap = new Map<string, KeyHandler>();
 	public keyBindingsMap = new Map<string, KeyBindings>();
 	public debugMode: boolean = false;
+	public didUseBgKey: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -42,17 +64,29 @@ class Hotkey {
 		const keyName = ev.code;
 
 		if (isBgKeyDown(ev)) {
+			const bgKey = getBgKey(ev);
+
 			if (this.keyBindingsMap.has(keyName)) {
-				const bgKey = getBgKey(ev);
 				const handler = this.keyBindingsMap.get(keyName)![bgKey];
 
 				handler?.(ev);
+			}
+
+			if (hasPlainBgKeypress(bgKey, this.plainKeyBindingsMap)) {
+				this.didUseBgKey = true;
 			}
 		}
 		else {
 			const handler = this.plainKeyBindingsMap.get(keyName);
 
-			handler?.(ev);
+			if (handler) {
+				if (isBgKey(keyName as RealKey) && this.didUseBgKey) {
+					this.didUseBgKey = false;
+				}
+				else {
+					handler(ev);
+				}
+			}
 		}
 	};
 

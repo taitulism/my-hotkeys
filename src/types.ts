@@ -54,6 +54,7 @@ export const ResolvedBgKeyValues = {
 } as const;
 
 export type BgKeySum = keyof typeof ResolvedBgKeyValues;
+export type BgKeyShortName = typeof ResolvedBgKeyValues[BgKeySum];
 
 export type BgKeys =
 	typeof KeyNames['CTRL'] |

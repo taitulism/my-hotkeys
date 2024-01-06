@@ -34,18 +34,12 @@ try {
 
 	const kb = hotkey();
 
-	kb.debugMode = true;
+	// kb.debugMode = true;
 
 	kb.bindKeys({
-		'a': () => {
-			console.log('WORKS! A');
-		},
-		'ctrl-a': () => {
-			console.log('WORKS! CTRL-A');
-		},
-		'ctrl': () => {
-			console.log('WORKS! CTRL');
-		},
+		'a': () => console.log('WORKS! A'),
+		'ctrl-a': () => console.log('WORKS! CTRL-A'),
+		'ctrl': () => console.log('WORKS! CTRL'),
 	});
 
 	console.log(kb.plainKeyBindingsMap);
