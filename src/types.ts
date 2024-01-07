@@ -1,4 +1,4 @@
-import {KeyNames} from './key-names-map';
+import {KeyAliases} from './key-names-map';
 
 export type ContextElement = HTMLElement | Document;
 
@@ -57,23 +57,19 @@ export type BgKeySum = keyof typeof ResolvedBgKeyValues;
 export type BgKeyShortName = typeof ResolvedBgKeyValues[BgKeySum];
 
 export type BgKeys =
-	typeof KeyNames['CTRL'] |
-	typeof KeyNames['SHIFT'] |
-	typeof KeyNames['ALT']
+	typeof KeyAliases['CTRL'] |
+	typeof KeyAliases['SHIFT'] |
+	typeof KeyAliases['ALT']
 
-export type BgKeyBindings = {
+export type BgKeyHandlers = {
 	[K in typeof ResolvedBgKeyValues[BgKeySum]]?: KeyHandler
 }
 
-// export type KeyBindings = {
-// 	[K in BgKey]?: KeyHandler
-// }
+export type KeyAlias = keyof typeof KeyAliases
 
-export type KeyAlias = keyof typeof KeyNames
-
-export type RealKey = typeof KeyNames[KeyAlias]
+export type KeyCode = typeof KeyAliases[KeyAlias]
 
 export type ParsedKey = {
-	key: RealKey
+	key: KeyCode
 	bgKey?: typeof ResolvedBgKeyValues[BgKeySum]
 }

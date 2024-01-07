@@ -1,21 +1,21 @@
-import {KeyNames} from './key-names-map';
+import {KeyAliases} from './key-names-map';
 import {
+	BgKeySum,
 	BgKeyValues,
 	ResolvedBgKeyValues,
-	BgKeySum,
+	EventBgKeyValues,
 	type BgKeys,
 	type KeyAlias,
 	type ParsedKey,
-	type RealKey,
-	EventBgKeyValues,
+	type KeyCode,
 } from './types';
 
-export function getRealKeyName (keyName: string): RealKey {
-	const realName = KeyNames[keyName as KeyAlias]; // TODO: use .hasOwnProperty ?
+export function getKeyCode (keyAlias: string): KeyCode {
+	const keyCode = KeyAliases[keyAlias.toUpperCase() as KeyAlias]; // TODO: use .hasOwnProperty ?
 
-	if (!realName) throw new Error(`KB: Unknown key "${keyName}"`);
+	if (!keyCode) throw new Error(`KB: Unknown key "${keyAlias}"`);
 
-	return realName;
+	return keyCode;
 }
 
 function parseBgKeys (...bgKeys: Array<BgKeys>): ParsedKey['bgKey'] {
@@ -25,8 +25,7 @@ function parseBgKeys (...bgKeys: Array<BgKeys>): ParsedKey['bgKey'] {
 }
 
 export function parseHotKey (hotkey: string): ParsedKey {
-	// TODO: it looks like the uppercasing better be in the getRealName fn (also used by tests)
-	const keys = hotkey.toUpperCase().split(/\s?-\s?/).map(getRealKeyName) as Array<RealKey>;
+	const keys = hotkey.split(/\s?-\s?/).map(getKeyCode) as Array<KeyCode>;
 	// const len = segments.length;
 
 	let key: ParsedKey['key'];
@@ -37,22 +36,22 @@ export function parseHotKey (hotkey: string): ParsedKey {
 		// bgKey = BgKey.Plain;
 	}
 	else {
-		const [actualKey, ...bgKeys] = keys.reverse();
+		const [targetKey, ...bgKeys] = keys.reverse();
 
-		key = actualKey;
+		key = targetKey;
 		bgKey = parseBgKeys(...bgKeys as Array<BgKeys>);
 	}
 
 	return {key, bgKey};
 }
 
-export function isBgKeyDown (ev: KeyboardEvent) {
+export function isBgKeyPressed (ev: KeyboardEvent) {
 	const {ctrlKey, altKey, shiftKey, metaKey} = ev;
 
 	return ctrlKey || altKey || shiftKey || metaKey;
 }
 
-export function getBgKey (ev: KeyboardEvent) {
+export function getPressedBgKey (ev: KeyboardEvent) {
 	const {ctrlKey, altKey, shiftKey, metaKey} = ev;
 
 	let bgKeysSum = 0;

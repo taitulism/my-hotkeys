@@ -1,4 +1,4 @@
-import {getRealKeyName} from '../src/internals';
+import {getKeyCode} from '../src/internals';
 import {ContextElement} from '../src/types';
 
 // const EventKeyAndCode = {
@@ -21,8 +21,8 @@ export function simulateKeyPress (ctxElm: ContextElement, code: string, ...bgKey
 		customEvent = {code};
 
 		bgKeys.forEach((bgk) => {
-			const realBgKey = getRealKeyName(bgk.toUpperCase()) as keyof typeof EventWithBgKey;
-			const evProp = EventWithBgKey[realBgKey];
+			const bgKeyCode = getKeyCode(bgk) as keyof typeof EventWithBgKey;
+			const evProp = EventWithBgKey[bgKeyCode];
 
 			customEvent[evProp] = true;
 		});
