@@ -37,11 +37,12 @@ try {
 	kb.debugMode = true;
 
 	kb.bindKeys({
-		'a': () => console.log('WORKS! A'),
-		'ctrl-a': () => console.log('WORKS! CTRL-A'),
-		'ctrl': () => console.log('WORKS! CTRL'),
-		// 'lctrl': () => console.log('WORKS! CTRL L'),
-		// 'rctrl': () => console.log('WORKS! CTRL R'),
+		'a': () => console.log('*** A ***'),
+		'ctrl': () => console.log('*** CTRL ***'),
+		'ctrl-a': () => console.log('*** CTRL-A ***'),
+		'ctrl-alt': () => console.log('*** CTRL-ALT ***'),
+		// 'lctrl': () => console.log('*** CTRL L ***'),
+		// 'rctrl': () => console.log('*** CTRL R ***'),
 	});
 
 	console.log(kb.plainHotkeys);

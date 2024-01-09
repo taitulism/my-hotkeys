@@ -18,7 +18,8 @@ class Hotkey {
 	public plainHotkeys = new Map<string, KeyHandler>();
 	public combinedHotkeys = new Map<string, BgKeyHandlers>();
 	public debugMode: boolean = false;
-	public didUseBgKey: boolean = false;
+
+	private didUseBgKey: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -59,27 +60,40 @@ class Hotkey {
 		this.debugMode && logKbEvent('🔻', ev);
 
 		const keyCode = ev.code as KeyCode;
+		const bgKeyDown = isBgKeyPressed(ev);
 
-		// TODO: will need to change this when the hotkey is 2 bg keys (e.g. "ctrl-alt")
-		if (isBgKey(ev.key)) return;
+		if (isBgKey(ev.key)) {
+			if (bgKeyDown) {
+				const uniBgKey = getPressedBgKey(ev);
 
-		if (isBgKeyPressed(ev)) {
-			const uniBgKey = getPressedBgKey(ev);
+				this.didUseBgKey = true;
 
-			if (this.combinedHotkeys.has(keyCode)) {
-				const handler = this.combinedHotkeys.get(keyCode)![uniBgKey];
+				if (this.combinedHotkeys.has(keyCode)) {
+					const handler = this.combinedHotkeys.get(keyCode)![uniBgKey];
+
+					handler?.(ev);
+				}
+			}
+		}
+		else { // a, b
+			if (bgKeyDown) {
+				const uniBgKey = getPressedBgKey(ev);
+
+				if (hasPlainBgHotkey(uniBgKey, this.plainHotkeys)) {
+					this.didUseBgKey = true;
+				}
+
+				if (this.combinedHotkeys.has(keyCode)) {
+					const handler = this.combinedHotkeys.get(keyCode)![uniBgKey];
+
+					handler?.(ev);
+				}
+			}
+			else {
+				const handler = this.plainHotkeys.get(keyCode);
 
 				handler?.(ev);
 			}
-
-			if (hasPlainBgHotkey(uniBgKey, this.plainHotkeys)) {
-				this.didUseBgKey = true;
-			}
-		}
-		else {
-			const handler = this.plainHotkeys.get(keyCode);
-
-			handler?.(ev);
 		}
 	};
 
@@ -88,7 +102,7 @@ class Hotkey {
 
 		const keyCode = ev.code as KeyCode;
 
-		if (!isBgKey(ev.key)) return;
+		if (!isBgKey(ev.key) || isBgKeyPressed(ev)) return;
 
 		const handler = this.plainHotkeys.get(keyCode);
 

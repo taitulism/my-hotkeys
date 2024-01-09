@@ -62,21 +62,25 @@ const bgKeysModifiers = {
 
 export function isBgKeyPressed (ev: KeyboardEvent) {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
-	const modifier = bgKeysModifiers[key as keyof typeof bgKeysModifiers];
-	const keyIsBgKey = modifier && ev[modifier];
+	const modifiers = Number(ctrlKey) + Number(altKey) + Number(shiftKey) + Number(metaKey);
 
-	return (ctrlKey || altKey || shiftKey || metaKey) && !keyIsBgKey;
+	return isBgKey(key) ? modifiers > 1 : modifiers > 0;
 }
 
+const Control = 'Control';
+const Shift = 'Shift';
+const Alt = 'Alt';
+const Meta = 'Meta';
+
 export function getPressedBgKey (ev: KeyboardEvent) {
-	const {ctrlKey, altKey, shiftKey, metaKey} = ev;
+	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 
 	let bgKeysSum = 0;
 
-	if (ctrlKey) bgKeysSum += EventBgKeyValues.ctrlKey;
-	if (altKey) bgKeysSum += EventBgKeyValues.altKey;
-	if (shiftKey) bgKeysSum += EventBgKeyValues.shiftKey;
-	if (metaKey) bgKeysSum += EventBgKeyValues.metaKey;
+	if (ctrlKey && key !== Control) bgKeysSum += EventBgKeyValues.ctrlKey;
+	if (altKey && key !== Shift) bgKeysSum += EventBgKeyValues.altKey;
+	if (shiftKey && key !== Alt) bgKeysSum += EventBgKeyValues.shiftKey;
+	if (metaKey && key !== Meta) bgKeysSum += EventBgKeyValues.metaKey;
 
 	return UnifiedBgKey[bgKeysSum as BgKeySum];
 }
