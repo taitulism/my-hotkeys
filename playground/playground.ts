@@ -34,12 +34,14 @@ try {
 
 	const kb = hotkey();
 
-	// kb.debugMode = true;
+	kb.debugMode = true;
 
 	kb.bindKeys({
 		'a': () => console.log('WORKS! A'),
 		'ctrl-a': () => console.log('WORKS! CTRL-A'),
 		'ctrl': () => console.log('WORKS! CTRL'),
+		// 'lctrl': () => console.log('WORKS! CTRL L'),
+		// 'rctrl': () => console.log('WORKS! CTRL R'),
 	});
 
 	console.log(kb.plainHotkeys);

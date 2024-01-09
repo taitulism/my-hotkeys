@@ -34,7 +34,7 @@ export const EventBgKeyValues = {
 	metaKey: 8,
 } as const;
 
-export const ResolvedBgKeyValues = {
+export const UnifiedBgKey = {
 	1: 'C',
 	2: 'S',
 	4: 'A',
@@ -53,16 +53,17 @@ export const ResolvedBgKeyValues = {
 	// 15: 'CASM',
 } as const;
 
-export type BgKeySum = keyof typeof ResolvedBgKeyValues;
-export type BgKeyShortName = typeof ResolvedBgKeyValues[BgKeySum];
+export type BgKeySum = keyof typeof UnifiedBgKey;
+export type UnifiedBgKey = typeof UnifiedBgKey[BgKeySum];
 
+// TODO: + right
 export type BgKeys =
 	typeof KeyAliases['CTRL'] |
 	typeof KeyAliases['SHIFT'] |
 	typeof KeyAliases['ALT']
 
 export type BgKeyHandlers = {
-	[K in typeof ResolvedBgKeyValues[BgKeySum]]?: KeyHandler
+	[K in UnifiedBgKey]?: KeyHandler
 }
 
 export type KeyAlias = keyof typeof KeyAliases
@@ -70,6 +71,6 @@ export type KeyAlias = keyof typeof KeyAliases
 export type KeyCode = typeof KeyAliases[KeyAlias]
 
 export type ParsedKey = {
-	key: KeyCode
-	bgKey?: typeof ResolvedBgKeyValues[BgKeySum]
+	targetKey: KeyCode
+	unifiedBgKey?: UnifiedBgKey
 }
