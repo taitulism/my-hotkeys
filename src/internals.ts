@@ -68,8 +68,8 @@ export function isBgKeyPressed (ev: KeyboardEvent) {
 }
 
 const Control = 'Control';
-const Shift = 'Shift';
 const Alt = 'Alt';
+const Shift = 'Shift';
 const Meta = 'Meta';
 
 export function getPressedBgKey (ev: KeyboardEvent) {
@@ -78,8 +78,8 @@ export function getPressedBgKey (ev: KeyboardEvent) {
 	let bgKeysSum = 0;
 
 	if (ctrlKey && key !== Control) bgKeysSum += EventBgKeyValues.ctrlKey;
-	if (altKey && key !== Shift) bgKeysSum += EventBgKeyValues.altKey;
-	if (shiftKey && key !== Alt) bgKeysSum += EventBgKeyValues.shiftKey;
+	if (altKey && key !== Alt) bgKeysSum += EventBgKeyValues.altKey;
+	if (shiftKey && key !== Shift) bgKeysSum += EventBgKeyValues.shiftKey;
 	if (metaKey && key !== Meta) bgKeysSum += EventBgKeyValues.metaKey;
 
 	return UnifiedBgKey[bgKeysSum as BgKeySum];

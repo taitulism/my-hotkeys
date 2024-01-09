@@ -6,12 +6,12 @@ export type KeyHandler = (ev: KeyboardEvent) => void
 
 export enum BgKey {
 	Plain = '_',
-	Shift = 'S',
 	Alt = 'A',
+	Shift = 'S',
 	Meta = 'M',
 	Control = 'C',
-	ControlShift = 'CS',
 	ControlAlt = 'CA',
+	ControlShift = 'CS',
 	// ControlAltShift = 'CAS',
 	// AltShift = 'AS',
 	// more...
@@ -20,28 +20,28 @@ export enum BgKey {
 export const BgKeyValues = {
 	ControlLeft: 1,
 	ControlRight: 1,
-	ShiftLeft: 2,
-	ShiftRight: 2,
-	AltLeft: 4,
-	AltRight: 4,
+	AltLeft: 2,
+	AltRight: 2,
+	ShiftLeft: 4,
+	ShiftRight: 4,
 	Meta: 8,
 } as const;
 
 export const EventBgKeyValues = {
 	ctrlKey: 1,
-	shiftKey: 2,
-	altKey: 4,
+	altKey: 2,
+	shiftKey: 4,
 	metaKey: 8,
 } as const;
 
 export const UnifiedBgKey = {
 	1: 'C',
-	2: 'S',
-	4: 'A',
-	// 8: 'M',
+	2: 'A',
+	4: 'S',
+	8: 'M',
 
-	3: 'CS',
-	5: 'CA',
+	5: 'CS',
+	3: 'CA',
 	6: 'AS',
 	7: 'CAS',
 	// 9: 'CM',

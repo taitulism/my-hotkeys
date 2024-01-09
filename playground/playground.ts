@@ -34,7 +34,7 @@ try {
 
 	const kb = hotkey();
 
-	kb.debugMode = true;
+	// kb.debugMode = true;
 
 	kb.bindKeys({
 		'a': () => console.log('*** A ***'),
