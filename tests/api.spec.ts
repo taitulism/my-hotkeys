@@ -1,7 +1,7 @@
 import * as jsdom from 'jsdom';
 import {it, expect, beforeAll, afterAll, vi} from 'vitest';
 import {hotkey} from '../src/index';
-import {simulateKeyPress} from './utils';
+import {KeyboardSimulator} from './keyboard-simulator';
 
 export function apiSpec () {
 	let doc: Document | undefined;
@@ -18,6 +18,7 @@ export function apiSpec () {
 
 	it('plain hotkey', () => {
 		const kb = hotkey(doc);
+		const kbSim = new KeyboardSimulator(doc);
 
 		kb.mount();
 
@@ -27,15 +28,16 @@ export function apiSpec () {
 
 		expect(spy.mock.calls.length).to.equal(0);
 
-		simulateKeyPress(doc!, 'KeyA');
-
+		kbSim.keyDown('A');
 		expect(spy.mock.calls.length).to.equal(1);
+		kbSim.keyUp('A');
 
 		kb.unmount();
 	});
 
 	it('ctrl hotkey', () => {
 		const kb = hotkey(doc);
+		const kbSim = new KeyboardSimulator(doc);
 
 		kb.mount();
 
@@ -44,8 +46,9 @@ export function apiSpec () {
 		kb.bindKey('ctrl', spy);
 
 		expect(spy.mock.calls.length).to.equal(0);
-
-		simulateKeyPress(doc!, 'ControlLeft');
+		kbSim.keyDown('Control');
+		expect(spy.mock.calls.length).to.equal(0);
+		kbSim.keyUp('Control');
 		expect(spy.mock.calls.length).to.equal(1);
 
 		kb.unmount();
@@ -53,6 +56,7 @@ export function apiSpec () {
 
 	it('ctrl-a hotkey', () => {
 		const kb = hotkey(doc);
+		const kbSim = new KeyboardSimulator(doc);
 
 		kb.mount();
 
@@ -61,21 +65,25 @@ export function apiSpec () {
 		kb.bindKey('ctrl-a', spy);
 
 		expect(spy.mock.calls.length).to.equal(0);
-
-		simulateKeyPress(doc!, 'KeyA');
+		kbSim.keypress('A');
 		expect(spy.mock.calls.length).to.equal(0);
 
-		simulateKeyPress(doc!, 'ControlLeft');
+		kbSim.keypress('Control');
 		expect(spy.mock.calls.length).to.equal(0);
 
-		simulateKeyPress(doc!, 'KeyA', 'ctrl');
+		kbSim.keyDown('Control', ['ctrlKey']); // TODO: set 'ctrlKey' automatic
+		expect(spy.mock.calls.length).to.equal(0);
+		kbSim.keyDown('A', ['ctrlKey']); // TODO: set 'ctrlKey' automatic when 'Control' is down
 		expect(spy.mock.calls.length).to.equal(1);
+		kbSim.keyUp('A', ['ctrlKey']);
+		kbSim.keyUp('Control');
 
 		kb.unmount();
 	});
 
 	it('multi obj', () => {
 		const kb = hotkey(doc);
+		const kbSim = new KeyboardSimulator(doc);
 
 		kb.mount();
 
@@ -93,9 +101,9 @@ export function apiSpec () {
 		expect(spy2.mock.calls.length).to.equal(0);
 		expect(spy3.mock.calls.length).to.equal(0);
 
-		simulateKeyPress(doc!, 'KeyA');
-		simulateKeyPress(doc!, 'KeyB');
-		simulateKeyPress(doc!, 'KeyC');
+		kbSim.keypress('A');
+		kbSim.keypress('B');
+		kbSim.keypress('C');
 
 		expect(spy1.mock.calls.length).to.equal(1);
 		expect(spy2.mock.calls.length).to.equal(1);

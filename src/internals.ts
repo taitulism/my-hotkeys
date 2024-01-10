@@ -10,6 +10,7 @@ import {
 	type KeyCode,
 } from './types';
 
+// TODO: rename. it's no longer just keyCodes
 export function getKeyCode (keyAlias: string): KeyCode {
 	const keyCode = KeyAliases[keyAlias.toUpperCase() as KeyAlias]; // TODO: use .hasOwnProperty ?
 
