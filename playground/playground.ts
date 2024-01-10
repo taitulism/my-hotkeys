@@ -40,7 +40,7 @@ try {
 	console.log(kb.combinedHotkeys);
 
 
-	kb.mount();
+	// kb.mount();
 
 
 

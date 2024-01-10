@@ -7,11 +7,11 @@ import {
 	parseHotKey,
 } from './internals';
 
-export const hotkey = function hotkey (ctxElm: ContextElement = document) {
-	return new Hotkey(ctxElm);
-};
+export function hotkey (ctxElm: ContextElement = document) {
+	return new Hotkey(ctxElm).mount();
+}
 
-class Hotkey {
+export class Hotkey {
 	public plainHotkeys = new Map<string, KeyHandler>();
 	public combinedHotkeys = new Map<string, BgKeyHandlers>();
 	public debugMode: boolean = false;
@@ -116,5 +116,10 @@ class Hotkey {
 		this.ctxElm.removeEventListener('keyup', this.keyupHandler as EventListener);
 
 		return this;
+	}
+
+	public die () {
+		this.unmount();
+		this.unbindAll();
 	}
 }
