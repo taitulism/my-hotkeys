@@ -36,12 +36,24 @@ class Hotkey {
 		else {
 			this.plainHotkeys.set(targetKey, handlerFn);
 		}
+
+		return this;
 	}
 
 	public bindKeys (hotkeysObj: Record<string, KeyHandler>) {
 		for (const [hotkey, keyHandler] of Object.entries(hotkeysObj)) {
 			this.bindKey(hotkey, keyHandler);
 		}
+
+		return this;
+	}
+
+	public unbindAll () {
+		this.plainHotkeys = new Map<string, KeyHandler>();
+		this.combinedHotkeys = new Map<string, BgKeyHandlers>();
+		this.dismissBgKeyUp = false;
+
+		return this;
 	}
 
 	private keydownHandler = (ev: KeyboardEvent) => {
@@ -65,7 +77,9 @@ class Hotkey {
 			}
 		}
 		else if (!isBgK) {
-			const handler = this.plainHotkeys.get(keyCode);
+			// TODO: fix this hack (see trello card: Enter - both)
+			const mapByKey = keyValue === 'Enter' ? keyValue : keyCode;
+			const handler = this.plainHotkeys.get(mapByKey);
 
 			handler?.(ev);
 		}
@@ -93,10 +107,14 @@ class Hotkey {
 	public mount () {
 		this.ctxElm.addEventListener('keydown', this.keydownHandler as EventListener);
 		this.ctxElm.addEventListener('keyup', this.keyupHandler as EventListener);
+
+		return this;
 	}
 
 	public unmount () {
 		this.ctxElm.removeEventListener('keydown', this.keydownHandler as EventListener);
 		this.ctxElm.removeEventListener('keyup', this.keyupHandler as EventListener);
+
+		return this;
 	}
 }
