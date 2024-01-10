@@ -1,11 +1,8 @@
-import type {ContextElement, BgKeyHandlers, KeyHandler, KeyCode} from './types';
+import type {ContextElement, BgKeyHandlers, KeyHandler} from './types';
 import {
-	PlainBgKeysMap,
 	getPressedBgKey,
-	hasPlainBgHotkey,
 	isBgKey,
 	isBgKeyPressed,
-	isPlainBgHotkey,
 	logKbEvent,
 	parseHotKey,
 } from './internals';
@@ -50,50 +47,38 @@ class Hotkey {
 	private keydownHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent('🔻', ev);
 
-		const keyCode = ev.code as KeyCode;
+		const keyCode = ev.code;
+		const keyValue = ev.key;
+		const isBgK = isBgKey(keyValue);
 		const bgKeyDown = isBgKeyPressed(ev);
 
-		if (isBgKey(ev.key)) {
-			if (bgKeyDown) {
-				const uniBgKey = getPressedBgKey(ev);
+		if (bgKeyDown) {
+			const uniBgKey = getPressedBgKey(ev);
+			const mapByKey = isBgK ? keyValue : keyCode;
 
-				this.dismissBgKeyUp = true;
+			this.dismissBgKeyUp = true;
 
-				if (this.combinedHotkeys.has(ev.key)) {
-					const handler = this.combinedHotkeys.get(ev.key)![uniBgKey];
-
-					handler?.(ev);
-				}
-			}
-		}
-		else { // a, b
-			if (bgKeyDown) {
-				const uniBgKey = getPressedBgKey(ev);
-
-				this.dismissBgKeyUp = true;
-
-				if (this.combinedHotkeys.has(keyCode)) {
-					const handler = this.combinedHotkeys.get(keyCode)![uniBgKey];
-
-					handler?.(ev);
-				}
-			}
-			else {
-				const handler = this.plainHotkeys.get(keyCode);
+			if (this.combinedHotkeys.has(mapByKey)) {
+				const handler = this.combinedHotkeys.get(mapByKey)![uniBgKey];
 
 				handler?.(ev);
 			}
+		}
+		else if (!isBgK) {
+			const handler = this.plainHotkeys.get(keyCode);
+
+			handler?.(ev);
 		}
 	};
 
 	private keyupHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent('🔼', ev);
 
-		// const keyCode = ev.code as KeyCode;
+		const keyValue = ev.key;
 
-		if (!isBgKey(ev.key) || isBgKeyPressed(ev)) return;
+		if (!isBgKey(keyValue) || isBgKeyPressed(ev)) return;
 
-		const handler = this.plainHotkeys.get(ev.key);
+		const handler = this.plainHotkeys.get(keyValue);
 
 		if (handler) {
 			if (this.dismissBgKeyUp) {

@@ -8,7 +8,6 @@ import {
 	type KeyAlias,
 	type ParsedKey,
 	type KeyCode,
-	type KeyHandler,
 } from './types';
 
 export function getKeyCode (keyAlias: string): KeyCode {
@@ -44,13 +43,6 @@ const bgKeys = [
 	'Meta',
 ];
 
-const bgKeysModifiers = {
-	Control: 'ctrlKey',
-	Shift: 'shiftKey',
-	Alt: 'altKey',
-	Meta: 'metaKey',
-} as const;
-
 export function isBgKeyPressed (ev: KeyboardEvent) {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 	const modifiers = Number(ctrlKey) + Number(altKey) + Number(shiftKey) + Number(metaKey);
@@ -80,44 +72,6 @@ export function isBgKey (evKey: string) {
 	return bgKeys.includes(evKey);
 }
 
-export const PlainBgKeysMap = {
-	'CTRL': ['ControlLeft', 'ControlRight'],
-	'CONTROL': ['ControlLeft', 'ControlRight'],
-	'ALT': ['AltLeft', 'AltRight'],
-	'SHIFT': ['ShiftLeft', 'ShiftRight'],
-	'META': ['MetaLeft', 'MetaRight'],
-} as const;
-
-const PlainBgKeys = Object.keys(PlainBgKeysMap);
-
-export function isPlainBgHotkey (hotkey: string) {
-	return PlainBgKeys.includes(hotkey.toUpperCase());
-}
-
-const UnifiedPlainHotkeys = {
-	C: ['ControlLeft'],
-	A: ['AltLeft'],
-	S: ['ShiftLeft'],
-	M: ['MetaLeft', 'MetaRight'],
-	CA: ['ControlLeft', 'AltLeft'],
-	CS: ['ControlLeft', 'ShiftLeft'],
-	AS: ['AltLeft', 'ShiftLeft'],
-	CAS: ['ControlLeft', 'AltLeft', 'ShiftLeft'],
-} as const;
-
-export function hasPlainBgHotkey (bgKey: UnifiedBgKey, map: Map<string, KeyHandler>) {
-	const bgKeys = UnifiedPlainHotkeys[bgKey];
-	const len = bgKey.length;
-
-	for (let i = 0; i < len; i++) {
-		const bgk = bgKeys[i];
-
-		if (!map.has(bgk)) return false;
-	}
-
-	return true;
-}
-
 export function logKbEvent (eventType: string, ev: KeyboardEvent) {
 	const {code, key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 	const hasBgPressed = ctrlKey || altKey || shiftKey || metaKey;
@@ -143,3 +97,48 @@ function rightPad (str: string, pad: number) {
 
 	return str;
 }
+
+// const bgKeysModifiers = {
+// 	Control: 'ctrlKey',
+// 	Shift: 'shiftKey',
+// 	Alt: 'altKey',
+// 	Meta: 'metaKey',
+// } as const;
+
+// export const PlainBgKeysMap = {
+// 	'CTRL': ['ControlLeft', 'ControlRight'],
+// 	'CONTROL': ['ControlLeft', 'ControlRight'],
+// 	'ALT': ['AltLeft', 'AltRight'],
+// 	'SHIFT': ['ShiftLeft', 'ShiftRight'],
+// 	'META': ['MetaLeft', 'MetaRight'],
+// } as const;
+
+// const PlainBgKeys = Object.keys(PlainBgKeysMap);
+
+// export function isPlainBgHotkey (hotkey: string) {
+// 	return PlainBgKeys.includes(hotkey.toUpperCase());
+// }
+
+// const UnifiedPlainHotkeys = {
+// 	C: ['ControlLeft'],
+// 	A: ['AltLeft'],
+// 	S: ['ShiftLeft'],
+// 	M: ['MetaLeft', 'MetaRight'],
+// 	CA: ['ControlLeft', 'AltLeft'],
+// 	CS: ['ControlLeft', 'ShiftLeft'],
+// 	AS: ['AltLeft', 'ShiftLeft'],
+// 	CAS: ['ControlLeft', 'AltLeft', 'ShiftLeft'],
+// } as const;
+
+// export function hasPlainBgHotkey (bgKey: UnifiedBgKey, map: Map<string, KeyHandler>) {
+// 	const bgKeys = UnifiedPlainHotkeys[bgKey];
+// 	const len = bgKey.length;
+
+// 	for (let i = 0; i < len; i++) {
+// 		const bgk = bgKeys[i];
+
+// 		if (!map.has(bgk)) return false;
+// 	}
+
+// 	return true;
+// }
