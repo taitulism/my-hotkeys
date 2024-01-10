@@ -1,4 +1,4 @@
-![Build Status](https://github.com/taitulism/pkg-name/actions/workflows/node-ci.yml/badge.svg)
+![Build Status](https://github.com/taitulism/hotkey/actions/workflows/node-ci.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 

@@ -1,13 +1,13 @@
 {
-	"name": "pkg-name",
+	"name": "hotkey",
 	"description": "Doing stuff.",
 	"version": "0.0.0",
 	"license": "MIT",
 	"private": true,
 	"main": "./src/index.ts",
-	"module": "./dist/esm/pkg-name.esm.js",
-	"browser": "./dist/browser/pkg-name.min.js",
-	"types": "./dist/esm/pkg-name.esm.d.ts",
+	"module": "./dist/esm/hotkey.esm.js",
+	"browser": "./dist/browser/hotkey.min.js",
+	"types": "./dist/esm/hotkey.esm.d.ts",
 	"files": [
 		"dist"
 	],
@@ -46,10 +46,10 @@
 		"vitest": "^1.0.4"
 	},
 	"keywords": [],
-	"homepage": "https://github.com/taitulism/pkg-name#readme",
+	"homepage": "https://github.com/taitulism/hotkey#readme",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/taitulism/pkg-name.git"
+		"url": "https://github.com/taitulism/hotkey.git"
 	},
 	"author": {
 		"name": "Itai Tenenbaum",

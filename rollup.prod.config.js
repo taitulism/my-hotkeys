@@ -25,7 +25,7 @@ const esm = {
 		banner,
 		dir: './dist/esm',
 		format: 'es',
-		entryFileNames:'pkg-name.esm.js',
+		entryFileNames:'hotkey.esm.js',
 	},
 };
 

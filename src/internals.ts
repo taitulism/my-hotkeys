@@ -85,6 +85,7 @@ export function logKbEvent (eventType: string, ev: KeyboardEvent) {
 	const bgKeys = `${ctrlKey ? 'ctrl ' : ''}${altKey ? 'alt ' : ''}${shiftKey ? 'shift ' : ''}${metaKey ? 'meta ' : ''}`;
 	const extras = `| id:${code} `;
 
+	/* eslint-disable no-console */
 	console.log(head, rightPad(bgkHead + bgKeys + bgkTail, 21), extras);
 }
 

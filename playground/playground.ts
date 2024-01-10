@@ -23,7 +23,7 @@ try {
 
 	const kb = hotkey();
 
-	// kb.debugMode = true;
+	kb.debugMode = true;
 
 	kb.bindKeys({
 		'a': () => console.log('*** A ***'),
@@ -31,6 +31,7 @@ try {
 		'ctrl-a': () => console.log('*** CTRL-A ***'),
 		'ctrl-alt': () => console.log('*** CTRL-ALT ***'),
 		'alt-ctrl': () => console.log('*** ALT-CTRL ***'),
+		'enter': () => console.log('*** ENTER ***'),
 		// 'lctrl': () => console.log('*** CTRL L ***'),
 		// 'rctrl': () => console.log('*** CTRL R ***'),
 	});
