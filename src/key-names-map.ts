@@ -1,8 +1,3 @@
-/*
-	TODO: It should be more about aliases.
-			For example: multiple aliases for the same key)
-*/
-
 export const KeyAliases = {
 	// TODO: needed?
 	F1: 'F1',
@@ -92,17 +87,19 @@ export const KeyAliases = {
 	CAPSLOCK: 'CapsLock',
 	TAB: 'Tab',
 
-	CONTROL: 'ControlLeft',
-	CTRL: 'ControlLeft',
+	CONTROL: 'Control',    // ev.key
+	CTRL: 'Control',       // ev.key
 	LCTRL: 'ControlLeft',
 	RCTRL: 'ControlRight',
-	ALT: 'AltLeft',
+	ALT: 'Alt',            // ev.key
 	LALT: 'AltLeft',
 	RALT: 'AltRight',
-	SHIFT: 'ShiftLeft',
+	SHIFT: 'Shift',        // ev.key
 	LSHIFT: 'ShiftLeft',
 	RSHIFT: 'ShiftRight',
-	META: 'MetaLeft',
+	META: 'Meta',          // ev.key
+	LMETA: 'MetaLeft',
+	RMETA: 'MetaRight',
 	CONTEXTMENU: 'ContextMenu',
 
 	PAUSE: 'Pause',

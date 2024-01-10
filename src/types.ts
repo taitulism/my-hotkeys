@@ -18,13 +18,18 @@ export enum BgKey {
 }
 
 export const BgKeyValues = {
+	Control: 1,
 	ControlLeft: 1,
 	ControlRight: 1,
+	Alt: 2,
 	AltLeft: 2,
 	AltRight: 2,
+	Shift: 4,
 	ShiftLeft: 4,
 	ShiftRight: 4,
 	Meta: 8,
+	MetaLeft: 8,
+	MetaRight: 8,
 } as const;
 
 export const EventBgKeyValues = {

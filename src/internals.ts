@@ -26,24 +26,15 @@ function parseBgKeys (...bgKeys: Array<BgKeys>): ParsedKey['unifiedBgKey'] {
 }
 
 export function parseHotKey (hotkey: string): ParsedKey {
-	const keys = hotkey.split(/\s?-\s?/).map(getKeyCode) as Array<KeyCode>;
-	// const len = segments.length;
+	const [_targetKey, ...bgKeys] = hotkey
+		.split(/\s?-\s?/)
+		.map(getKeyCode)
+		.reverse() as Array<KeyCode>;
 
-	let targetKey: ParsedKey['targetKey'];
-	let unifiedBgKey: ParsedKey['unifiedBgKey'];
-
-	if (keys.length === 1) { // happy path
-		[targetKey] = keys;
-		// bgKey = BgKey.Plain;
-	}
-	else {
-		const [_targetKey, ...bgKeys] = keys.reverse();
-
-		targetKey = _targetKey;
-		unifiedBgKey = parseBgKeys(...bgKeys as Array<BgKeys>);
-	}
-
-	return {targetKey, unifiedBgKey};
+	return {
+		targetKey: _targetKey,
+		unifiedBgKey: parseBgKeys(...bgKeys as Array<BgKeys>),
+	};
 }
 
 const bgKeys = [
@@ -94,6 +85,7 @@ export const PlainBgKeysMap = {
 	'CONTROL': ['ControlLeft', 'ControlRight'],
 	'ALT': ['AltLeft', 'AltRight'],
 	'SHIFT': ['ShiftLeft', 'ShiftRight'],
+	'META': ['MetaLeft', 'MetaRight'],
 } as const;
 
 const PlainBgKeys = Object.keys(PlainBgKeysMap);
@@ -104,10 +96,11 @@ export function isPlainBgHotkey (hotkey: string) {
 
 const UnifiedPlainHotkeys = {
 	C: ['ControlLeft'],
-	S: ['ShiftLeft'],
 	A: ['AltLeft'],
-	CS: ['ControlLeft', 'ShiftLeft'],
+	S: ['ShiftLeft'],
+	M: ['MetaLeft', 'MetaRight'],
 	CA: ['ControlLeft', 'AltLeft'],
+	CS: ['ControlLeft', 'ShiftLeft'],
 	AS: ['AltLeft', 'ShiftLeft'],
 	CAS: ['ControlLeft', 'AltLeft', 'ShiftLeft'],
 } as const;

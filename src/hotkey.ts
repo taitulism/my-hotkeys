@@ -19,20 +19,11 @@ class Hotkey {
 	public combinedHotkeys = new Map<string, BgKeyHandlers>();
 	public debugMode: boolean = false;
 
-	private didUseBgKey: boolean = false;
+	private dismissBgKeyUp: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
-		if (isPlainBgHotkey(hotkey)) {
-			const HOTKEY = hotkey.toUpperCase() as keyof typeof PlainBgKeysMap;
-
-			this.plainHotkeys.set(PlainBgKeysMap[HOTKEY][0], handlerFn);
-			this.plainHotkeys.set(PlainBgKeysMap[HOTKEY][1], handlerFn);
-
-			return;
-		}
-
 		const {targetKey, unifiedBgKey} = parseHotKey(hotkey);
 
 		if (unifiedBgKey) {
@@ -66,10 +57,10 @@ class Hotkey {
 			if (bgKeyDown) {
 				const uniBgKey = getPressedBgKey(ev);
 
-				this.didUseBgKey = true;
+				this.dismissBgKeyUp = true;
 
-				if (this.combinedHotkeys.has(keyCode)) {
-					const handler = this.combinedHotkeys.get(keyCode)![uniBgKey];
+				if (this.combinedHotkeys.has(ev.key)) {
+					const handler = this.combinedHotkeys.get(ev.key)![uniBgKey];
 
 					handler?.(ev);
 				}
@@ -79,9 +70,7 @@ class Hotkey {
 			if (bgKeyDown) {
 				const uniBgKey = getPressedBgKey(ev);
 
-				if (hasPlainBgHotkey(uniBgKey, this.plainHotkeys)) {
-					this.didUseBgKey = true;
-				}
+				this.dismissBgKeyUp = true;
 
 				if (this.combinedHotkeys.has(keyCode)) {
 					const handler = this.combinedHotkeys.get(keyCode)![uniBgKey];
@@ -100,15 +89,15 @@ class Hotkey {
 	private keyupHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent('🔼', ev);
 
-		const keyCode = ev.code as KeyCode;
+		// const keyCode = ev.code as KeyCode;
 
 		if (!isBgKey(ev.key) || isBgKeyPressed(ev)) return;
 
-		const handler = this.plainHotkeys.get(keyCode);
+		const handler = this.plainHotkeys.get(ev.key);
 
 		if (handler) {
-			if (this.didUseBgKey) {
-				this.didUseBgKey = false;
+			if (this.dismissBgKeyUp) {
+				this.dismissBgKeyUp = false;
 			}
 			else {
 				handler(ev);
