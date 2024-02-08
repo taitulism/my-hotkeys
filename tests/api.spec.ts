@@ -1,15 +1,18 @@
 import * as jsdom from 'jsdom';
-import {it, expect, beforeAll, afterAll, vi} from 'vitest';
-import {hotkey} from '../src/index';
+import {it, beforeAll, afterAll} from 'vitest';
+import {hotkey} from '../src';
 import {KeyboardSimulator} from './keyboard-simulator';
+import {calledOnce, notCalledYet, spies, spyFn} from './utils';
 
 export function apiSpec () {
+	let simulate: KeyboardSimulator;
 	let doc: Document | undefined;
 
 	beforeAll(() => {
 		const dom = new jsdom.JSDOM('');
 
 		doc = dom.window.document;
+		simulate = new KeyboardSimulator(doc);
 	});
 
 	afterAll(() => {
@@ -17,100 +20,72 @@ export function apiSpec () {
 	});
 
 	it('plain hotkey', () => {
-		const kb = hotkey(doc);
-		const kbSim = new KeyboardSimulator(doc);
+		const hk = hotkey(doc);
+		const spy = spyFn();
 
-		kb.mount();
+		hk.bindKey('a', spy);
 
-		const spy = vi.fn();
+		notCalledYet(spy);
+		simulate.keyDown('A');
+		calledOnce(spy);
+		simulate.keyUp('A');
 
-		kb.bindKey('a', spy);
-
-		expect(spy.mock.calls.length).to.equal(0);
-
-		kbSim.keyDown('A');
-		expect(spy.mock.calls.length).to.equal(1);
-		kbSim.keyUp('A');
-
-		kb.unmount();
+		hk.unmount();
 	});
 
 	it('ctrl hotkey', () => {
-		const kb = hotkey(doc);
-		const kbSim = new KeyboardSimulator(doc);
+		const hk = hotkey(doc);
+		const spy = spyFn();
 
-		kb.mount();
+		hk.bindKey('ctrl', spy);
 
-		const spy = vi.fn();
+		notCalledYet(spy);
+		simulate.keyDown('Control');
+		notCalledYet(spy);
+		simulate.keyUp('Control');
+		calledOnce(spy);
 
-		kb.bindKey('ctrl', spy);
-
-		expect(spy.mock.calls.length).to.equal(0);
-		kbSim.keyDown('Control');
-		expect(spy.mock.calls.length).to.equal(0);
-		kbSim.keyUp('Control');
-		expect(spy.mock.calls.length).to.equal(1);
-
-		kb.unmount();
+		hk.unmount();
 	});
 
 	it('ctrl-a hotkey', () => {
-		const kb = hotkey(doc);
-		const kbSim = new KeyboardSimulator(doc);
+		const hk = hotkey(doc);
+		const spy = spyFn();
 
-		kb.mount();
+		hk.bindKey('ctrl-a', spy);
 
-		const spy = vi.fn();
+		notCalledYet(spy);
+		simulate.keypress('A');
+		notCalledYet(spy);
+		simulate.keypress('Control');
+		notCalledYet(spy);
 
-		kb.bindKey('ctrl-a', spy);
+		simulate.keyDown('Control', ['ctrlKey']); // TODO: set 'ctrlKey' automatic
+		notCalledYet(spy);
+		simulate.keyDown('A', ['ctrlKey']); // TODO: set 'ctrlKey' automatic when 'Control' is down
+		calledOnce(spy);
+		simulate.keyUp('A', ['ctrlKey']);
+		simulate.keyUp('Control');
 
-		expect(spy.mock.calls.length).to.equal(0);
-		kbSim.keypress('A');
-		expect(spy.mock.calls.length).to.equal(0);
-
-		kbSim.keypress('Control');
-		expect(spy.mock.calls.length).to.equal(0);
-
-		kbSim.keyDown('Control', ['ctrlKey']); // TODO: set 'ctrlKey' automatic
-		expect(spy.mock.calls.length).to.equal(0);
-		kbSim.keyDown('A', ['ctrlKey']); // TODO: set 'ctrlKey' automatic when 'Control' is down
-		expect(spy.mock.calls.length).to.equal(1);
-		kbSim.keyUp('A', ['ctrlKey']);
-		kbSim.keyUp('Control');
-
-		kb.unmount();
+		hk.unmount();
 	});
 
 	it('multi obj', () => {
-		const kb = hotkey(doc);
-		const kbSim = new KeyboardSimulator(doc);
+		const hk = hotkey(doc);
+		const [spy1, spy2, spy3] = spies(3);
 
-		kb.mount();
-
-		const spy1 = vi.fn();
-		const spy2 = vi.fn();
-		const spy3 = vi.fn();
-
-		kb.bindKeys({
+		hk.bindKeys({
 			'a': spy1,
 			'b': spy2,
 			'c': spy3,
 		});
 
-		expect(spy1.mock.calls.length).to.equal(0);
-		expect(spy2.mock.calls.length).to.equal(0);
-		expect(spy3.mock.calls.length).to.equal(0);
+		notCalledYet(spy1, spy2, spy3);
+		simulate.keypress('A');
+		simulate.keypress('B');
+		simulate.keypress('C');
+		calledOnce(spy1, spy2, spy3);
 
-		kbSim.keypress('A');
-		kbSim.keypress('B');
-		kbSim.keypress('C');
-
-		expect(spy1.mock.calls.length).to.equal(1);
-		expect(spy2.mock.calls.length).to.equal(1);
-		expect(spy3.mock.calls.length).to.equal(1);
-
-		kb.unmount();
+		hk.unmount();
 	});
 }
-
-
