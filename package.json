@@ -18,7 +18,7 @@
 		"prebuild": "rm -rf ./dist",
 		"build": "rollup --config rollup.prod.config.js --bundleConfigAsCjs",
 		"postbuild": "rm -rf ./dist/esm/temp-dts",
-		"test": "vitest run ./tests/index.spec.ts",
+		"test": "vitest run ./tests/index.spec.ts ./tests/keyboard-simulator/keyboard-simulator.spec.ts",
 		"test:watch": "vitest watch ./tests/index.spec.ts",
 		"lint": "npm run check:lint",
 		"checks": "npm run check:all",

@@ -1,77 +1,70 @@
-import * as jsdom from 'jsdom';
-import {it, beforeAll, afterAll} from 'vitest';
-import {hotkey} from '../src';
+import {JSDOM} from 'jsdom';
+import {it, beforeAll, beforeEach, afterEach, Mock} from 'vitest';
+import {hotkey, Hotkey} from '../src';
 import {KeyboardSimulator} from './keyboard-simulator';
 import {calledOnce, notCalledYet, spies, spyFn} from './utils';
 
 export function apiSpec () {
-	let simulate: KeyboardSimulator;
 	let doc: Document | undefined;
+	let simulate: KeyboardSimulator;
+	let hk: Hotkey;
+	let spy: Mock;
 
 	beforeAll(() => {
-		const dom = new jsdom.JSDOM('');
+		const dom = new JSDOM();
 
 		doc = dom.window.document;
 		simulate = new KeyboardSimulator(doc);
+		spy = spyFn();
 	});
 
-	afterAll(() => {
-		doc = undefined;
+	beforeEach(() => {
+		hk = hotkey(doc);
+	});
+
+	afterEach(() => {
+		hk.unmount();
+		simulate.reset();
+		spy.mockReset();
 	});
 
 	it('plain hotkey', () => {
-		const hk = hotkey(doc);
-		const spy = spyFn();
-
 		hk.bindKey('a', spy);
 
 		notCalledYet(spy);
 		simulate.keyDown('A');
 		calledOnce(spy);
 		simulate.keyUp('A');
-
-		hk.unmount();
 	});
 
-	it('ctrl hotkey', () => {
-		const hk = hotkey(doc);
-		const spy = spyFn();
-
+	it('ctrl', () => {
 		hk.bindKey('ctrl', spy);
 
 		notCalledYet(spy);
-		simulate.keyDown('Control');
+		simulate.keyDown('Ctrl');
 		notCalledYet(spy);
-		simulate.keyUp('Control');
+		simulate.keyUp('Ctrl');
 		calledOnce(spy);
-
-		hk.unmount();
 	});
 
-	it('ctrl-a hotkey', () => {
-		const hk = hotkey(doc);
-		const spy = spyFn();
-
+	it('ctrl-a', () => {
 		hk.bindKey('ctrl-a', spy);
 
 		notCalledYet(spy);
-		simulate.keypress('A');
+		simulate.keyPress('A');
 		notCalledYet(spy);
-		simulate.keypress('Control');
+		simulate.keyPress('Ctrl');
 		notCalledYet(spy);
 
-		simulate.keyDown('Control', ['ctrlKey']); // TODO: set 'ctrlKey' automatic
+		simulate.keyDown('Ctrl');
 		notCalledYet(spy);
-		simulate.keyDown('A', ['ctrlKey']); // TODO: set 'ctrlKey' automatic when 'Control' is down
+		simulate.keyDown('A');
 		calledOnce(spy);
-		simulate.keyUp('A', ['ctrlKey']);
-		simulate.keyUp('Control');
-
-		hk.unmount();
+		simulate.keyUp('A');
+		simulate.keyUp('Ctrl');
 	});
 
 	it('multi obj', () => {
-		const hk = hotkey(doc);
 		const [spy1, spy2, spy3] = spies(3);
 
 		hk.bindKeys({
@@ -81,11 +74,9 @@ export function apiSpec () {
 		});
 
 		notCalledYet(spy1, spy2, spy3);
-		simulate.keypress('A');
-		simulate.keypress('B');
-		simulate.keypress('C');
+		simulate.keyPress('A');
+		simulate.keyPress('B');
+		simulate.keyPress('C');
 		calledOnce(spy1, spy2, spy3);
-
-		hk.unmount();
 	});
 }
