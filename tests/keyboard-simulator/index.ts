@@ -1,46 +1,103 @@
-// import {getKeyCode} from '../../src/internals';
 import {ContextElement} from '../../src/types';
 import {
 	EventKeyAndCode,
+	IsModifierDown,
+	EventModifiers,
+	isModifier,
 	type EventType,
-	type Modifier,
 	type TAliases,
+	type EventModifier,
 } from './types';
 
-function createKbEvent (eventType: EventType, key: TAliases, modifiers?: Array<Modifier>) {
-	const ev: KeyboardEventInit = Object.assign({
-		ctrlKey: false,
-		altKey: false,
-		shiftKey: false,
-		metaKey: false,
-	}, EventKeyAndCode[key]);
+const defaultEventModifiers: KeyboardEventInit = {
+	ctrlKey: false,
+	altKey: false,
+	shiftKey: false,
+	metaKey: false,
+};
 
-	if (modifiers) {
-		modifiers.forEach((mod) => {
-			ev[mod] = true;
-		});
-	}
+function keyBoardEventCreator (eventType: EventType) {
+	return function createKbEvent (key: TAliases, modifiers?: Array<EventModifier>) {
+		const ev: KeyboardEventInit = Object.assign({}, defaultEventModifiers, EventKeyAndCode[key]);
 
-	return new KeyboardEvent(eventType, ev);
+		if (modifiers) {
+			modifiers.forEach((mod) => {
+				ev[mod] = true;
+			});
+		}
+
+		return new KeyboardEvent(eventType, ev);
+	};
 }
 
+const createKeyDownEvent = keyBoardEventCreator('keydown');
+const createKeyUpEvent = keyBoardEventCreator('keyup');
+
 export class KeyboardSimulator {
+	private isCtrlDown = false;
+	private isAltDown = false;
+	private isShiftDown = false;
+	private isMetaDown = false;
+
 	constructor (public ctxElm: ContextElement = document) {}
 
-	keyDown (key: TAliases, modifiers?: Array<Modifier>) {
-		const keydownEvent = createKbEvent('keydown', key, modifiers);
-
-		this.ctxElm.dispatchEvent(keydownEvent);
+	private isModifierDown () {
+		return this.isCtrlDown || this.isAltDown || this.isShiftDown || this.isMetaDown;
 	}
 
-	keyUp (key: TAliases, modifiers?: Array<Modifier>) {
-		const keydownEvent = createKbEvent('keyup', key, modifiers);
-
-		this.ctxElm.dispatchEvent(keydownEvent);
+	public reset () {
+		this.isCtrlDown = false;
+		this.isAltDown = false;
+		this.isShiftDown = false;
+		this.isMetaDown = false;
 	}
 
-	keypress (key: TAliases, modifiers?: Array<Modifier>) {
-		this.keyDown(key, modifiers);
-		this.keyUp(key, modifiers);
+	public keyDown (key: TAliases) {
+		const modifiers: Array<EventModifier> = [];
+
+		if (isModifier(key)) {
+			const holdModifierDown = (`is${key}Down`) as IsModifierDown;
+
+			this[holdModifierDown] = true;
+			modifiers.push(EventModifiers[key]);
+		}
+
+		if (this.isModifierDown()) {
+			if (this.isCtrlDown) modifiers.push(EventModifiers.Ctrl);
+			if (this.isAltDown) modifiers.push(EventModifiers.Alt);
+			if (this.isShiftDown) modifiers.push(EventModifiers.Shift);
+			if (this.isMetaDown) modifiers.push(EventModifiers.Meta);
+		}
+
+		const keyDownEvent = createKeyDownEvent(key, modifiers);
+
+		return this.ctxElm.dispatchEvent(keyDownEvent);
+	}
+
+	public keyUp (key: TAliases) {
+		const modifiers: Array<EventModifier> = [];
+
+		if (this.isModifierDown()) {
+			if (isModifier(key)) {
+				if (key === 'Ctrl') this.isCtrlDown = false;
+				if (key === 'Alt') this.isAltDown = false;
+				if (key === 'Shift') this.isShiftDown = false;
+				if (key === 'Meta') this.isMetaDown = false;
+			}
+
+			if (this.isCtrlDown) modifiers.push(EventModifiers.Ctrl);
+			if (this.isAltDown) modifiers.push(EventModifiers.Alt);
+			if (this.isShiftDown) modifiers.push(EventModifiers.Shift);
+			if (this.isMetaDown) modifiers.push(EventModifiers.Meta);
+		}
+
+		const keyUpEvent = createKeyUpEvent(key, modifiers);
+
+		return this.ctxElm.dispatchEvent(keyUpEvent);
+	}
+
+	public keyPress (key: TAliases) {
+		this.keyDown(key);
+		this.keyUp(key);
 	}
 }
