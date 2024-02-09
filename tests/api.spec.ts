@@ -1,5 +1,5 @@
 import {JSDOM} from 'jsdom';
-import {it, beforeAll, beforeEach, afterEach, Mock, describe} from 'vitest';
+import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
 import {hotkey, Hotkey} from '../src';
 import {KeyboardSimulator} from './keyboard-simulator';
 import {calledOnce, notCalled, spies, spyFn} from './utils';
@@ -117,6 +117,77 @@ export function apiSpec () {
 			simulate.keyUp('Ctrl');
 			notCalled(spy1);
 			calledOnce(spy2);
+		});
+	});
+
+	describe('Modifiers', () => {
+		it('Get triggered on "keyup"', () => {
+			const [spy1, spy2, spy3, spy4] = spies(4);
+
+			hk.bindKeys({
+				'ctrl': spy1,
+				'alt': spy2,
+				'shift': spy3,
+				'meta': spy4,
+			});
+
+			notCalled(spy1);
+			simulate.keyDown('Ctrl');
+			notCalled(spy1);
+			simulate.keyUp('Ctrl');
+			calledOnce(spy1);
+
+			notCalled(spy2);
+			simulate.keyDown('Alt');
+			notCalled(spy2);
+			simulate.keyUp('Alt');
+			calledOnce(spy2);
+
+			notCalled(spy3);
+			simulate.keyDown('Shift');
+			notCalled(spy3);
+			simulate.keyUp('Shift');
+			calledOnce(spy3);
+
+			notCalled(spy4);
+			simulate.keyDown('Meta');
+			notCalled(spy4);
+			simulate.keyUp('Meta');
+			calledOnce(spy4);
+		});
+
+		it('Don\'t get Triggered when used as a BG key', () => {
+			const [spy1, spy2, spy3, spy4] = spies(4);
+
+			hk.bindKeys({
+				'ctrl': spy1,
+				'ctrl-a': spy,
+				'alt': spy2,
+				'alt-a': spy,
+				'shift': spy3,
+				'shift-a': spy,
+				'meta': spy4,
+				'meta-a': spy,
+			});
+
+			simulate.keyDown('Ctrl');
+			simulate.keyPress('A');
+			simulate.keyUp('Ctrl');
+
+			simulate.keyDown('Alt');
+			simulate.keyPress('A');
+			simulate.keyUp('Alt');
+
+			simulate.keyDown('Shift');
+			simulate.keyPress('A');
+			simulate.keyUp('Shift');
+
+			simulate.keyDown('Meta');
+			simulate.keyPress('A');
+			simulate.keyUp('Meta');
+
+			notCalled(spy1, spy2, spy3, spy4);
+			expect(spy.mock.calls.length).to.equal(4);
 		});
 	});
 }
