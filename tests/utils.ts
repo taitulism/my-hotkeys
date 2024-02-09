@@ -12,7 +12,7 @@ export const spies = (count: number) => {
 	return array;
 };
 
-export const notCalledYet = (...spies: Array<Mock>) => {
+export const notCalled = (...spies: Array<Mock>) => {
 	spies.forEach((spy) => {
 		expect(spy.mock.calls.length).to.equal(0);
 	});

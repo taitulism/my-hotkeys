@@ -1,8 +1,8 @@
 import {JSDOM} from 'jsdom';
-import {it, beforeAll, beforeEach, afterEach, Mock} from 'vitest';
+import {it, beforeAll, beforeEach, afterEach, Mock, describe} from 'vitest';
 import {hotkey, Hotkey} from '../src';
 import {KeyboardSimulator} from './keyboard-simulator';
-import {calledOnce, notCalledYet, spies, spyFn} from './utils';
+import {calledOnce, notCalled, spies, spyFn} from './utils';
 
 export function apiSpec () {
 	let doc: Document | undefined;
@@ -31,7 +31,7 @@ export function apiSpec () {
 	it('plain hotkey', () => {
 		hk.bindKey('a', spy);
 
-		notCalledYet(spy);
+		notCalled(spy);
 		simulate.keyDown('A');
 		calledOnce(spy);
 		simulate.keyUp('A');
@@ -40,9 +40,9 @@ export function apiSpec () {
 	it('ctrl', () => {
 		hk.bindKey('ctrl', spy);
 
-		notCalledYet(spy);
+		notCalled(spy);
 		simulate.keyDown('Ctrl');
-		notCalledYet(spy);
+		notCalled(spy);
 		simulate.keyUp('Ctrl');
 		calledOnce(spy);
 	});
@@ -50,14 +50,14 @@ export function apiSpec () {
 	it('ctrl-a', () => {
 		hk.bindKey('ctrl-a', spy);
 
-		notCalledYet(spy);
+		notCalled(spy);
 		simulate.keyPress('A');
-		notCalledYet(spy);
+		notCalled(spy);
 		simulate.keyPress('Ctrl');
-		notCalledYet(spy);
+		notCalled(spy);
 
 		simulate.keyDown('Ctrl');
-		notCalledYet(spy);
+		notCalled(spy);
 		simulate.keyDown('A');
 		calledOnce(spy);
 		simulate.keyUp('A');
@@ -73,10 +73,50 @@ export function apiSpec () {
 			'c': spy3,
 		});
 
-		notCalledYet(spy1, spy2, spy3);
+		notCalled(spy1, spy2, spy3);
 		simulate.keyPress('A');
 		simulate.keyPress('B');
 		simulate.keyPress('C');
 		calledOnce(spy1, spy2, spy3);
+	});
+
+	describe('Plain keys and Modifiers', () => {
+		it('doesn\'t trigger A on Ctrl-A ', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'a': spy1,
+				'ctrl-a': spy2,
+			});
+
+			simulate.keyDown('Ctrl');
+			simulate.keyDown('A');
+			notCalled(spy1);
+			calledOnce(spy2);
+
+			simulate.keyUp('A');
+			simulate.keyUp('Ctrl');
+			notCalled(spy1);
+			calledOnce(spy2);
+		});
+
+		it('doesn\'t trigger Ctrl on Ctrl-A ', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'ctrl': spy1,
+				'ctrl-a': spy2,
+			});
+
+			simulate.keyDown('Ctrl');
+			simulate.keyDown('A');
+			notCalled(spy1);
+			calledOnce(spy2);
+
+			simulate.keyUp('A');
+			simulate.keyUp('Ctrl');
+			notCalled(spy1);
+			calledOnce(spy2);
+		});
 	});
 }
