@@ -4,19 +4,6 @@ export type ContextElement = HTMLElement | Document;
 
 export type KeyHandler = (ev: KeyboardEvent) => void
 
-export enum BgKey {
-	Plain = '_',
-	Alt = 'A',
-	Shift = 'S',
-	Meta = 'M',
-	Control = 'C',
-	ControlAlt = 'CA',
-	ControlShift = 'CS',
-	// ControlAltShift = 'CAS',
-	// AltShift = 'AS',
-	// more...
-}
-
 export const BgKeyValues = {
 	Control: 1,
 	ControlLeft: 1,

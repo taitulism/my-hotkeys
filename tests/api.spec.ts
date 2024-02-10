@@ -74,14 +74,12 @@ export function apiSpec () {
 		});
 
 		notCalled(spy1, spy2, spy3);
-		simulate.keyPress('A');
-		simulate.keyPress('B');
-		simulate.keyPress('C');
+		simulate.keyPress('A', 'B', 'C');
 		calledOnce(spy1, spy2, spy3);
 	});
 
 	describe('Plain keys and Modifiers', () => {
-		it('doesn\'t trigger A on Ctrl-A ', () => {
+		it('Doesn\'t trigger A on Ctrl-A ', () => {
 			const [spy1, spy2] = spies(2);
 
 			hk.bindKeys({
@@ -89,18 +87,15 @@ export function apiSpec () {
 				'ctrl-a': spy2,
 			});
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('A');
-			notCalled(spy1);
+			simulate.keyDown('Ctrl', 'A');
+			calledOnce(spy2);
+			simulate.keyUpRev('Ctrl', 'A');
 			calledOnce(spy2);
 
-			simulate.keyUp('A');
-			simulate.keyUp('Ctrl');
 			notCalled(spy1);
-			calledOnce(spy2);
 		});
 
-		it('doesn\'t trigger Ctrl on Ctrl-A ', () => {
+		it('Doesn\'t trigger Ctrl on Ctrl-A ', () => {
 			const [spy1, spy2] = spies(2);
 
 			hk.bindKeys({
@@ -108,15 +103,29 @@ export function apiSpec () {
 				'ctrl-a': spy2,
 			});
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('A');
-			notCalled(spy1);
+			simulate.keyDown('Ctrl', 'A');
+			calledOnce(spy2);
+			simulate.keyUpRev('Ctrl', 'A');
 			calledOnce(spy2);
 
-			simulate.keyUp('A');
-			simulate.keyUp('Ctrl');
 			notCalled(spy1);
-			calledOnce(spy2);
+		});
+
+		it('Doesn\'t trigger Ctrl nor A on Ctrl-A ', () => {
+			const [spy1, spy2, spy3] = spies(3);
+
+			hk.bindKeys({
+				'a': spy1,
+				'ctrl': spy2,
+				'ctrl-a': spy3,
+			});
+
+			simulate.keyDown('Ctrl', 'A');
+			calledOnce(spy3);
+			simulate.keyUpRev('Ctrl', 'A');
+			calledOnce(spy3);
+
+			notCalled(spy1, spy2);
 		});
 	});
 
@@ -166,29 +175,21 @@ export function apiSpec () {
 				'meta-a': spy4,
 			});
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'A');
 			calledOnce(spy1);
-			simulate.keyUp('A');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'A');
 
-			simulate.keyDown('Alt');
-			simulate.keyDown('A');
+			simulate.keyDown('Alt', 'A');
 			calledOnce(spy2);
-			simulate.keyUp('A');
-			simulate.keyUp('Alt');
+			simulate.keyUpRev('Alt', 'A');
 
-			simulate.keyDown('Shift');
-			simulate.keyDown('A');
+			simulate.keyDown('Shift', 'A');
 			calledOnce(spy3);
-			simulate.keyUp('A');
-			simulate.keyUp('Shift');
+			simulate.keyUpRev('Shift', 'A');
 
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Meta', 'A');
 			calledOnce(spy4);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
+			simulate.keyUpRev('Meta', 'A');
 
 			calledOnce(spy1, spy2, spy3, spy4);
 		});
@@ -254,11 +255,9 @@ export function apiSpec () {
 			});
 
 			// ctrl-alt
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
+			simulate.keyDown('Ctrl', 'Alt');
 			calledOnce(spy1);
-			simulate.keyUp('Alt');
-			simulate.keyUp('Ctrl');
+			simulate.keyUp('Alt', 'Ctrl');
 			calledOnce(spy1);
 			notCalled(spy2);
 
@@ -266,11 +265,9 @@ export function apiSpec () {
 			spy2.mockReset();
 
 			// alt-ctrl
-			simulate.keyDown('Alt');
-			simulate.keyDown('Ctrl');
+			simulate.keyDown('Alt', 'Ctrl');
 			calledOnce(spy2);
-			simulate.keyUp('Ctrl');
-			simulate.keyUp('Alt');
+			simulate.keyUp('Ctrl', 'Alt');
 			calledOnce(spy2);
 			notCalled(spy1);
 		});
@@ -287,53 +284,29 @@ export function apiSpec () {
 				'shift-meta-a': spy6,
 			});
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Alt', 'A');
 			calledOnce(spy1);
-			simulate.keyUp('A');
-			simulate.keyUp('Alt');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Alt', 'A');
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Shift');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Shift', 'A');
 			calledOnce(spy2);
-			simulate.keyUp('A');
-			simulate.keyUp('Shift');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Shift', 'A');
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Meta', 'A');
 			calledOnce(spy3);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Meta', 'A');
 
-			simulate.keyDown('Alt');
-			simulate.keyDown('Shift');
-			simulate.keyDown('A');
+			simulate.keyDown('Alt', 'Shift', 'A');
 			calledOnce(spy4);
-			simulate.keyUp('A');
-			simulate.keyUp('Shift');
-			simulate.keyUp('Alt');
+			simulate.keyUpRev('Alt', 'Shift', 'A');
 
-			simulate.keyDown('Alt');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Alt', 'Meta', 'A');
 			calledOnce(spy5);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Alt');
+			simulate.keyUpRev('Alt', 'Meta', 'A');
 
-			simulate.keyDown('Shift');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Shift', 'Meta', 'A');
 			calledOnce(spy6);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Shift');
+			simulate.keyUpRev('Shift', 'Meta', 'A');
 
 			calledOnce(spy1, spy2, spy3, spy4, spy5, spy6);
 		});
@@ -341,22 +314,13 @@ export function apiSpec () {
 		it('Order doesn\'t matter when multiple BG keys', () => {
 			hk.bindKey('ctrl-alt-a', spy);
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Alt', 'A');
 			calledOnce(spy);
-			simulate.keyUp('A');
-			simulate.keyUp('Alt');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Alt', 'A');
 
-
-			simulate.keyDown('Alt');
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('A');
+			simulate.keyDown('Alt', 'Ctrl', 'A');
 			calledTwice(spy);
-			simulate.keyUp('A');
-			simulate.keyUp('Ctrl');
-			simulate.keyUp('Alt');
+			simulate.keyUpRev('Alt', 'Ctrl', 'A');
 
 			calledTwice(spy);
 		});
@@ -373,61 +337,29 @@ export function apiSpec () {
 			});
 
 			// ctrl-alt-shift-a
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
-			simulate.keyDown('Shift');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Alt', 'Shift', 'A');
 			calledOnce(spy1);
-			simulate.keyUp('A');
-			simulate.keyUp('Shift');
-			simulate.keyUp('Alt');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Alt', 'Shift', 'A');
 
 			// ctrl-alt-meta-a
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Alt', 'Meta', 'A');
 			calledOnce(spy2);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Alt');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Alt', 'Meta', 'A');
 
 			// ctrl-shift-meta-a
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Shift');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Shift', 'Meta', 'A');
 			calledOnce(spy3);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Shift');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Shift', 'Meta', 'A');
 
 			// alt-shift-meta-a
-			simulate.keyDown('Alt');
-			simulate.keyDown('Shift');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Alt', 'Shift', 'Meta', 'A');
 			calledOnce(spy4);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Shift');
-			simulate.keyUp('Alt');
+			simulate.keyUpRev('Alt', 'Shift', 'Meta', 'A');
 
 			// ctrl-alt-shift-meta-a
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
-			simulate.keyDown('Shift');
-			simulate.keyDown('Meta');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Alt', 'Shift', 'Meta', 'A');
 			calledOnce(spy5);
-			simulate.keyUp('A');
-			simulate.keyUp('Meta');
-			simulate.keyUp('Shift');
-			simulate.keyUp('Alt');
-			simulate.keyUp('Ctrl');
+			simulate.keyUpRev('Ctrl', 'Alt', 'Shift', 'Meta', 'A');
 		});
 
 		it('Release order doesn\'t matter', () => {
@@ -439,15 +371,9 @@ export function apiSpec () {
 				'a': spy3,
 			});
 
-			simulate.keyDown('Ctrl');
-			simulate.keyDown('Alt');
-			simulate.keyDown('Shift');
-			simulate.keyDown('A');
+			simulate.keyDown('Ctrl', 'Alt', 'Shift', 'A');
 			calledOnce(spy1);
-			simulate.keyUp('Alt');
-			simulate.keyUp('Shift');
-			simulate.keyUp('A');
-			simulate.keyUp('Ctrl');
+			simulate.keyUp('Alt', 'Shift', 'A', 'Ctrl');
 
 			calledOnce(spy1);
 			notCalled(spy2, spy3);
