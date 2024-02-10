@@ -33,17 +33,12 @@ function keyBoardEventCreator (eventType: EventType) {
 const createKeyDownEvent = keyBoardEventCreator('keydown');
 const createKeyUpEvent = keyBoardEventCreator('keyup');
 
-/* TODO:idea
-	If keyDown saves keys, keyUp (or keysUp) could be called with no
-	args to release them in reverse.
-	Maybe .hold & .release and keep the current ones low level.
-*/
-
 export class KeyboardSimulator {
 	private isCtrlDown = false;
 	private isAltDown = false;
 	private isShiftDown = false;
 	private isMetaDown = false;
+	private heldKeys: Array<TAliases> = [];
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -56,6 +51,7 @@ export class KeyboardSimulator {
 		this.isAltDown = false;
 		this.isShiftDown = false;
 		this.isMetaDown = false;
+		this.heldKeys = [];
 	}
 
 	// TODO:test multiple keys & return
@@ -137,6 +133,24 @@ export class KeyboardSimulator {
 	public keyPress (...keys: Array<TAliases>) {
 		return keys.map((key) => [
 			this.keyDown(key),
+			this.keyUp(key),
+		]);
+	}
+
+	public hold (...keys: Array<TAliases>) {
+		this.heldKeys.push(...keys);
+
+		return keys.map((key) => [
+			this.keyDown(key),
+		]);
+	}
+
+	public release () {
+		const keys = this.heldKeys;
+
+		this.heldKeys = [];
+
+		return keys.reverse().map((key) => [
 			this.keyUp(key),
 		]);
 	}
