@@ -42,20 +42,19 @@ export const EventBgKeyValues = {
 export const UnifiedBgKey = {
 	1: 'C',
 	2: 'A',
-	4: 'S',
-	8: 'M',
-
-	5: 'CS',
 	3: 'CA',
+	4: 'S',
+	5: 'CS',
 	6: 'AS',
 	7: 'CAS',
-	// 9: 'CM',
-	// 10: 'SM',
-	// 11: 'CSM',
-	// 12: 'AM',
-	// 13: 'CAM',
-	// 14: 'ASM',
-	// 15: 'CASM',
+	8: 'M',
+	9: 'CM',
+	10: 'AM',
+	11: 'CAM',
+	12: 'SM',
+	13: 'CSM',
+	14: 'ASM',
+	15: 'CASM',
 } as const;
 
 export type BgKeySum = keyof typeof UnifiedBgKey;

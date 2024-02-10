@@ -28,8 +28,9 @@ try {
 	kb.bindKeys({
 		'a': () => console.log('*** A ***'),
 		'ctrl': () => console.log('*** CTRL ***'),
-		'ctrl-a': () => console.log('*** CTRL-A ***'),
+		'alt': () => console.log('*** ALT ***'),
 		'ctrl-alt': () => console.log('*** CTRL-ALT ***'),
+		'ctrl-a': () => console.log('*** CTRL-A ***'),
 		'alt-ctrl': () => console.log('*** ALT-CTRL ***'),
 		'enter': () => console.log('*** ENTER ***'),
 		// 'lctrl': () => console.log('*** CTRL L ***'),

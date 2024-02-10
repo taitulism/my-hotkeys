@@ -16,7 +16,8 @@ export class Hotkey {
 	public combinedHotkeys = new Map<string, BgKeyHandlers>();
 	public debugMode: boolean = false;
 
-	private dismissBgKeyUp: boolean = false;
+	private keysDownCount = 0;
+	private ignoreFollowingHandlers: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -51,7 +52,7 @@ export class Hotkey {
 	public unbindAll () {
 		this.plainHotkeys = new Map<string, KeyHandler>();
 		this.combinedHotkeys = new Map<string, BgKeyHandlers>();
-		this.dismissBgKeyUp = false;
+		this.ignoreFollowingHandlers = false;
 
 		return this;
 	}
@@ -64,11 +65,13 @@ export class Hotkey {
 		const isBgK = isBgKey(keyValue);
 		const bgKeyDown = isBgKeyPressed(ev);
 
+		this.keysDownCount++;
+
 		if (bgKeyDown) {
 			const uniBgKey = getPressedBgKey(ev);
 			const mapByKey = isBgK ? keyValue : keyCode;
 
-			this.dismissBgKeyUp = true;
+			this.ignoreFollowingHandlers = true;
 
 			if (this.combinedHotkeys.has(mapByKey)) {
 				const handler = this.combinedHotkeys.get(mapByKey)![uniBgKey];
@@ -90,17 +93,21 @@ export class Hotkey {
 
 		const keyValue = ev.key;
 
+		this.keysDownCount = Math.max(--this.keysDownCount, 0);
+
 		if (!isBgKey(keyValue) || isBgKeyPressed(ev)) return;
 
 		const handler = this.plainHotkeys.get(keyValue);
 
-		if (handler) {
-			if (this.dismissBgKeyUp) {
-				this.dismissBgKeyUp = false;
+		if (!handler) return;
+
+		if (this.ignoreFollowingHandlers) {
+			if (this.keysDownCount === 0) {
+				this.ignoreFollowingHandlers = false;
 			}
-			else {
-				handler(ev);
-			}
+		}
+		else {
+			handler(ev);
 		}
 	};
 

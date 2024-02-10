@@ -52,6 +52,7 @@ export class KeyboardSimulator {
 		this.isMetaDown = false;
 	}
 
+	// TODO: .keysDown & .keysUp (for multi keys) - e.g .keysDown('Ctrl', 'Alt', 'A')
 	public keyDown (key: TAliases) {
 		const modifiers: Array<EventModifier> = [];
 
