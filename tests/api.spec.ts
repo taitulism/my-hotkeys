@@ -78,7 +78,7 @@ export function apiSpec () {
 	});
 
 	describe('Plain keys and Modifiers', () => {
-		it('Doesn\'t trigger A on Ctrl-A ', () => {
+		it('Doesn\'t trigger A on Ctrl-A', () => {
 			const [spy1, spy2] = spies(2);
 
 			hk.bindKeys({
@@ -94,7 +94,7 @@ export function apiSpec () {
 			notCalled(spy1);
 		});
 
-		it('Doesn\'t trigger Ctrl on Ctrl-A ', () => {
+		it('Doesn\'t trigger Ctrl on Ctrl-A', () => {
 			const [spy1, spy2] = spies(2);
 
 			hk.bindKeys({
@@ -110,7 +110,7 @@ export function apiSpec () {
 			notCalled(spy1);
 		});
 
-		it('Doesn\'t trigger Ctrl nor A on Ctrl-A ', () => {
+		it('Doesn\'t trigger Ctrl nor A on Ctrl-A', () => {
 			const [spy1, spy2, spy3] = spies(3);
 
 			hk.bindKeys({
@@ -125,6 +125,34 @@ export function apiSpec () {
 			calledOnce(spy3);
 
 			notCalled(spy1, spy2);
+		});
+
+		it.skip('Doesn\'t trigger B on A-B', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'a': spy1,
+				'b': spy2,
+			});
+
+			simulate.hold('A', 'B');
+			simulate.release();
+			calledOnce(spy1);
+			notCalled(spy2);
+		});
+
+		it.skip('Doesn\'t trigger Ctrl-B on Ctrl-A-B', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'ctrl-a': spy1,
+				'ctrl-b': spy2,
+			});
+
+			simulate.hold('Ctrl', 'A', 'B');
+			simulate.release();
+			calledOnce(spy1);
+			notCalled(spy2);
 		});
 	});
 

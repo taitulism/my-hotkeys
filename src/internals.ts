@@ -73,10 +73,11 @@ export function isBgKey (evKey: string) {
 	return bgKeys.includes(evKey);
 }
 
-export function logKbEvent (eventType: string, ev: KeyboardEvent) {
-	const {code, key, ctrlKey, altKey, shiftKey, metaKey} = ev;
+export function logKbEvent (ev: KeyboardEvent) {
+	const {type, code, key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 	const hasBgPressed = ctrlKey || altKey || shiftKey || metaKey;
-	const head = eventType + rightPad(key, 7);
+	const symbol = type === 'keydown' ? '🔻' : '🔼';
+	const head = symbol + rightPad(key, 7);
 
 	const bgkHead = hasBgPressed ? '[ ' : '';
 	const bgkTail = hasBgPressed ? ']' : '';

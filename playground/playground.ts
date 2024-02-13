@@ -1,54 +1,64 @@
+/* eslint-disable no-console */
 import {hotkey} from '../src';
 
-// function keyUpHandler (ev: KeyboardEvent) {
-// 	console.log('keyUp', ev);
-// }
-
-// function keyDownHandler (ev: KeyboardEvent) {
-// 	console.log('keyDown', ev);
-
-// 	if (ev.code === 'KeyA' && ev.ctrlKey) {
-// 		// ev.preventDefault();
-// 		// ev.stopImmediatePropagation();
-// 		// ev.stopPropagation();
-
-// 		// return false;
-// 	}
-// }
-
+const logKey = (keyName: string) => console.log(`*** ${keyName} ***`);
 
 try {
-	// document.addEventListener('keydown', keyDownHandler);
-	// document.addEventListener('keyup', keyUpHandler);
+	const kb1 = hotkey();
+	// const kb2 = hotkey(document.getElementById('super-container')!);
 
-	const kb = hotkey();
+	// kb1.debugMode = true;
+	// kb2.debugMode = true;
 
-	kb.debugMode = true;
+	// 'ctrl': () => logKey(CTRL),
+	// 'alt': () => logKey(ALT),
+	// 'ctrl-alt': () => logKey(CTRL-ALT),
+	// 'ctrl-a': () => logKey(CTRL-A),
+	// 'alt-ctrl': () => logKey(ALT-CTRL),
+	// 'enter': () => logKey(ENTER),
+	// 'lctrl': () => logKey(CTRL L),
+	// 'rctrl': () => logKey(CTRL R),
 
-	kb.bindKeys({
-		'a': () => console.log('*** A ***'),
-		'ctrl': () => console.log('*** CTRL ***'),
-		'alt': () => console.log('*** ALT ***'),
-		'ctrl-alt': () => console.log('*** CTRL-ALT ***'),
-		'ctrl-a': () => console.log('*** CTRL-A ***'),
-		'alt-ctrl': () => console.log('*** ALT-CTRL ***'),
-		'enter': () => console.log('*** ENTER ***'),
-		// 'lctrl': () => console.log('*** CTRL L ***'),
-		// 'rctrl': () => console.log('*** CTRL R ***'),
+	kb1.bindKeys({
+		'A': (ev) => {
+			logKey('A1');
+			// ev.stopPropagation();
+		},
+		'B': (ev) => {
+			logKey('B1');
+		},
+		'ctrl': (ev) => {
+			logKey('ctrl 1');
+		},
+		'ctrl-A': (ev) => {
+			logKey('ctrl A');
+		},
+		'ctrl-B': (ev) => {
+			logKey('ctrl B');
+		},
 	});
 
-	console.log(kb.plainHotkeys);
-	console.log(kb.combinedHotkeys);
+	// kb2.bindKeys({
+	// 	'A': (ev) => {
+	// 		logKey('A2');
+	// 		ev.stopPropagation();
+	// 	},
+	// 	'B': (ev) => {
+	// 		logKey('B2');
+	// 		// ev.stopPropagation();
+	// 	},
+	// 	'ctrl': (ev) => {
+	// 		logKey('ctrl2');
+	// 		// ev.stopPropagation();
+	// 	},
+	// 'ctrl-a': (ev) => {
+	// 	logKey('ctrl-a2');
+	// 	// ev.preventDefault();
+	// },
+	// });
 
-
-	// kb.mount();
-
-
-
-
-
-
-
+	// console.log(kb1.plainHotkeys);
+	// console.log(kb1.combinedHotkeys);
 }
 catch (err) {
 	console.error('--- Error ---');

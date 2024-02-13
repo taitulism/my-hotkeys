@@ -17,7 +17,7 @@ export class Hotkey {
 	public debugMode: boolean = false;
 
 	private keysDownCount = 0;
-	private ignoreFollowingHandlers: boolean = false;
+	private ignoreNextEvents: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -52,13 +52,13 @@ export class Hotkey {
 	public unbindAll () {
 		this.plainHotkeys = new Map<string, KeyHandler>();
 		this.combinedHotkeys = new Map<string, BgKeyHandlers>();
-		this.ignoreFollowingHandlers = false;
+		this.ignoreNextEvents = false;
 
 		return this;
 	}
 
 	private keydownHandler = (ev: KeyboardEvent) => {
-		this.debugMode && logKbEvent('🔻', ev);
+		this.debugMode && logKbEvent(ev);
 
 		const {code: keyCode, key: keyValue, repeat} = ev;
 		const isBgK = isBgKey(keyValue);
@@ -70,7 +70,7 @@ export class Hotkey {
 			const uniBgKey = getPressedBgKey(ev);
 			const mapByKey = isBgK ? keyValue : keyCode;
 
-			this.ignoreFollowingHandlers = true;
+			this.ignoreNextEvents = true;
 
 			if (this.combinedHotkeys.has(mapByKey)) {
 				const handler = this.combinedHotkeys.get(mapByKey)![uniBgKey];
@@ -88,7 +88,7 @@ export class Hotkey {
 	};
 
 	private keyupHandler = (ev: KeyboardEvent) => {
-		this.debugMode && logKbEvent('🔼', ev);
+		this.debugMode && logKbEvent(ev);
 
 		const keyValue = ev.key;
 
@@ -100,9 +100,9 @@ export class Hotkey {
 
 		if (!handler) return;
 
-		if (this.ignoreFollowingHandlers) {
+		if (this.ignoreNextEvents) {
 			if (this.keysDownCount === 0) {
-				this.ignoreFollowingHandlers = false;
+				this.ignoreNextEvents = false;
 			}
 		}
 		else {
