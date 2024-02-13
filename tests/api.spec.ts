@@ -367,4 +367,22 @@ export function apiSpec () {
 			notCalled(spy2, spy3);
 		});
 	});
+
+	describe('ev.repeat', () => {
+		it('holding a key down doesn\'t mess up other key bindings', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'ctrl': spy1,
+				'ctrl-a': spy2,
+			});
+
+			simulate.hold('Ctrl', 'A');
+			simulate.holdRepeat('A', 5);
+			simulate.release();
+
+			simulate.keyPress('Ctrl');
+			calledOnce(spy1);
+		});
+	});
 }

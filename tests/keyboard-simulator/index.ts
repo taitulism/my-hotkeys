@@ -9,26 +9,29 @@ import {
 	type EventModifier,
 } from './types';
 
-const defaultEventModifiers: KeyboardEventInit = {
+const defaultEvent: KeyboardEventInit = {
 	ctrlKey: false,
 	altKey: false,
 	shiftKey: false,
 	metaKey: false,
+	repeat: false,
 };
 
-function keyBoardEventCreator (eventType: EventType) {
-	return function createKbEvent (key: TAliases, modifiers?: Array<EventModifier>) {
-		const ev: KeyboardEventInit = Object.assign({}, defaultEventModifiers, EventKeyAndCode[key]);
+const keyBoardEventCreator = (eventType: EventType) => (
+	key: TAliases,
+	modifiers?: Array<EventModifier>,
+	repeat: boolean = false, // TODO: I don't like this. What about additional future props?
+) => {
+	const ev: KeyboardEventInit = Object.assign({}, defaultEvent, {repeat}, EventKeyAndCode[key]);
 
-		if (modifiers) {
-			modifiers.forEach((mod) => {
-				ev[mod] = true;
-			});
-		}
+	if (modifiers) {
+		modifiers.forEach((mod) => {
+			ev[mod] = true;
+		});
+	}
 
-		return new KeyboardEvent(eventType, ev);
-	};
-}
+	return new KeyboardEvent(eventType, ev);
+};
 
 const createKeyDownEvent = keyBoardEventCreator('keydown');
 const createKeyUpEvent = keyBoardEventCreator('keyup');
@@ -55,7 +58,16 @@ export class KeyboardSimulator {
 	}
 
 	// TODO:test multiple keys & return
-	public keyDown (...keys: Array<TAliases>) {
+	public keyDown (repeatOrKey: boolean | TAliases, ...keys: Array<TAliases>) {
+		let _repeat: boolean;
+
+		if (typeof repeatOrKey === 'boolean') {
+			_repeat = repeatOrKey;
+		}
+		else {
+			keys.unshift(repeatOrKey);
+		}
+
 		return keys.map((key) => {
 			const modifiers: Array<EventModifier> = [];
 
@@ -73,7 +85,7 @@ export class KeyboardSimulator {
 				if (this.isMetaDown) modifiers.push(EventModifiers.Meta);
 			}
 
-			const keyDownEvent = createKeyDownEvent(key, modifiers);
+			const keyDownEvent = createKeyDownEvent(key, modifiers, _repeat);
 
 			return this.ctxElm.dispatchEvent(keyDownEvent);
 		});
@@ -82,31 +94,6 @@ export class KeyboardSimulator {
 	// TODO:test multiple keys & return
 	public keyUp (...keys: Array<TAliases>) {
 		return keys.map((key) => {
-			const modifiers: Array<EventModifier> = [];
-
-			if (this.isModifierDown()) {
-				if (isModifier(key)) {
-					if (key === 'Ctrl') this.isCtrlDown = false;
-					if (key === 'Alt') this.isAltDown = false;
-					if (key === 'Shift') this.isShiftDown = false;
-					if (key === 'Meta') this.isMetaDown = false;
-				}
-
-				if (this.isCtrlDown) modifiers.push(EventModifiers.Ctrl);
-				if (this.isAltDown) modifiers.push(EventModifiers.Alt);
-				if (this.isShiftDown) modifiers.push(EventModifiers.Shift);
-				if (this.isMetaDown) modifiers.push(EventModifiers.Meta);
-			}
-
-			const keyUpEvent = createKeyUpEvent(key, modifiers);
-
-			return this.ctxElm.dispatchEvent(keyUpEvent);
-		});
-	}
-
-	// TODO:test & reuse this.keyUp & return
-	public keyUpRev (...keys: Array<TAliases>) {
-		return keys.reverse().map((key) => {
 			const modifiers: Array<EventModifier> = [];
 
 			if (this.isModifierDown()) {
@@ -143,6 +130,16 @@ export class KeyboardSimulator {
 		return keys.map((key) => [
 			this.keyDown(key),
 		]);
+	}
+
+	public holdRepeat (key: TAliases, repeatCount: number) {
+		if (this.heldKeys[this.heldKeys.length - 1] !== key) {
+			this.heldKeys.push(key);
+		}
+
+		for (let i = 0; i < repeatCount; i++) {
+			this.keyDown(true, key);
+		}
 	}
 
 	public release () {

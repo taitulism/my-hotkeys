@@ -9,7 +9,7 @@ describe('KeyboardSimulator', () => {
 	let kbSim: KeyboardSimulator;
 
 	beforeAll(() => {
-		const dom = new JSDOM();
+		const dom = new JSDOM('', {url: 'http://localhost'});
 
 		doc = dom.window.document;
 		spy = vi.spyOn(doc, 'dispatchEvent');
@@ -50,6 +50,11 @@ describe('KeyboardSimulator', () => {
 			expect(kbSim.hold).to.be.a('function');
 		});
 
+		it('.holdRepeat()', () => {
+			expect(kbSim).toHaveProperty('holdRepeat');
+			expect(kbSim.hold).to.be.a('function');
+		});
+
 		it('.release()', () => {
 			expect(kbSim).toHaveProperty('release');
 			expect(kbSim.release).to.be.a('function');
@@ -68,6 +73,7 @@ describe('KeyboardSimulator', () => {
 				expect(ev.key).to.equal('a');
 				expect(ev.code).to.equal('KeyA');
 				expect(ev.type).to.equal('keydown');
+				expect(ev.repeat).to.equal(false);
 			});
 		});
 
@@ -101,6 +107,21 @@ describe('KeyboardSimulator', () => {
 				expect(lastEv.code).to.equal('KeyA');
 				expect(lastEv.type).to.equal('keyup');
 
+			});
+		});
+
+		describe('.holdRepeat()', () => {
+			it('Dispatches "keydown" event with `repeat: true`', () => {
+				expect(spy.mock.calls.length).to.equal(0);
+				kbSim.holdRepeat('A', 3);
+				expect(spy.mock.calls.length).to.equal(3);
+
+				const ev = extractLastEvent(spy);
+
+				expect(ev.key).to.equal('a');
+				expect(ev.code).to.equal('KeyA');
+				expect(ev.type).to.equal('keydown');
+				expect(ev.repeat).to.equal(true);
 			});
 		});
 

@@ -60,12 +60,11 @@ export class Hotkey {
 	private keydownHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent('🔻', ev);
 
-		const keyCode = ev.code;
-		const keyValue = ev.key;
+		const {code: keyCode, key: keyValue, repeat} = ev;
 		const isBgK = isBgKey(keyValue);
 		const bgKeyDown = isBgKeyPressed(ev);
 
-		this.keysDownCount++;
+		if (!repeat) this.keysDownCount++;
 
 		if (bgKeyDown) {
 			const uniBgKey = getPressedBgKey(ev);
@@ -112,6 +111,7 @@ export class Hotkey {
 	};
 
 	public mount () {
+		// TODO: prevent multi mounting
 		this.ctxElm.addEventListener('keydown', this.keydownHandler as EventListener);
 		this.ctxElm.addEventListener('keyup', this.keyupHandler as EventListener);
 
