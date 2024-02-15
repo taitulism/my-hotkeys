@@ -62,26 +62,26 @@ export class Hotkey {
 
 		const {code: keyCode, key: keyValue, repeat} = ev;
 		const isBgK = isBgKey(keyValue);
-		const bgKeyDown = isBgKeyPressed(ev);
+		const bgKeyDown = isBgKeyPressed(ev); // TODO: might be replaced with `.isAnyKeyDown`. The counter?
 
 		if (!repeat) this.keysDownCount++;
 
 		if (bgKeyDown) {
 			const uniBgKey = getPressedBgKey(ev);
-			const mapByKey = isBgK ? keyValue : keyCode;
+			const key = isBgK ? keyValue : keyCode;
 
 			this.ignoreNextEvents = true;
 
-			if (this.combinedHotkeys.has(mapByKey)) {
-				const handler = this.combinedHotkeys.get(mapByKey)![uniBgKey];
+			if (this.combinedHotkeys.has(key)) {
+				const handler = this.combinedHotkeys.get(key)![uniBgKey];
 
 				handler?.(ev);
 			}
 		}
 		else if (!isBgK) {
 			// TODO: fix this hack (see trello card: Enter - both)
-			const mapByKey = keyValue === 'Enter' ? keyValue : keyCode;
-			const handler = this.plainHotkeys.get(mapByKey);
+			const key = keyValue === 'Enter' ? keyValue : keyCode;
+			const handler = this.plainHotkeys.get(key);
 
 			handler?.(ev);
 		}
@@ -94,20 +94,20 @@ export class Hotkey {
 
 		this.keysDownCount = Math.max(--this.keysDownCount, 0);
 
-		if (!isBgKey(keyValue) || isBgKeyPressed(ev)) return;
-
-		const handler = this.plainHotkeys.get(keyValue);
-
-		if (!handler) return;
-
 		if (this.ignoreNextEvents) {
 			if (this.keysDownCount === 0) {
 				this.ignoreNextEvents = false;
 			}
+
+			return;
 		}
-		else {
-			handler(ev);
-		}
+
+		// (isBgKeyPressed(ev) || !isBgKey(keyValue)) <-- was
+		if (isBgKeyPressed(ev)) return;
+
+		const handler = this.plainHotkeys.get(keyValue);
+
+		handler?.(ev);
 	};
 
 	public mount () {

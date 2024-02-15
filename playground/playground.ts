@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import {hotkey} from '../src';
 
-const logKey = (keyName: string) => console.log(`*** ${keyName} ***`);
+const logKey = (keyName: string) => console.log(`${' '.repeat(30)}*** ${keyName.toUpperCase()} ***`);
 
 try {
 	const kb1 = hotkey();
@@ -22,6 +22,7 @@ try {
 	kb1.bindKeys({
 		'A': (ev) => {
 			logKey('A1');
+			ev.preventDefault();
 			// ev.stopPropagation();
 		},
 		'B': (ev) => {
@@ -30,11 +31,26 @@ try {
 		'ctrl': (ev) => {
 			logKey('ctrl 1');
 		},
+		'alt': (ev) => {
+			logKey('alt 1');
+			ev.preventDefault();
+		},
 		'ctrl-A': (ev) => {
 			logKey('ctrl A');
 		},
+		'alt-A': (ev) => {
+			logKey('alt A');
+		},
 		'ctrl-B': (ev) => {
 			logKey('ctrl B');
+		},
+		// 'ctrl-shift': (ev) => {
+		// 	logKey('ctrl shift');
+		// 	ev.preventDefault();
+		// },
+		'ctrl-shift-a': (ev) => {
+			logKey('ctrl shift');
+			ev.preventDefault();
 		},
 	});
 
