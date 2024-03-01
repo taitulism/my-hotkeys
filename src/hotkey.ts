@@ -1,9 +1,9 @@
 import type {ContextElement, BgKeyHandlers, KeyHandler} from './types';
+import {logKbEvent} from './log-keyboard-event';
 import {
 	getPressedBgKey,
 	isBgKey,
 	isBgKeyPressed,
-	logKbEvent,
 	parseHotKey,
 } from './internals';
 
@@ -15,9 +15,6 @@ export class Hotkey {
 	public plainHotkeys = new Map<string, KeyHandler>();
 	public combinedHotkeys = new Map<string, BgKeyHandlers>();
 	public debugMode: boolean = false;
-
-	private keysDownCount = 0;
-	private ignoreNextEvents: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
@@ -50,9 +47,8 @@ export class Hotkey {
 	}
 
 	public unbindAll () {
-		this.plainHotkeys = new Map<string, KeyHandler>();
-		this.combinedHotkeys = new Map<string, BgKeyHandlers>();
-		this.ignoreNextEvents = false;
+		this.plainHotkeys.clear();
+		this.combinedHotkeys.clear();
 
 		return this;
 	}
@@ -60,17 +56,16 @@ export class Hotkey {
 	private keydownHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent(ev);
 
-		const {code: keyCode, key: keyValue, repeat} = ev;
+		const {code: keyCode, key: keyValue} = ev;
 		const isBgK = isBgKey(keyValue);
-		const bgKeyDown = isBgKeyPressed(ev); // TODO: might be replaced with `.isAnyKeyDown`. The counter?
 
-		if (!repeat) this.keysDownCount++;
+		if (isBgK) return;
+
+		const bgKeyDown = isBgKeyPressed(ev); // TODO: might be replaced with `.isAnyKeyDown`. The counter?
 
 		if (bgKeyDown) {
 			const uniBgKey = getPressedBgKey(ev);
 			const key = isBgK ? keyValue : keyCode;
-
-			this.ignoreNextEvents = true;
 
 			if (this.combinedHotkeys.has(key)) {
 				const handler = this.combinedHotkeys.get(key)![uniBgKey];
@@ -78,7 +73,7 @@ export class Hotkey {
 				handler?.(ev);
 			}
 		}
-		else if (!isBgK) {
+		else {
 			// TODO: fix this hack (see trello card: Enter - both)
 			const key = keyValue === 'Enter' ? keyValue : keyCode;
 			const handler = this.plainHotkeys.get(key);
@@ -87,45 +82,20 @@ export class Hotkey {
 		}
 	};
 
-	private keyupHandler = (ev: KeyboardEvent) => {
-		this.debugMode && logKbEvent(ev);
-
-		const keyValue = ev.key;
-
-		this.keysDownCount = Math.max(--this.keysDownCount, 0);
-
-		if (this.ignoreNextEvents) {
-			if (this.keysDownCount === 0) {
-				this.ignoreNextEvents = false;
-			}
-
-			return;
-		}
-
-		// (isBgKeyPressed(ev) || !isBgKey(keyValue)) <-- was
-		if (isBgKeyPressed(ev)) return;
-
-		const handler = this.plainHotkeys.get(keyValue);
-
-		handler?.(ev);
-	};
-
 	public mount () {
 		// TODO: prevent multi mounting
 		this.ctxElm.addEventListener('keydown', this.keydownHandler as EventListener);
-		this.ctxElm.addEventListener('keyup', this.keyupHandler as EventListener);
 
 		return this;
 	}
 
 	public unmount () {
 		this.ctxElm.removeEventListener('keydown', this.keydownHandler as EventListener);
-		this.ctxElm.removeEventListener('keyup', this.keyupHandler as EventListener);
 
 		return this;
 	}
 
-	public die () {
+	public destruct () {
 		this.unmount();
 		this.unbindAll();
 	}

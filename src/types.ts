@@ -65,3 +65,35 @@ export type ParsedKey = {
 	targetKey: KeyCode
 	unifiedBgKey?: UnifiedBgKey
 }
+
+// const bgKeysModifiers = {
+// 	Control: 'ctrlKey',
+// 	Shift: 'shiftKey',
+// 	Alt: 'altKey',
+// 	Meta: 'metaKey',
+// } as const;
+
+// const UnifiedPlainHotkeys = {
+// 	C: ['ControlLeft'],
+// 	A: ['AltLeft'],
+// 	S: ['ShiftLeft'],
+// 	M: ['MetaLeft', 'MetaRight'],
+// 	CA: ['ControlLeft', 'AltLeft'],
+// 	CS: ['ControlLeft', 'ShiftLeft'],
+// 	AS: ['AltLeft', 'ShiftLeft'],
+// 	CAS: ['ControlLeft', 'AltLeft', 'ShiftLeft'],
+// } as const;
+
+// export const PlainBgKeysMap = {
+// 	'CTRL': ['ControlLeft', 'ControlRight'],
+// 	'CONTROL': ['ControlLeft', 'ControlRight'],
+// 	'ALT': ['AltLeft', 'AltRight'],
+// 	'SHIFT': ['ShiftLeft', 'ShiftRight'],
+// 	'META': ['MetaLeft', 'MetaRight'],
+// } as const;
+
+// const PlainBgKeys = Object.keys(PlainBgKeysMap);
+
+// export function isPlainBgHotkey (hotkey: string) {
+// 	return PlainBgKeys.includes(hotkey.toUpperCase());
+// }
