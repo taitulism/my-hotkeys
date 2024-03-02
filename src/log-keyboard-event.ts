@@ -21,7 +21,7 @@ export function logKbEvent (ev: KeyboardEvent) {
 	/* eslint-disable-next-line */
 	const bgKeys = `${ctrlKey ? 'ctrl ' : ''}${altKey ? 'alt ' : ''}${shiftKey ? 'shift ' : ''}${metaKey ? 'meta ' : ''}`;
 	const extras = `| id:${code} `;
-    const body = rightPad(bgkHead + bgKeys + bgkTail, 21)
+	const body = rightPad(bgkHead + bgKeys + bgkTail, 21);
 
 	/* eslint-disable no-console */
 	console.log(head, body, extras);
