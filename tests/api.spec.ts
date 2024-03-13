@@ -1,7 +1,7 @@
 import {JSDOM} from 'jsdom';
+import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
 import {hotkey, Hotkey} from '../src';
-import {KeyboardSimulator} from './keyboard-simulator';
 import {calledOnce, calledTwice, notCalled, spies, spyFn} from './utils';
 
 export function apiSpec () {
@@ -86,9 +86,9 @@ export function apiSpec () {
 				'ctrl-a': spy2,
 			});
 
-			simulate.hold('Ctrl', 'A');
+			simulate.keyDown('Ctrl', 'A');
 			calledOnce(spy2);
-			simulate.release();
+			simulate.releaseAll();
 			calledOnce(spy2);
 
 			notCalled(spy1);
@@ -102,9 +102,9 @@ export function apiSpec () {
 				'ctrl-a': spy2,
 			});
 
-			simulate.hold('Ctrl', 'A');
+			simulate.keyDown('Ctrl', 'A');
 			calledOnce(spy2);
-			simulate.release();
+			simulate.releaseAll();
 			calledOnce(spy2);
 
 			notCalled(spy1);
@@ -119,9 +119,9 @@ export function apiSpec () {
 				'ctrl-a': spy3,
 			});
 
-			simulate.hold('Ctrl', 'A');
+			simulate.keyDown('Ctrl', 'A');
 			calledOnce(spy3);
-			simulate.release();
+			simulate.releaseAll();
 			calledOnce(spy3);
 
 			notCalled(spy1, spy2);
@@ -135,8 +135,8 @@ export function apiSpec () {
 				'b': spy2,
 			});
 
-			simulate.hold('A', 'B');
-			simulate.release();
+			simulate.keyDown('A', 'B');
+			simulate.releaseAll();
 			calledOnce(spy1);
 			notCalled(spy2);
 		});
@@ -149,8 +149,8 @@ export function apiSpec () {
 				'ctrl-b': spy2,
 			});
 
-			simulate.hold('Ctrl', 'A', 'B');
-			simulate.release();
+			simulate.keyDown('Ctrl', 'A', 'B');
+			simulate.releaseAll();
 			calledOnce(spy1);
 			notCalled(spy2);
 		});
@@ -202,21 +202,21 @@ export function apiSpec () {
 				'meta-a': spy4,
 			});
 
-			simulate.hold('Ctrl', 'A');
+			simulate.keyDown('Ctrl', 'A');
 			calledOnce(spy1);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Alt', 'A');
+			simulate.keyDown('Alt', 'A');
 			calledOnce(spy2);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Shift', 'A');
+			simulate.keyDown('Shift', 'A');
 			calledOnce(spy3);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Meta', 'A');
+			simulate.keyDown('Meta', 'A');
 			calledOnce(spy4);
-			simulate.release();
+			simulate.releaseAll();
 
 			calledOnce(spy1, spy2, spy3, spy4);
 		});
@@ -235,17 +235,17 @@ export function apiSpec () {
 				'meta-a': spy,
 			});
 
-			simulate.hold('Ctrl', 'A');
-			simulate.release();
+			simulate.keyDown('Ctrl', 'A');
+			simulate.releaseAll();
 
-			simulate.hold('Alt', 'A');
-			simulate.release();
+			simulate.keyDown('Alt', 'A');
+			simulate.releaseAll();
 
-			simulate.hold('Shift', 'A');
-			simulate.release();
+			simulate.keyDown('Shift', 'A');
+			simulate.releaseAll();
 
-			simulate.hold('Meta', 'A');
-			simulate.release();
+			simulate.keyDown('Meta', 'A');
+			simulate.releaseAll();
 
 			notCalled(spy1, spy2, spy3, spy4);
 			expect(spy.mock.calls.length).to.equal(4);
@@ -260,9 +260,9 @@ export function apiSpec () {
 				'ctrl-alt': spy3,
 			});
 
-			simulate.hold('Ctrl', 'Alt');
+			simulate.keyDown('Ctrl', 'Alt');
 			calledOnce(spy3);
-			simulate.release();
+			simulate.releaseAll();
 			notCalled(spy1, spy2);
 			calledOnce(spy3);
 		});
@@ -276,9 +276,9 @@ export function apiSpec () {
 			});
 
 			// ctrl-alt
-			simulate.hold('Ctrl', 'Alt');
+			simulate.keyDown('Ctrl', 'Alt');
 			calledOnce(spy1);
-			simulate.release();
+			simulate.releaseAll();
 			calledOnce(spy1);
 			notCalled(spy2);
 
@@ -286,9 +286,9 @@ export function apiSpec () {
 			spy2.mockReset();
 
 			// alt-ctrl
-			simulate.hold('Alt', 'Ctrl');
+			simulate.keyDown('Alt', 'Ctrl');
 			calledOnce(spy2);
-			simulate.release();
+			simulate.releaseAll();
 			calledOnce(spy2);
 			notCalled(spy1);
 		});
@@ -305,29 +305,29 @@ export function apiSpec () {
 				'shift-meta-a': spy6,
 			});
 
-			simulate.hold('Ctrl', 'Alt', 'A');
+			simulate.keyDown('Ctrl', 'Alt', 'A');
 			calledOnce(spy1);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Ctrl', 'Shift', 'A');
+			simulate.keyDown('Ctrl', 'Shift', 'A');
 			calledOnce(spy2);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Ctrl', 'Meta', 'A');
+			simulate.keyDown('Ctrl', 'Meta', 'A');
 			calledOnce(spy3);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Alt', 'Shift', 'A');
+			simulate.keyDown('Alt', 'Shift', 'A');
 			calledOnce(spy4);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Alt', 'Meta', 'A');
+			simulate.keyDown('Alt', 'Meta', 'A');
 			calledOnce(spy5);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Shift', 'Meta', 'A');
+			simulate.keyDown('Shift', 'Meta', 'A');
 			calledOnce(spy6);
-			simulate.release();
+			simulate.releaseAll();
 
 			calledOnce(spy1, spy2, spy3, spy4, spy5, spy6);
 		});
@@ -335,13 +335,13 @@ export function apiSpec () {
 		it('Order doesn\'t matter when multiple BG keys', () => {
 			hk.bindKey('ctrl-alt-a', spy);
 
-			simulate.hold('Ctrl', 'Alt', 'A');
+			simulate.keyDown('Ctrl', 'Alt', 'A');
 			calledOnce(spy);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Alt', 'Ctrl', 'A');
+			simulate.keyDown('Alt', 'Ctrl', 'A');
 			calledTwice(spy);
-			simulate.release();
+			simulate.releaseAll();
 
 			calledTwice(spy);
 		});
@@ -357,25 +357,25 @@ export function apiSpec () {
 				'ctrl-alt-shift-meta-a': spy5,
 			});
 
-			simulate.hold('Ctrl', 'Alt', 'Shift', 'A');
+			simulate.keyDown('Ctrl', 'Alt', 'Shift', 'A');
 			calledOnce(spy1);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Ctrl', 'Alt', 'Meta', 'A');
+			simulate.keyDown('Ctrl', 'Alt', 'Meta', 'A');
 			calledOnce(spy2);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Ctrl', 'Shift', 'Meta', 'A');
+			simulate.keyDown('Ctrl', 'Shift', 'Meta', 'A');
 			calledOnce(spy3);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Alt', 'Shift', 'Meta', 'A');
+			simulate.keyDown('Alt', 'Shift', 'Meta', 'A');
 			calledOnce(spy4);
-			simulate.release();
+			simulate.releaseAll();
 
-			simulate.hold('Ctrl', 'Alt', 'Shift', 'Meta', 'A');
+			simulate.keyDown('Ctrl', 'Alt', 'Shift', 'Meta', 'A');
 			calledOnce(spy5);
-			simulate.release();
+			simulate.releaseAll();
 		});
 
 		it('Release order doesn\'t matter', () => {
@@ -405,9 +405,9 @@ export function apiSpec () {
 				'ctrl-a': spy2,
 			});
 
-			simulate.hold('Ctrl', 'A');
-			simulate.holdRepeat('A', 5);
-			simulate.release();
+			simulate.keyDown('Ctrl', 'A');
+			simulate.holdKey('A', 5);
+			simulate.releaseAll();
 
 			simulate.keyPress('Ctrl');
 			calledOnce(spy1);
