@@ -1,10 +1,10 @@
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
-import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
+import {it, beforeAll, beforeEach, afterEach, Mock, describe} from 'vitest';
 import {hotkey, Hotkey} from '../src';
 import {calledOnce, calledTwice, notCalled, spies, spyFn} from './utils';
 
-export function apiSpec () {
+describe('API', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;
@@ -215,7 +215,7 @@ export function apiSpec () {
 		});
 
 		it('Release order doesn\'t matter', () => {
-			const [spy1, spy2] = spies(3);
+			const [spy1, spy2] = spies(2);
 
 			hk.bindKeys({
 				'ctrl-alt-shift-a': spy1,
@@ -229,4 +229,4 @@ export function apiSpec () {
 			notCalled(spy2);
 		});
 	});
-}
+});
