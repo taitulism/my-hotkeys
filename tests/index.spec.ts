@@ -42,16 +42,6 @@ describe('hotkey', () => {
 			simulate.keyUp('A');
 		});
 
-		it.skip('ctrl', () => {
-			hk.bindKey('ctrl', spy);
-
-			notCalled(spy);
-			simulate.keyDown('Ctrl');
-			notCalled(spy);
-			simulate.keyUp('Ctrl');
-			calledOnce(spy);
-		});
-
 		it('ctrl-a', () => {
 			hk.bindKey('ctrl-a', spy);
 
@@ -99,53 +89,6 @@ describe('hotkey', () => {
 				notCalled(spy1);
 			});
 
-			it.skip('Doesn\'t trigger Ctrl on Ctrl-A', () => {
-				const [spy1, spy2] = spies(2);
-
-				hk.bindKeys({
-					'ctrl': spy1,
-					'ctrl-a': spy2,
-				});
-
-				simulate.keyDown('Ctrl', 'A');
-				calledOnce(spy2);
-				simulate.releaseAll();
-				calledOnce(spy2);
-
-				notCalled(spy1);
-			});
-
-			it.skip('Doesn\'t trigger Ctrl nor A on Ctrl-A', () => {
-				const [spy1, spy2, spy3] = spies(3);
-
-				hk.bindKeys({
-					'a': spy1,
-					'ctrl': spy2,
-					'ctrl-a': spy3,
-				});
-
-				simulate.keyDown('Ctrl', 'A');
-				calledOnce(spy3);
-				simulate.releaseAll();
-				calledOnce(spy3);
-
-				notCalled(spy1, spy2);
-			});
-
-			it.skip('Doesn\'t trigger B on A-B', () => {
-				const [spy1, spy2] = spies(2);
-
-				hk.bindKeys({
-					'a': spy1,
-					'b': spy2,
-				});
-
-				simulate.keyDown('A', 'B');
-				simulate.releaseAll();
-				calledOnce(spy1);
-				notCalled(spy2);
-			});
-
 			it.skip('Doesn\'t trigger Ctrl-B on Ctrl-A-B', () => {
 				const [spy1, spy2] = spies(2);
 
@@ -162,41 +105,6 @@ describe('hotkey', () => {
 		});
 
 		describe('Modifiers', () => {
-			it.skip('Can be used as target keys ("keyup")', () => {
-				const [spy1, spy2, spy3, spy4] = spies(4);
-
-				hk.bindKeys({
-					'ctrl': spy1,
-					'alt': spy2,
-					'shift': spy3,
-					'meta': spy4,
-				});
-
-				notCalled(spy1);
-				simulate.keyDown('Ctrl');
-				notCalled(spy1);
-				simulate.keyUp('Ctrl');
-				calledOnce(spy1);
-
-				notCalled(spy2);
-				simulate.keyDown('Alt');
-				notCalled(spy2);
-				simulate.keyUp('Alt');
-				calledOnce(spy2);
-
-				notCalled(spy3);
-				simulate.keyDown('Shift');
-				notCalled(spy3);
-				simulate.keyUp('Shift');
-				calledOnce(spy3);
-
-				notCalled(spy4);
-				simulate.keyDown('Meta');
-				notCalled(spy4);
-				simulate.keyUp('Meta');
-				calledOnce(spy4);
-			});
-
 			it('Can be used as BG keys', () => {
 				const [spy1, spy2, spy3, spy4] = spies(4);
 
@@ -224,78 +132,6 @@ describe('hotkey', () => {
 				simulate.releaseAll();
 
 				calledOnce(spy1, spy2, spy3, spy4);
-			});
-
-			it.skip('Don\'t get triggered when used as a BG key', () => {
-				const [spy1, spy2, spy3, spy4] = spies(4);
-
-				hk.bindKeys({
-					'ctrl': spy1,
-					'ctrl-a': spy,
-					'alt': spy2,
-					'alt-a': spy,
-					'shift': spy3,
-					'shift-a': spy,
-					'meta': spy4,
-					'meta-a': spy,
-				});
-
-				simulate.keyDown('Ctrl', 'A');
-				simulate.releaseAll();
-
-				simulate.keyDown('Alt', 'A');
-				simulate.releaseAll();
-
-				simulate.keyDown('Shift', 'A');
-				simulate.releaseAll();
-
-				simulate.keyDown('Meta', 'A');
-				simulate.releaseAll();
-
-				notCalled(spy1, spy2, spy3, spy4);
-				expect(spy.mock.calls.length).to.equal(4);
-			});
-
-			it.skip('Can be used as target keys with other BG modifiers', () => {
-				const [spy1, spy2, spy3] = spies(3);
-
-				hk.bindKeys({
-					'ctrl': spy1,
-					'alt': spy2,
-					'ctrl-alt': spy3,
-				});
-
-				simulate.keyDown('Ctrl', 'Alt');
-				calledOnce(spy3);
-				simulate.releaseAll();
-				notCalled(spy1, spy2);
-				calledOnce(spy3);
-			});
-
-			it.skip('Order matters when used as a target key with other BG modifiers', () => {
-				const [spy1, spy2] = spies(2);
-
-				hk.bindKeys({
-					'ctrl-alt': spy1,
-					'alt-ctrl': spy2,
-				});
-
-				// ctrl-alt
-				simulate.keyDown('Ctrl', 'Alt');
-				calledOnce(spy1);
-				simulate.releaseAll();
-				calledOnce(spy1);
-				notCalled(spy2);
-
-				spy1.mockReset();
-				spy2.mockReset();
-
-				// alt-ctrl
-				simulate.keyDown('Alt', 'Ctrl');
-				calledOnce(spy2);
-				simulate.releaseAll();
-				calledOnce(spy2);
-				notCalled(spy1);
 			});
 
 			it('Can be used with other modifiers as BG keys', () => {
@@ -397,24 +233,6 @@ describe('hotkey', () => {
 
 				calledOnce(spy1);
 				notCalled(spy2);
-			});
-		});
-
-		describe.skip('ev.repeat', () => {
-			it('holding a key down doesn\'t mess up other key bindings', () => {
-				const [spy1, spy2] = spies(2);
-
-				hk.bindKeys({
-					'ctrl': spy1,
-					'ctrl-a': spy2,
-				});
-
-				simulate.keyDown('Ctrl', 'A');
-				simulate.holdKey('A', 5);
-				simulate.releaseAll();
-
-				simulate.keyPress('Ctrl');
-				calledOnce(spy1);
 			});
 		});
 	});
