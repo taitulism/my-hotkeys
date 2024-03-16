@@ -7,7 +7,7 @@ try {
 	const kb1 = hotkey();
 	// const kb2 = hotkey(document.getElementById('super-container')!);
 
-	// kb1.debugMode = true;
+	kb1.debugMode = true;
 	// kb2.debugMode = true;
 
 	// 'ctrl': () => logKey(CTRL),
@@ -25,8 +25,8 @@ try {
 			ev.preventDefault();
 			// ev.stopPropagation();
 		},
-		'B': (ev) => {
-			logKey('B1');
+		'{': (ev) => {
+			logKey('{');
 		},
 		'ctrl': (ev) => {
 			logKey('ctrl 1');

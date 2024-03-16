@@ -100,7 +100,7 @@ describe('API', () => {
 	});
 
 	describe('Modifiers', () => {
-		it('Can be used as BG keys', () => {
+		it('Are used as background keys in combinations', () => {
 			const [spy1, spy2, spy3, spy4] = spies(4);
 
 			hk.bindKeys({
@@ -129,7 +129,7 @@ describe('API', () => {
 			calledOnce(spy1, spy2, spy3, spy4);
 		});
 
-		it('Can be used with other modifiers as BG keys', () => {
+		it('Can be used with other modifiers as background keys', () => {
 			const [spy1, spy2, spy3, spy4, spy5, spy6] = spies(6);
 
 			hk.bindKeys({
@@ -168,7 +168,7 @@ describe('API', () => {
 			calledOnce(spy1, spy2, spy3, spy4, spy5, spy6);
 		});
 
-		it('Order doesn\'t matter when multiple BG keys', () => {
+		it('Order doesn\'t matter when multiple background keys', () => {
 			hk.bindKey('ctrl-alt-a', spy);
 
 			simulate.keyDown('Ctrl', 'Alt', 'A');
@@ -182,7 +182,7 @@ describe('API', () => {
 			calledTwice(spy);
 		});
 
-		it('Can be used with all other modifiers as BG keys', () => {
+		it('Can be used with all other modifiers as background keys', () => {
 			const [spy1, spy2, spy3, spy4, spy5] = spies(5);
 
 			hk.bindKeys({

@@ -1,9 +1,9 @@
-import type {ContextElement, BgKeyHandlers, KeyHandler} from './types';
+import type {ContextElement, CombinationHandlers, KeyHandler} from './types';
 import {logKbEvent} from './log-keyboard-event';
 import {
-	getPressedBgKey,
-	isBgKey,
-	isBgKeyPressed,
+	unifyModifiers,
+	isModifier,
+	isModifierPressed,
 	parseHotKey,
 } from './internals';
 
@@ -13,22 +13,22 @@ export function hotkey (ctxElm: ContextElement = document) {
 
 export class Hotkey {
 	public plainHotkeys = new Map<string, KeyHandler>();
-	public combinedHotkeys = new Map<string, BgKeyHandlers>();
+	public combinedHotkeys = new Map<string, CombinationHandlers>();
 	public debugMode: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
 
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
-		const {targetKey, unifiedBgKey} = parseHotKey(hotkey);
+		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
-		if (unifiedBgKey) {
+		if (unifiedModifier) {
 			const map = this.combinedHotkeys;
 
 			if (map.has(targetKey)) {
-				map.get(targetKey)![unifiedBgKey] = handlerFn;
+				map.get(targetKey)![unifiedModifier] = handlerFn;
 			}
 			else {
-				map.set(targetKey, {[unifiedBgKey]: handlerFn});
+				map.set(targetKey, {[unifiedModifier]: handlerFn});
 			}
 		}
 		else {
@@ -56,26 +56,28 @@ export class Hotkey {
 	private keydownHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent(ev);
 
-		const {code: keyCode, key: keyValue} = ev;
-		const isBgK = isBgKey(keyValue);
+		const {code: kId, key: kValue} = ev;
+		const keyIsModifier = isModifier(kValue);
 
-		if (isBgK) return;
+		if (keyIsModifier) return;
 
-		const bgKeyDown = isBgKeyPressed(ev); // TODO: might be replaced with `.isAnyKeyDown`. The counter?
+		// (Irrelevant in basics) TODO: might be replaced with `.isAnyKeyDown`. The counter?
+		const isModPressed = isModifierPressed(ev);
 
-		if (bgKeyDown) {
-			const uniBgKey = getPressedBgKey(ev);
-			const key = isBgK ? keyValue : keyCode;
+		if (isModPressed) {
+			const uniMod = unifyModifiers(ev);
+			// TODO: has early return if isMod
+			const key = keyIsModifier ? kValue : kId;
 
 			if (this.combinedHotkeys.has(key)) {
-				const handler = this.combinedHotkeys.get(key)![uniBgKey];
+				const handler = this.combinedHotkeys.get(key)![uniMod];
 
 				handler?.(ev);
 			}
 		}
 		else {
 			// TODO: fix this hack (see trello card: Enter - both)
-			const key = keyValue === 'Enter' ? keyValue : keyCode;
+			const key = kValue === 'Enter' ? kValue : kId;
 			const handler = this.plainHotkeys.get(key);
 
 			handler?.(ev);

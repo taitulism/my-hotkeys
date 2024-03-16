@@ -1,14 +1,24 @@
 import {KeyAliases} from './key-names-map';
 import {
-	BgKeyValues,
-	UnifiedBgKey,
-	EventBgKeyValues,
-	type BgKeySum,
-	type BgKeys,
+	Control,
+	Alt,
+	Shift,
+	Meta,
+	ModifiersNumValues,
+	UnifiedModifiersMap,
+	EventModifierValues,
+	Modifiers,
+	type UnifiedModifier,
+	type UniModSum,
+	type Modifier,
 	type KeyAlias,
-	type ParsedKey,
+	type ParsedHotKey,
 	type KeyCode,
 } from './types';
+
+export function isModifier (evKey: Modifier | string): evKey is Modifier {
+	return Modifiers.includes(evKey as Modifier);
+}
 
 // TODO: rename. it's no longer just keyCodes
 export function getKeyCode (keyAlias: string): KeyCode {
@@ -19,56 +29,44 @@ export function getKeyCode (keyAlias: string): KeyCode {
 	return keyCode;
 }
 
-function parseBgKeys (...bgKeys: Array<BgKeys>): ParsedKey['unifiedBgKey'] {
-	const bgKeysSum = bgKeys.reduce((acc, bgKey) => acc + BgKeyValues[bgKey], 0);
+function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
+	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
+		const modNumVal = ModifiersNumValues[modifier];
 
-	return UnifiedBgKey[bgKeysSum as BgKeySum];
+		return acc + modNumVal;
+	}, 0) as UniModSum;
+
+	return UnifiedModifiersMap[modifiersSum];
 }
 
-export function parseHotKey (hotkey: string): ParsedKey {
-	const [targetKey, ...bgKeys] = hotkey
+export function parseHotKey (hotkey: string): ParsedHotKey {
+	const [targetKey, ...modifiers] = hotkey
 		.split(/\s?-\s?/)
 		.map(getKeyCode)
 		.reverse() as Array<KeyCode>;
 
 	return {
 		targetKey,
-		unifiedBgKey: parseBgKeys(...bgKeys as Array<BgKeys>),
+		unifiedModifier: parseModifiers(...modifiers as Array<Modifier>),
 	};
 }
 
-export function isBgKeyPressed (ev: KeyboardEvent) {
+export function isModifierPressed (ev: KeyboardEvent) {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 	const modifiers = Number(ctrlKey) + Number(altKey) + Number(shiftKey) + Number(metaKey);
 
-	return isBgKey(key) ? modifiers > 1 : modifiers > 0;
+	return isModifier(key) ? modifiers > 1 : modifiers > 0;
 }
 
-const Control = 'Control';
-const Alt = 'Alt';
-const Shift = 'Shift';
-const Meta = 'Meta';
-
-export function getPressedBgKey (ev: KeyboardEvent) {
+export function unifyModifiers (ev: KeyboardEvent): UnifiedModifier {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 
-	let bgKeysSum = 0;
+	let modifiersSum = 0;
 
-	if (ctrlKey && key !== Control) bgKeysSum += EventBgKeyValues.ctrlKey;
-	if (altKey && key !== Alt) bgKeysSum += EventBgKeyValues.altKey;
-	if (shiftKey && key !== Shift) bgKeysSum += EventBgKeyValues.shiftKey;
-	if (metaKey && key !== Meta) bgKeysSum += EventBgKeyValues.metaKey;
+	if (ctrlKey && key !== Control) modifiersSum += EventModifierValues.ctrlKey;
+	if (altKey && key !== Alt) modifiersSum += EventModifierValues.altKey;
+	if (shiftKey && key !== Shift) modifiersSum += EventModifierValues.shiftKey;
+	if (metaKey && key !== Meta) modifiersSum += EventModifierValues.metaKey;
 
-	return UnifiedBgKey[bgKeysSum as BgKeySum];
-}
-
-const bgKeys = [
-	'Control',
-	'Shift',
-	'Alt',
-	'Meta',
-];
-
-export function isBgKey (evKey: string) {
-	return bgKeys.includes(evKey);
+	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }

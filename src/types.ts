@@ -4,7 +4,12 @@ export type ContextElement = HTMLElement | Document;
 
 export type KeyHandler = (ev: KeyboardEvent) => void
 
-export const BgKeyValues = {
+export const Control = 'Control';
+export const Alt = 'Alt';
+export const Shift = 'Shift';
+export const Meta = 'Meta';
+
+export const ModifiersNumValues = {
 	Control: 1,
 	ControlLeft: 1,
 	ControlRight: 1,
@@ -19,14 +24,14 @@ export const BgKeyValues = {
 	MetaRight: 8,
 } as const;
 
-export const EventBgKeyValues = {
+export const EventModifierValues = {
 	ctrlKey: 1,
 	altKey: 2,
 	shiftKey: 4,
 	metaKey: 8,
 } as const;
 
-export const UnifiedBgKey = {
+export const UnifiedModifiersMap = {
 	1: 'C',
 	2: 'A',
 	3: 'CA',
@@ -44,26 +49,35 @@ export const UnifiedBgKey = {
 	15: 'CASM',
 } as const;
 
-export type BgKeySum = keyof typeof UnifiedBgKey;
-export type UnifiedBgKey = typeof UnifiedBgKey[BgKeySum];
+export type UniModSum = keyof typeof UnifiedModifiersMap;
+export type UnifiedModifier = typeof UnifiedModifiersMap[UniModSum];
 
-// TODO: + right
-export type BgKeys =
+export const Modifiers = [
+	'Control',
+	'Shift',
+	'Alt',
+	'Meta',
+] as const;
+
+// TODO: + meta
+// TODO: + left & right
+// TODO: why not just "Control" | "Alt" | "Shift"
+export type Modifier =
 	typeof KeyAliases['CTRL'] |
 	typeof KeyAliases['SHIFT'] |
 	typeof KeyAliases['ALT']
 
-export type BgKeyHandlers = {
-	[K in UnifiedBgKey]?: KeyHandler
+export type CombinationHandlers = {
+	[K in UnifiedModifier]?: KeyHandler
 }
 
 export type KeyAlias = keyof typeof KeyAliases
 
 export type KeyCode = typeof KeyAliases[KeyAlias]
 
-export type ParsedKey = {
+export type ParsedHotKey = {
 	targetKey: KeyCode
-	unifiedBgKey?: UnifiedBgKey
+	unifiedModifier?: UnifiedModifier
 }
 
 // const bgKeysModifiers = {
