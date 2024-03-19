@@ -10,6 +10,8 @@ function rightPad (str: string, pad: number) {
 }
 
 export function logKbEvent (ev: KeyboardEvent) {
+	// return console.log(ev);
+
 	const {type, code, key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 	const hasModifierPressed = ctrlKey || altKey || shiftKey || metaKey;
 	const symbol = type === 'keydown' ? '🔻' : '🔼';

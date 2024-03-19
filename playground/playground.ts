@@ -3,80 +3,39 @@ import {hotkey} from '../src';
 
 const logKey = (keyName: string) => console.log(`${' '.repeat(30)}*** ${keyName.toUpperCase()} ***`);
 
-try {
-	const kb1 = hotkey();
-	// const kb2 = hotkey(document.getElementById('super-container')!);
+const kb1 = hotkey();
+// const kb2 = hotkey(document.getElementById('super-container')!);
 
-	kb1.debugMode = true;
-	// kb2.debugMode = true;
+kb1.debugMode = true;
+// kb2.debugMode = true;
 
-	// 'ctrl': () => logKey(CTRL),
-	// 'alt': () => logKey(ALT),
-	// 'ctrl-alt': () => logKey(CTRL-ALT),
-	// 'ctrl-a': () => logKey(CTRL-A),
-	// 'alt-ctrl': () => logKey(ALT-CTRL),
-	// 'enter': () => logKey(ENTER),
-	// 'lctrl': () => logKey(CTRL L),
-	// 'rctrl': () => logKey(CTRL R),
-
-	kb1.bindKeys({
-		'A': (ev) => {
-			logKey('A1');
-			ev.preventDefault();
-			// ev.stopPropagation();
-		},
-		'{': (ev) => {
-			logKey('{');
-		},
-		'ctrl': (ev) => {
-			logKey('ctrl 1');
-		},
-		'alt': (ev) => {
-			logKey('alt 1');
-			ev.preventDefault();
-		},
-		'ctrl-A': (ev) => {
-			logKey('ctrl A');
-		},
-		'alt-A': (ev) => {
-			logKey('alt A');
-		},
-		'ctrl-B': (ev) => {
-			logKey('ctrl B');
-		},
-		// 'ctrl-shift': (ev) => {
-		// 	logKey('ctrl shift');
-		// 	ev.preventDefault();
-		// },
-		'ctrl-shift-a': (ev) => {
-			logKey('ctrl shift');
-			ev.preventDefault();
-		},
-	});
-
-	// kb2.bindKeys({
-	// 	'A': (ev) => {
-	// 		logKey('A2');
-	// 		ev.stopPropagation();
-	// 	},
-	// 	'B': (ev) => {
-	// 		logKey('B2');
-	// 		// ev.stopPropagation();
-	// 	},
-	// 	'ctrl': (ev) => {
-	// 		logKey('ctrl2');
-	// 		// ev.stopPropagation();
-	// 	},
-	// 'ctrl-a': (ev) => {
-	// 	logKey('ctrl-a2');
-	// 	// ev.preventDefault();
+kb1.bindKeys({
+	// 'a': (ev) => {
+	// 	logKey('a');
+	// 	ev.preventDefault();
 	// },
-	// });
+	'ctrl-A': (ev) => {
+		logKey('A');
+		ev.preventDefault();
+	},
+	'?': (ev) => {
+		logKey('?');
+		ev.preventDefault();
+	},
+	// 'ctrl-a': (ev) => {
+	// 	logKey('ctrl-a');
+	// 	ev.preventDefault();
+	// },
+	// 'shift-a': (ev) => {
+	// 	logKey('shift-a');
+	// 	ev.preventDefault();
+	// },
+	// 'A': (ev) => {
+	// 	logKey('A');
+	// 	ev.preventDefault();
+	// },
+});
 
-	// console.log(kb1.plainHotkeys);
-	// console.log(kb1.combinedHotkeys);
-}
-catch (err) {
-	console.error('--- Error ---');
-	console.error(err);
-}
+// console.log(kb1.plainHotkeys);
+// console.log(kb1.combinedHotkeys);
+console.log(kb1.hotkeys);

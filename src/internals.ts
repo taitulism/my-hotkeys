@@ -1,4 +1,4 @@
-import {KeyAliases} from './key-names-map';
+import {ImplicitShiftQwertyAliases, ModifierAliases} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -8,25 +8,16 @@ import {
 	UnifiedModifiersMap,
 	EventModifierValues,
 	Modifiers,
+	RawModifiers,
+	RawModifier,
+	type Modifier,
 	type UnifiedModifier,
 	type UniModSum,
-	type Modifier,
-	type KeyAlias,
 	type ParsedHotKey,
-	type KeyCode,
 } from './types';
 
-export function isModifier (evKey: Modifier | string): evKey is Modifier {
-	return Modifiers.includes(evKey as Modifier);
-}
-
-// TODO: rename. it's no longer just keyCodes
-export function getKeyCode (keyAlias: string): KeyCode {
-	const keyCode = KeyAliases[keyAlias.toUpperCase() as KeyAlias]; // TODO: use .hasOwnProperty ?
-
-	if (!keyCode) throw new Error(`KB: Unknown key "${keyAlias}"`);
-
-	return keyCode;
+function isRawModifier (rawKey: string): rawKey is RawModifier {
+	return RawModifiers.includes(rawKey as RawModifier);
 }
 
 function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
@@ -39,23 +30,42 @@ function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum];
 }
 
+// TODO:! should throw: more than 1 target, unknown key
 export function parseHotKey (hotkey: string): ParsedHotKey {
-	const [targetKey, ...modifiers] = hotkey
-		.split(/\s?-\s?/)
-		.map(getKeyCode)
-		.reverse() as Array<KeyCode>;
+	const keys = hotkey.split(/\s?-\s?/);
+	const modifiers = new Set<Modifier>();
+	let targetKey: string | undefined;
+
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		const upperKey = key.toUpperCase();
+
+		if (isRawModifier(upperKey)) {
+			const modifier = ModifierAliases[upperKey];
+
+			modifiers.add(modifier);
+			continue;
+		}
+
+		if (key.length === 1 && /[A-Z]/.test(upperKey)) {
+			targetKey = upperKey;
+		}
+		else if (key in ImplicitShiftQwertyAliases) {
+			targetKey = ImplicitShiftQwertyAliases[key as keyof typeof ImplicitShiftQwertyAliases];
+			modifiers.add('Shift');
+		}
+		else {
+			targetKey = key;
+		}
+	}
+
+	// TODO:! +test
+	if (typeof targetKey === 'undefined') throw new Error('No Target Key');
 
 	return {
 		targetKey,
-		unifiedModifier: parseModifiers(...modifiers as Array<Modifier>),
+		unifiedModifier: parseModifiers(...Array.from(modifiers)),
 	};
-}
-
-export function isModifierPressed (ev: KeyboardEvent) {
-	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
-	const modifiers = Number(ctrlKey) + Number(altKey) + Number(shiftKey) + Number(metaKey);
-
-	return isModifier(key) ? modifiers > 1 : modifiers > 0;
 }
 
 export function unifyModifiers (ev: KeyboardEvent): UnifiedModifier {
@@ -70,3 +80,14 @@ export function unifyModifiers (ev: KeyboardEvent): UnifiedModifier {
 
 	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }
+
+export function isEventModifier (evKey: string): evKey is Modifier {
+	return Modifiers.includes(evKey as Modifier);
+}
+
+// export function isModifierPressed (ev: KeyboardEvent) {
+// 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
+// 	const modifiers = Number(ctrlKey) + Number(altKey) + Number(shiftKey) + Number(metaKey);
+
+// 	return isEventModifier(key) ? modifiers > 1 : modifiers > 0;
+// }

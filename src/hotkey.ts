@@ -2,8 +2,7 @@ import type {ContextElement, CombinationHandlers, KeyHandler} from './types';
 import {logKbEvent} from './log-keyboard-event';
 import {
 	unifyModifiers,
-	isModifier,
-	isModifierPressed,
+	isEventModifier,
 	parseHotKey,
 } from './internals';
 
@@ -12,8 +11,7 @@ export function hotkey (ctxElm: ContextElement = document) {
 }
 
 export class Hotkey {
-	public plainHotkeys = new Map<string, KeyHandler>();
-	public combinedHotkeys = new Map<string, CombinationHandlers>();
+	public hotkeys = new Map<string, CombinationHandlers>();
 	public debugMode: boolean = false;
 
 	constructor (public ctxElm: ContextElement = document) {}
@@ -21,18 +19,18 @@ export class Hotkey {
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
-		if (unifiedModifier) {
-			const map = this.combinedHotkeys;
+		if (this.hotkeys.has(targetKey)) {
+			const hotKeys = this.hotkeys.get(targetKey) as CombinationHandlers;
 
-			if (map.has(targetKey)) {
-				map.get(targetKey)![unifiedModifier] = handlerFn;
+			if (hotKeys[unifiedModifier]) {
+				// TODO:! Currently replacing. Throw or add.
+				console.log('Dup:', targetKey);
 			}
-			else {
-				map.set(targetKey, {[unifiedModifier]: handlerFn});
-			}
+
+			hotKeys[unifiedModifier] = handlerFn;
 		}
 		else {
-			this.plainHotkeys.set(targetKey, handlerFn);
+			this.hotkeys.set(targetKey, {[unifiedModifier]: handlerFn});
 		}
 
 		return this;
@@ -46,9 +44,9 @@ export class Hotkey {
 		return this;
 	}
 
+	// TODO: test
 	public unbindAll () {
-		this.plainHotkeys.clear();
-		this.combinedHotkeys.clear();
+		this.hotkeys.clear();
 
 		return this;
 	}
@@ -56,32 +54,20 @@ export class Hotkey {
 	private keydownHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent(ev);
 
-		const {code: kId, key: kValue} = ev;
-		const keyIsModifier = isModifier(kValue);
+		const {key: kValue, code: kId} = ev;
 
-		if (keyIsModifier) return;
+		if (isEventModifier(kValue)) return;
 
-		// (Irrelevant in basics) TODO: might be replaced with `.isAnyKeyDown`. The counter?
-		const isModPressed = isModifierPressed(ev);
+		const upperKeyValue = kValue.toUpperCase();
+		const uniMod = unifyModifiers(ev);
+		const key = this.hotkeys.has(upperKeyValue)
+			? upperKeyValue
+			: kId
+		;
 
-		if (isModPressed) {
-			const uniMod = unifyModifiers(ev);
-			// TODO: has early return if isMod
-			const key = keyIsModifier ? kValue : kId;
+		const handler = this.hotkeys.get(key)?.[uniMod];
 
-			if (this.combinedHotkeys.has(key)) {
-				const handler = this.combinedHotkeys.get(key)![uniMod];
-
-				handler?.(ev);
-			}
-		}
-		else {
-			// TODO: fix this hack (see trello card: Enter - both)
-			const key = kValue === 'Enter' ? kValue : kId;
-			const handler = this.plainHotkeys.get(key);
-
-			handler?.(ev);
-		}
+		handler?.(ev);
 	};
 
 	public mount () {
