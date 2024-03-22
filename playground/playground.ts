@@ -22,6 +22,10 @@ kb1.bindKeys({
 		logKey('?');
 		ev.preventDefault();
 	},
+	'`': (ev) => {
+		logKey('backtick');
+		ev.preventDefault();
+	},
 	// 'ctrl-a': (ev) => {
 	// 	logKey('ctrl-a');
 	// 	ev.preventDefault();

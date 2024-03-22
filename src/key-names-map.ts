@@ -15,7 +15,7 @@ export const ImplicitShiftQwertyAliases = {
 	'<': 'Comma',
 	'>': 'Period',
 	'?': 'Slash',
-	'`': 'Backquote',
+	'~': 'Backquote',
 } as const;
 
 // 	MINUS: 'Minus',
