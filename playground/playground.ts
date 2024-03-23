@@ -9,7 +9,7 @@ kb1.debugMode = true;
 // kb2.debugMode = true;
 
 kb1.bindKeys({
-	'-': (ev) => {
+	'Enter': (ev) => {
 		logKey('SXS');
 		ev.preventDefault();
 	},

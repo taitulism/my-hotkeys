@@ -55,11 +55,13 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 			continue;
 		}
 
-		if (key.length === 1 && /[A-Z]/.test(upperKey)) {
+		if (isCapitalLetter(upperKey)) {
 			targetKey = upperKey;
 		}
 		else if (key in ImplicitShiftQwertyAliases) {
-			targetKey = ImplicitShiftQwertyAliases[key as keyof typeof ImplicitShiftQwertyAliases];
+			const k = key as keyof typeof ImplicitShiftQwertyAliases;
+
+			targetKey = ImplicitShiftQwertyAliases[k];
 			modifiers.add('Shift');
 		}
 		else {
@@ -75,6 +77,8 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		unifiedModifier: parseModifiers(...Array.from(modifiers)),
 	};
 }
+
+export const isCapitalLetter = (str: string) => str.length === 1 && /[A-Z]/.test(str);
 
 export function unifyModifiers (ev: KeyboardEvent): UnifiedModifier {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
