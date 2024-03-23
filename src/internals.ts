@@ -32,6 +32,14 @@ function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 
 // TODO:! should throw: more than 1 target, unknown key
 export function parseHotKey (hotkey: string): ParsedHotKey {
+	if (hotkey === '-') {
+		// TODO: 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
+		return {
+			targetKey: '-',
+			unifiedModifier: '_',
+		};
+	}
+
 	const keys = hotkey.split(/\s?-\s?/);
 	const modifiers = new Set<Modifier>();
 	let targetKey: string | undefined;

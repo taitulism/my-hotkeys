@@ -95,7 +95,7 @@ describe('Symbols', () => {
 	it('Math Symbols', () => {
 		hk.bindKeys({
 			'+': spy,
-			'-': spy, // TODO:! not firing (is splitter)
+			'-': spy,
 			'*': spy,
 			'/': spy,
 		});
@@ -104,9 +104,19 @@ describe('Symbols', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 		simulate.keyPress('NumpadSubtract');
 		expect(spy).toHaveBeenCalledTimes(2);
-		simulate.keyPress('NumpadMultiply');
+		simulate.keyPress('Minus');
 		expect(spy).toHaveBeenCalledTimes(3);
-		simulate.keyPress('NumpadDivide');
+		simulate.keyPress('NumpadMultiply');
 		expect(spy).toHaveBeenCalledTimes(4);
+		simulate.keyPress('NumpadDivide');
+		expect(spy).toHaveBeenCalledTimes(5);
+		simulate.keyPress('Slash');
+		expect(spy).toHaveBeenCalledTimes(6);
+
+		// TODO: not working
+		// simulate.keyDown('Shift', 'Equal');
+		// simulate.releaseAll();
+		// simulate.keyDown('Shift', 'Digit8');
+		// simulate.releaseAll();
 	});
 });
