@@ -6,17 +6,17 @@ export const ModifierAliases = {
 	META: 'Meta',
 } as const;
 
-export const ImplicitShiftQwertyAliases = {
-	'{': 'BracketLeft',
-	'}': 'BracketRight',
-	':': 'Semicolon',
-	'"': 'Quote',
-	'|': 'Backslash',
-	'<': 'Comma',
-	'>': 'Period',
-	'?': 'Slash',
-	'~': 'Backquote',
-} as const;
+// export const ImplicitShiftQwertyAliases = {
+// 	'{': 'BracketLeft',
+// 	'}': 'BracketRight',
+// 	':': 'Semicolon',
+// 	'"': 'Quote',
+// 	'|': 'Backslash',
+// 	'<': 'Comma',
+// 	'>': 'Period',
+// 	'?': 'Slash',
+// 	'~': 'Backquote',
+// } as const;
 
 // 	MINUS: 'Minus',
 // 	PLUS: 'Equal',

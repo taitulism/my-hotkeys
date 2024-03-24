@@ -1,4 +1,4 @@
-import {ImplicitShiftQwertyAliases, ModifierAliases} from './key-names-map';
+import {ModifierAliases} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -58,12 +58,6 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		if (isCapitalLetter(upperKey)) {
 			targetKey = upperKey;
 		}
-		else if (key in ImplicitShiftQwertyAliases) {
-			const k = key as keyof typeof ImplicitShiftQwertyAliases;
-
-			targetKey = ImplicitShiftQwertyAliases[k];
-			modifiers.add('Shift');
-		}
 		else {
 			targetKey = key;
 		}
@@ -79,6 +73,12 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 }
 
 export const isCapitalLetter = (str: string) => str.length === 1 && /[A-Z]/.test(str);
+
+export const isSingleChar = (ev: KeyboardEvent) => {
+	const {key: kValue, code: kId} = ev;
+
+	return kValue.length === 1 && !kId.startsWith('Num'); // Numpad_
+};
 
 export function unifyModifiers (ev: KeyboardEvent): UnifiedModifier {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;

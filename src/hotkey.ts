@@ -5,6 +5,7 @@ import {
 	isEventModifier,
 	parseHotKey,
 	isCapitalLetter,
+	isSingleChar,
 } from './internals';
 
 export function hotkey (ctxElm: ContextElement = document) {
@@ -67,10 +68,18 @@ export class Hotkey {
 				: kId
 		;
 
-		const uniMod = unifyModifiers(ev);
-		const handler = this.hotkeys.get(key)?.[uniMod];
+		const unifiedModifier = unifyModifiers(ev);
+		const handlers = this.hotkeys.get(key);
 
-		handler?.(ev);
+		if (handlers?.[unifiedModifier]) {
+			handlers[unifiedModifier]!(ev);
+		}
+		else {
+			const uniMod = isSingleChar(ev) && unifiedModifier === 'S' ? '_' : unifiedModifier;
+			const handler = handlers![uniMod];
+
+			handler?.(ev);
+		}
 	};
 
 	public mount () {

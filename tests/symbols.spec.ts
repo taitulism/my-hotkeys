@@ -102,21 +102,24 @@ describe('Symbols', () => {
 
 		simulate.keyPress('NumpadAdd');
 		expect(spy).toHaveBeenCalledTimes(1);
-		simulate.keyPress('NumpadSubtract');
+		simulate.keyDown('Shift', 'Equal');
 		expect(spy).toHaveBeenCalledTimes(2);
-		simulate.keyPress('Minus');
-		expect(spy).toHaveBeenCalledTimes(3);
-		simulate.keyPress('NumpadMultiply');
-		expect(spy).toHaveBeenCalledTimes(4);
-		simulate.keyPress('NumpadDivide');
-		expect(spy).toHaveBeenCalledTimes(5);
-		simulate.keyPress('Slash');
-		expect(spy).toHaveBeenCalledTimes(6);
+		simulate.releaseAll();
 
-		// TODO: not working
-		// simulate.keyDown('Shift', 'Equal');
-		// simulate.releaseAll();
-		// simulate.keyDown('Shift', 'Digit8');
-		// simulate.releaseAll();
+		simulate.keyPress('NumpadSubtract');
+		expect(spy).toHaveBeenCalledTimes(3);
+		simulate.keyPress('Minus');
+		expect(spy).toHaveBeenCalledTimes(4);
+
+		simulate.keyPress('NumpadMultiply');
+		expect(spy).toHaveBeenCalledTimes(5);
+		simulate.keyDown('Shift', 'Digit8');
+		expect(spy).toHaveBeenCalledTimes(6);
+		simulate.releaseAll();
+
+		simulate.keyPress('NumpadDivide');
+		expect(spy).toHaveBeenCalledTimes(7);
+		simulate.keyPress('Slash');
+		expect(spy).toHaveBeenCalledTimes(8);
 	});
 });
