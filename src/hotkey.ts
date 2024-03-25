@@ -68,15 +68,17 @@ export class Hotkey {
 				: kId
 		;
 
-		const unifiedModifier = unifyModifiers(ev);
-		const handlers = this.hotkeys.get(key);
+		if (!this.hotkeys.has(key)) return;
 
-		if (handlers?.[unifiedModifier]) {
+		const unifiedModifier = unifyModifiers(ev);
+		const handlers = this.hotkeys.get(key) as CombinationHandlers;
+
+		if (handlers[unifiedModifier]) {
 			handlers[unifiedModifier]!(ev);
 		}
 		else {
 			const uniMod = isSingleChar(ev) && unifiedModifier === 'S' ? '_' : unifiedModifier;
-			const handler = handlers![uniMod];
+			const handler = handlers[uniMod];
 
 			handler?.(ev);
 		}
