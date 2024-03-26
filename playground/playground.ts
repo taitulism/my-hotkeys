@@ -9,8 +9,12 @@ kb1.debugMode = true;
 // kb2.debugMode = true;
 
 kb1.bindKeys({
-	'+': (ev) => {
-		logKey('SXS');
+	'Insert': (ev) => {
+		logKey('SXS 1');
+		ev.preventDefault();
+	},
+	'Delete': (ev) => {
+		logKey('SXS 2');
 		ev.preventDefault();
 	},
 });
