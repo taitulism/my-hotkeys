@@ -4,8 +4,8 @@ import {
 	unifyModifiers,
 	isEventModifier,
 	parseHotKey,
-	isCapitalLetter,
 	isSingleChar,
+	getMapKey,
 } from './internals';
 
 export function hotkey (ctxElm: ContextElement = document) {
@@ -56,22 +56,16 @@ export class Hotkey {
 	private keydownHandler = (ev: KeyboardEvent) => {
 		this.debugMode && logKbEvent(ev);
 
-		const {key: kValue, code: kId} = ev;
+		const {key: kValue} = ev;
 
 		if (isEventModifier(kValue)) return;
 
-		const upperKeyValue = kValue.toUpperCase();
-		const key = isCapitalLetter(upperKeyValue)
-			? upperKeyValue
-			: this.hotkeys.has(kValue)
-				? kValue
-				: kId
-		;
+		const mapKey = getMapKey(ev, this.hotkeys);
 
-		if (!this.hotkeys.has(key)) return;
+		if (!this.hotkeys.has(mapKey)) return;
 
 		const unifiedModifier = unifyModifiers(ev);
-		const handlers = this.hotkeys.get(key) as CombinationHandlers;
+		const handlers = this.hotkeys.get(mapKey) as CombinationHandlers;
 
 		if (handlers[unifiedModifier]) {
 			handlers[unifiedModifier]!(ev);

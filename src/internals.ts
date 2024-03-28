@@ -14,11 +14,17 @@ import {
 	type UnifiedModifier,
 	type UniModSum,
 	type ParsedHotKey,
+	CombinationHandlers,
 } from './types';
 
-function isRawModifier (rawKey: string): rawKey is RawModifier {
-	return RawModifiers.includes(rawKey as RawModifier);
-}
+const isCapitalLetter = (str: string) => str.length === 1 && /[A-Z]/.test(str);
+const extractDigit = (evKey: string) => evKey[evKey.length - 1];
+
+const isDigitKey = (evKey: string) =>
+	evKey.startsWith('Dig') || evKey.startsWith('Num') && /\d$/.test(evKey);
+
+const isRawModifier = (rawKey: string): rawKey is RawModifier =>
+	RawModifiers.includes(rawKey as RawModifier);
 
 function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
@@ -72,7 +78,20 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 	};
 }
 
-export const isCapitalLetter = (str: string) => str.length === 1 && /[A-Z]/.test(str);
+export function getMapKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
+	const {key: kValue, code: kId} = ev;
+	const upperKeyValue = kValue.toUpperCase();
+	const mapKey = isCapitalLetter(upperKeyValue)
+		? upperKeyValue
+		: map.has(kValue)
+			? kValue
+			: isDigitKey(kId)
+				? extractDigit(kId)
+				: kId
+		;
+
+	return mapKey;
+}
 
 export const isSingleChar = (ev: KeyboardEvent) => {
 	const {key: kValue, code: kId} = ev;
