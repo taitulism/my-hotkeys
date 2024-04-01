@@ -1,4 +1,4 @@
-import {ModifierAliases} from './key-names-map';
+import {ModifierAliases, SymbolIDs, type SymbolKeyID} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -48,7 +48,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 	const keys = hotkey.split(/\s?-\s?/);
 	const modifiers = new Set<Modifier>();
-	let targetKey: string | undefined;
+	let targetKey: string | SymbolKeyID | undefined;
 
 	for (let i = 0; i < keys.length; i++) {
 		const key = keys[i];
@@ -63,6 +63,9 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 		if (isCapitalLetter(upperKey)) {
 			targetKey = upperKey;
+		}
+		else if (key in SymbolIDs) {
+			targetKey = SymbolIDs[key as keyof typeof SymbolIDs];
 		}
 		else {
 			targetKey = key;
@@ -80,17 +83,16 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 export function getMapKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
 	const {key: kValue, code: kId} = ev;
-	const upperKeyValue = kValue.toUpperCase();
-	const mapKey = isCapitalLetter(upperKeyValue)
-		? upperKeyValue
-		: map.has(kValue)
-			? kValue
-			: isDigitKey(kId)
-				? extractDigit(kId)
-				: kId
-		;
 
-	return mapKey;
+	if (map.has(kValue)) return kValue;
+	if (map.has(kId)) return kId;
+
+	const upperKeyValue = kValue.toUpperCase();
+
+	if (isCapitalLetter(upperKeyValue)) return upperKeyValue;
+	if (isDigitKey(kId)) return extractDigit(kId);
+
+	return;
 }
 
 export const isSingleChar = (ev: KeyboardEvent) => {

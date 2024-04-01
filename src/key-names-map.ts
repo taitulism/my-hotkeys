@@ -6,6 +6,25 @@ export const ModifierAliases = {
 	META: 'Meta',
 } as const;
 
+export const SymbolIDs = {
+	'[': 'BracketLeft',
+	']': 'BracketRight',
+	';': 'Semicolon',
+	'\'': 'Quote',
+	'\\': 'Backslash',
+	',': 'Comma',
+	'`': 'Backquote',
+	'.': ['Period', 'NumpadDecimal'],
+	'/': ['Slash', 'NumpadDivide'],
+	/* TODO:
+		maybe Slash can be removed
+		If so, consider special treatment for period and remove it and
+		all the array handling
+	*/
+} as const;
+
+export type SymbolKeyID = typeof SymbolIDs[keyof typeof SymbolIDs];
+
 // export const ImplicitShiftQwertyAliases = {
 // 	'{': 'BracketLeft',
 // 	'}': 'BracketRight',

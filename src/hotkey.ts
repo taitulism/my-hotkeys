@@ -21,18 +21,27 @@ export class Hotkey {
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
-		if (this.hotkeys.has(targetKey)) {
-			const hotKeys = this.hotkeys.get(targetKey) as CombinationHandlers;
+		const addHotkey = (tKey: string) => {
+			if (this.hotkeys.has(tKey)) {
+				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
 
-			if (hotKeys[unifiedModifier]) {
-				// TODO:! Currently replacing. Throw or add.
-				console.log('Dup:', targetKey);
+				if (hotKeys[unifiedModifier]) {
+					// TODO:! Currently replacing. Throw or add.
+					console.log('Dup:', tKey);
+				}
+
+				hotKeys[unifiedModifier] = handlerFn;
 			}
+			else {
+				this.hotkeys.set(tKey, {[unifiedModifier]: handlerFn});
+			}
+		};
 
-			hotKeys[unifiedModifier] = handlerFn;
+		if (Array.isArray(targetKey)) {
+			targetKey.forEach(addHotkey);
 		}
 		else {
-			this.hotkeys.set(targetKey, {[unifiedModifier]: handlerFn});
+			addHotkey(targetKey as string);
 		}
 
 		return this;
@@ -62,7 +71,7 @@ export class Hotkey {
 
 		const mapKey = getMapKey(ev, this.hotkeys);
 
-		if (!this.hotkeys.has(mapKey)) return;
+		if (!mapKey || !this.hotkeys.has(mapKey)) return;
 
 		const unifiedModifier = unifyModifiers(ev);
 		const handlers = this.hotkeys.get(mapKey) as CombinationHandlers;
