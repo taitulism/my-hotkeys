@@ -1,4 +1,4 @@
-import {ModifierAliases, SymbolIDs, type SymbolKeyID} from './key-names-map';
+import {ArrowAlias, ModifierAliases, SymbolAlias, SymbolIDs, type SymbolKeyID} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -61,11 +61,19 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 			continue;
 		}
 
+		const lowerKey = key.toLowerCase();
+
 		if (isCapitalLetter(upperKey)) {
 			targetKey = upperKey;
 		}
 		else if (key in SymbolIDs) {
 			targetKey = SymbolIDs[key as keyof typeof SymbolIDs];
+		}
+		else if (lowerKey in SymbolAlias) {
+			targetKey = SymbolAlias[lowerKey as keyof typeof SymbolAlias];
+		}
+		else if (lowerKey in ArrowAlias) {
+			targetKey = ArrowAlias[lowerKey as keyof typeof ArrowAlias];
 		}
 		else {
 			targetKey = key;

@@ -53,7 +53,6 @@ describe('Carret/Page Navigation', () => {
 	});
 
 	it('Arrows', () => {
-		// TODO: aliases:! up down...
 		hk.bindKeys({
 			'ArrowUp': spy,
 			'ArrowDown': spy,
@@ -73,6 +72,27 @@ describe('Carret/Page Navigation', () => {
 		simulate.keyPress('ArrowRight');
 		expect(spy).toHaveBeenCalledTimes(4);
 
-		// TODO: numpad arrows
+		// TODO:! numpad arrows (needs KeyboardSimulator update)
+	});
+
+	it('Arrows Aliases (+ case insensitive)', () => {
+		hk.bindKeys({
+			'Up': spy,
+			'down': spy,
+			'LEFT': spy,
+			'RighT': spy,
+		});
+
+		simulate.keyPress('ArrowUp');
+		expect(spy).toHaveBeenCalledTimes(1);
+
+		simulate.keyPress('ArrowDown');
+		expect(spy).toHaveBeenCalledTimes(2);
+
+		simulate.keyPress('ArrowLeft');
+		expect(spy).toHaveBeenCalledTimes(3);
+
+		simulate.keyPress('ArrowRight');
+		expect(spy).toHaveBeenCalledTimes(4);
 	});
 });

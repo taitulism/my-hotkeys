@@ -236,4 +236,90 @@ describe('Symbols', () => {
 		expect(spy).toHaveBeenCalledTimes(9);
 		simulate.releaseAll();
 	});
+
+	describe('Symbols Aliases', () => {
+		it('All Aliases', () => {
+			hk.bindKeys({
+				'plus': spy,
+				'minus': spy,
+				'space': spy,
+				'tilde': spy,
+				'quote': spy,
+				'quotes': spy,
+				'backslash': spy,
+				'underscore': spy,
+			});
+
+			simulate.keyDown('Shift', 'Equal');
+			expect(spy).toHaveBeenCalledTimes(1);
+			simulate.releaseAll();
+
+			simulate.keyPress('Minus');
+			expect(spy).toHaveBeenCalledTimes(2);
+
+			simulate.keyPress('Space');
+			expect(spy).toHaveBeenCalledTimes(3);
+
+			simulate.keyPress('BackQuote');
+			expect(spy).toHaveBeenCalledTimes(4);
+
+			simulate.keyPress('Quote');
+			expect(spy).toHaveBeenCalledTimes(5);
+
+			simulate.keyDown('Shift', 'Quote');
+			expect(spy).toHaveBeenCalledTimes(6);
+			simulate.releaseAll();
+
+			simulate.keyPress('BackSlash');
+			expect(spy).toHaveBeenCalledTimes(7);
+
+			simulate.keyDown('Shift', 'Minus');
+			expect(spy).toHaveBeenCalledTimes(8);
+			simulate.releaseAll();
+		});
+
+		it('Case Insensitive', () => {
+			hk.bindKeys({
+				'Plus': spy,
+				'MINUS': spy,
+				'spacE': spy,
+			});
+
+			simulate.keyDown('Shift', 'Equal');
+			expect(spy).toHaveBeenCalledTimes(1);
+			simulate.releaseAll();
+
+			simulate.keyPress('Minus');
+			expect(spy).toHaveBeenCalledTimes(2);
+
+			simulate.keyPress('Space');
+			expect(spy).toHaveBeenCalledTimes(3);
+		});
+
+		it('With Modifiers', () => {
+			hk.bindKeys({
+				'shift-underscore': spy,
+				'ctrl-plus': spy, // TODO:! 1. plus = implicit shift 2. NumpadPlus
+				'alt-space': spy,
+				'meta-tilde': spy,
+			});
+
+			simulate.keyDown('Shift', 'Minus');
+			expect(spy).toHaveBeenCalledTimes(1);
+			simulate.releaseAll();
+
+			// simulate.keyDown('Ctrl', 'Shift', 'Equal');
+			simulate.keyDown('Ctrl', 'NumpadAdd');
+			expect(spy).toHaveBeenCalledTimes(2);
+			simulate.releaseAll();
+
+			simulate.keyDown('Alt', 'Space');
+			expect(spy).toHaveBeenCalledTimes(3);
+			simulate.releaseAll();
+
+			simulate.keyDown('Meta', 'BackQuote');
+			expect(spy).toHaveBeenCalledTimes(4);
+			simulate.releaseAll();
+		});
+	});
 });

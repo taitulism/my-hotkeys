@@ -6,6 +6,24 @@ export const ModifierAliases = {
 	META: 'Meta',
 } as const;
 
+export const SymbolAlias = {
+	'space': ' ',
+	'plus': '+',
+	'minus': '-',
+	'underscore': '_',
+	'quote': '\'',
+	'quotes': '"',
+	'tilde': '`',
+	'backslash': '\\',
+};
+
+export const ArrowAlias = {
+	'up': 'ArrowUp',
+	'down': 'ArrowDown',
+	'left': 'ArrowLeft',
+	'right': 'ArrowRight',
+};
+
 export const SymbolIDs = {
 	'[': 'BracketLeft',
 	']': 'BracketRight',
