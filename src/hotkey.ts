@@ -55,6 +55,30 @@ export class Hotkey {
 		return this;
 	}
 
+	public unbindKey (hotkey: string) {
+		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
+
+		const removeHotkey = (tKey: string) => {
+			if (this.hotkeys.has(tKey)) {
+				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
+
+				if (hotKeys[unifiedModifier]) {
+					delete hotKeys[unifiedModifier];
+				}
+			}
+			else {
+				throw new Error('No Such Hotkey');
+			}
+		};
+
+		if (Array.isArray(targetKey)) {
+			targetKey.forEach(removeHotkey);
+		}
+		else {
+			removeHotkey(targetKey as string);
+		}
+	}
+
 	// TODO: test
 	public unbindAll () {
 		this.hotkeys.clear();
