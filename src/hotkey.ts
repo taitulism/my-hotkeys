@@ -55,6 +55,14 @@ export class Hotkey {
 		return this;
 	}
 
+	public unbindKeys (hotkeys: Array<string>) {
+		hotkeys.forEach((hotkey) => {
+			this.unbindKey(hotkey);
+		});
+
+		return this;
+	}
+
 	public unbindKey (hotkey: string) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
