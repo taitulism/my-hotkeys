@@ -4,6 +4,7 @@ export type ContextElement = HTMLElement | Document;
 
 export type KeyHandler = (ev: KeyboardEvent) => void
 
+// TODO: refactor all modifier types. Too many dups.
 export const Control = 'Control';
 export const Alt = 'Alt';
 export const Shift = 'Shift';
@@ -53,6 +54,7 @@ export const Modifiers = [
 ] as const;
 
 export type Modifier = 'Control' | 'Alt' | 'Shift' | 'Meta'
+export type RawModifier = Uppercase<Modifier>
 
 export const RawModifiers = [
 	'CONTROL',
@@ -61,8 +63,6 @@ export const RawModifiers = [
 	'ALT',
 	'META',
 ] as const;
-
-export type RawModifier = 'CONTROL' | 'SHIFT' | 'ALT' | 'META'
 
 
 export type CombinationHandlers = {

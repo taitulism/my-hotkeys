@@ -46,7 +46,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		};
 	}
 
-	const keys = hotkey.split(/\s?-\s?/);
+	const keys = hotkey.split('-');
 	const modifiers = new Set<Modifier>();
 	let targetKey: string | SymbolKeyID | undefined;
 

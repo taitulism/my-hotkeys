@@ -47,8 +47,10 @@ export class Hotkey {
 		return this;
 	}
 
-	public bindKeys (hotkeysObj: Record<string, KeyHandler>) {
-		for (const [hotkey, keyHandler] of Object.entries(hotkeysObj)) {
+	public bindKeys (hotkeysObj: Partial<Record<string, KeyHandler>>) {
+		const entries = Object.entries(hotkeysObj) as Array<[string, KeyHandler]>;
+
+		for (const [hotkey, keyHandler] of entries) {
 			this.bindKey(hotkey, keyHandler);
 		}
 
