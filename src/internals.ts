@@ -36,10 +36,9 @@ function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum];
 }
 
-// TODO:! should throw: more than 1 target, unknown key
 export function parseHotKey (hotkey: string): ParsedHotKey {
 	if (hotkey === '-') {
-		// TODO: 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
+		// TODO:! 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
 		return {
 			targetKey: '-',
 			unifiedModifier: '_',
@@ -80,7 +79,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		}
 	}
 
-	// TODO:! +test
+	// TODO:test
 	if (typeof targetKey === 'undefined') throw new Error('No Target Key');
 
 	return {

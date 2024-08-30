@@ -34,7 +34,7 @@ export const SymbolIDs = {
 	'`': 'Backquote',
 	'.': ['Period', 'NumpadDecimal'],
 	'/': ['Slash', 'NumpadDivide'],
-	/* TODO:
+	/* TODO:?
 		maybe Slash can be removed
 		If so, consider special treatment for period and remove it and
 		all the array handling

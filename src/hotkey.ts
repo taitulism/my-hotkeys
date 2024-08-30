@@ -26,7 +26,7 @@ export class Hotkey {
 				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
 
 				if (hotKeys[unifiedModifier]) {
-					// TODO:! Currently replacing. Throw or add.
+					// TODO:? Currently replacing. Throw or add.
 					console.log('Dup:', tKey);
 				}
 
@@ -89,7 +89,7 @@ export class Hotkey {
 		}
 	}
 
-	// TODO: test
+	// TODO:test
 	public unbindAll () {
 		this.hotkeys.clear();
 
@@ -122,7 +122,7 @@ export class Hotkey {
 	};
 
 	public mount () {
-		// TODO: prevent multi mounting
+		// TODO:! prevent multi mounting
 		this.ctxElm.addEventListener('keydown', this.keydownHandler as EventListener);
 
 		return this;

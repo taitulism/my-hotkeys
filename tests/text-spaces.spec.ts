@@ -30,7 +30,7 @@ describe('Text Spaces', () => {
 
 	it('Space & BackSpace', () => {
 		hk.bindKeys({
-			' ': spy, // TODO:! space alias
+			' ': spy,
 			'Backspace': spy,
 		});
 
