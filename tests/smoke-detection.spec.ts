@@ -4,7 +4,7 @@ import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vite
 import {hotkey, Hotkey} from '../src';
 import {spies, spyFn} from './utils';
 
-describe('API', () => {
+describe('Smoke Detection', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;

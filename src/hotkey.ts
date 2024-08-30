@@ -121,7 +121,6 @@ export class Hotkey {
 	};
 
 	public mount () {
-		// TODO:! prevent multi mounting
 		this.ctxElm.addEventListener('keydown', this.keydownHandler as EventListener);
 
 		return this;
