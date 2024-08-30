@@ -89,7 +89,6 @@ export class Hotkey {
 		}
 	}
 
-	// TODO:test
 	public unbindAll () {
 		this.hotkeys.clear();
 
