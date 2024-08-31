@@ -38,7 +38,7 @@ function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 
 export function parseHotKey (hotkey: string): ParsedHotKey {
 	if (hotkey === '-') {
-		// TODO:! 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
+		// TODO:!? 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
 		return {
 			targetKey: '-',
 			unifiedModifier: '_',

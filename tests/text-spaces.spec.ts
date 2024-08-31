@@ -52,7 +52,7 @@ describe('Text Spaces', () => {
 		simulate.keyPress('Delete');
 		expect(spy).toHaveBeenCalledTimes(2);
 
-		// TODO: NumpadDecimal --> delete
+		// TODO: "del" - NumpadDecimal with NumLock off (needs KeyboardSimulator update)
 		// simulate.keyPress('NumpadDecimal');
 		// expect(spy).toHaveBeenCalledTimes(3);
 	});

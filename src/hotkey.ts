@@ -26,8 +26,7 @@ export class Hotkey {
 				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
 
 				if (hotKeys[unifiedModifier]) {
-					// TODO:? Currently replacing. Throw or add.
-					console.log('Dup:', tKey);
+					throw new Error(`Duplicated hotkey: "${tKey}"`);
 				}
 
 				hotKeys[unifiedModifier] = handlerFn;

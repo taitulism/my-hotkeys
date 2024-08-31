@@ -71,6 +71,15 @@ describe('Smoke Detection', () => {
 		expect(spy3).toHaveBeenCalledTimes(1);
 	});
 
+	it('Throws on duplicate', () => {
+		const failFunc = () => {
+			hk.bindKey('a', spy);
+			hk.bindKey('a', spy);
+		};
+
+		expect(failFunc).throw('Duplicated hotkey: "A"');
+	});
+
 	describe('Plain keys and Modifiers', () => {
 		it('Doesn\'t trigger A on Ctrl-A', () => {
 			const [spy1, spy2] = spies(2);

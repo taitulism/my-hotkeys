@@ -72,7 +72,7 @@ describe('Carret/Page Navigation', () => {
 		simulate.keyPress('ArrowRight');
 		expect(spy).toHaveBeenCalledTimes(4);
 
-		// TODO:! numpad arrows (needs KeyboardSimulator update)
+		// TODO: numpad arrows (needs KeyboardSimulator update)
 	});
 
 	it('Arrows Aliases (+ case insensitive)', () => {
