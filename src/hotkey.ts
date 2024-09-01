@@ -1,7 +1,7 @@
 import type {ContextElement, CombinationHandlers, KeyHandler} from './types';
 import {logKbEvent} from './log-keyboard-event';
 import {
-	unifyModifiers,
+	unifyEventModifiers,
 	isEventModifier,
 	parseHotKey,
 	isSingleChar,
@@ -21,6 +21,7 @@ export class Hotkey {
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
+		// TODO: move out
 		const addHotkey = (tKey: string) => {
 			if (this.hotkeys.has(tKey)) {
 				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
@@ -67,6 +68,7 @@ export class Hotkey {
 	public unbindKey (hotkey: string) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
+		// TODO: move out
 		const removeHotkey = (tKey: string) => {
 			if (this.hotkeys.has(tKey)) {
 				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
@@ -105,7 +107,7 @@ export class Hotkey {
 
 		if (!mapKey || !this.hotkeys.has(mapKey)) return;
 
-		const unifiedModifier = unifyModifiers(ev);
+		const unifiedModifier = unifyEventModifiers(ev);
 		const handlers = this.hotkeys.get(mapKey) as CombinationHandlers;
 
 		if (handlers[unifiedModifier]) {

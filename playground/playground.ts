@@ -9,11 +9,11 @@ kb1.debugMode = true;
 // kb2.debugMode = true;
 
 kb1.bindKeys({
-	'3': (ev) => {
+	'ctrl-shift-?': (ev) => {
 		logKey('SXS 1');
 		ev.preventDefault();
 	},
-	'shift-3': (ev) => {
+	'ctrl-?': (ev) => {
 		logKey('SXS 2');
 		ev.preventDefault();
 	},

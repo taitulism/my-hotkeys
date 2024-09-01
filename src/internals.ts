@@ -26,7 +26,7 @@ const isDigitKey = (evKey: string) =>
 const isRawModifier = (rawKey: string): rawKey is RawModifier =>
 	RawModifiers.includes(rawKey as RawModifier);
 
-function parseModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
+function unifyHotkeyModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
 		const modNumVal = ModifiersNumValues[modifier];
 
@@ -79,12 +79,12 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		}
 	}
 
-	// TODO:test
+	// TODO:test. This can only happen when hotkey.split(-) fails somehow.
 	if (typeof targetKey === 'undefined') throw new Error('No Target Key');
 
 	return {
 		targetKey,
-		unifiedModifier: parseModifiers(...Array.from(modifiers)),
+		unifiedModifier: unifyHotkeyModifiers(...Array.from(modifiers)),
 	};
 }
 
@@ -108,7 +108,7 @@ export const isSingleChar = (ev: KeyboardEvent) => {
 	return kValue.length === 1 && !kId.startsWith('Num'); // Numpad_
 };
 
-export function unifyModifiers (ev: KeyboardEvent): UnifiedModifier {
+export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 
 	let modifiersSum = 0;
