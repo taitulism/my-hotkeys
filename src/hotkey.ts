@@ -4,8 +4,9 @@ import {
 	unifyEventModifiers,
 	isEventModifier,
 	parseHotKey,
-	isSingleChar,
 	getMapKey,
+	removeShift,
+	implicitShift,
 } from './internals';
 
 export function hotkey (ctxElm: ContextElement = document) {
@@ -113,12 +114,14 @@ export class Hotkey {
 		if (handlers[unifiedModifier]) {
 			handlers[unifiedModifier]!(ev);
 		}
-		else {
-			// TODO:! huh?
-			const uniMod = isSingleChar(ev) && unifiedModifier === 'S' ? '_' : unifiedModifier;
-			const handler = handlers[uniMod];
+		else if (implicitShift(ev, unifiedModifier)) {
+			const alternativeUnifiedModifier = removeShift(unifiedModifier);
 
-			handler?.(ev);
+			if (alternativeUnifiedModifier !== unifiedModifier) {
+				const handler = handlers[alternativeUnifiedModifier];
+
+				handler?.(ev);
+			}
 		}
 	};
 

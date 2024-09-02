@@ -53,11 +53,11 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 	return Array.from(modifiersSet);
 }
 
-function parseTargetKey (targetKey?: Lowercase<string>): ParsedTargetKey {
+function parseTargetKey (withShift: boolean, targetKey?: Lowercase<string>): ParsedTargetKey {
 	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow.
 	if (targetKey === undefined) throw new Error('No Target Key');
 
-	if (targetKey in SymbolIDs) return SymbolIDs[targetKey as ISymbol];
+	if (targetKey in SymbolIDs && withShift) return SymbolIDs[targetKey as ISymbol];
 	if (targetKey in Aliases) return Aliases[targetKey as Alias];
 
 	return targetKey;
@@ -77,9 +77,15 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 	const modifiers = parseModifiers(allKeys); // after pop
 
 	return {
-		targetKey: parseTargetKey(targetKey),
+		targetKey: parseTargetKey(modifiers.includes(Shift), targetKey),
 		unifiedModifier: unifyHotkeyModifiers(modifiers),
 	};
+}
+
+// ------------------------------------------------------------------------------
+
+export function isEventModifier (evKey: string): evKey is Modifier {
+	return Modifiers.includes(evKey as Modifier);
 }
 
 export function getMapKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
@@ -96,12 +102,6 @@ export function getMapKey (ev: KeyboardEvent, map: Map<string, CombinationHandle
 	return key;
 }
 
-export const isSingleChar = (ev: KeyboardEvent) => {
-	const {key: kValue, code: kId} = ev;
-
-	return kValue.length === 1 && !kId.startsWith('Num'); // Numpad_
-};
-
 export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
 
@@ -115,9 +115,23 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }
 
-export function isEventModifier (evKey: string): evKey is Modifier {
-	return Modifiers.includes(evKey as Modifier);
-}
+const isSingleChar = (ev: KeyboardEvent) => {
+	const {key: kValue, code: kId} = ev;
+
+	// TODO: understand & doc the second part: `.startsWith('Num')`
+	return kValue.length === 1 && !kId.startsWith('Num'); // Numpad_
+};
+
+const isShiftPressed = (unifiedModifier: UnifiedModifier) =>
+	unifiedModifier.includes('S');
+
+export const implicitShift = (ev: KeyboardEvent, unifiedModifier: UnifiedModifier) =>
+	isSingleChar(ev) && isShiftPressed(unifiedModifier);
+
+export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier => (
+	uniModWithShift.replace('S', '') || '_'
+) as UnifiedModifier;
+
 
 // export function isModifierPressed (ev: KeyboardEvent) {
 // 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;

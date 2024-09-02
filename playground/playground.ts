@@ -9,17 +9,21 @@ kb1.debugMode = true;
 // kb2.debugMode = true;
 
 kb1.bindKeys({
-	'ctrl-shift-?': (ev) => {
+	'shift-@': (ev) => {
+		ev.preventDefault();
 		logKey('SXS 1');
-		ev.preventDefault();
 	},
-	'ctrl-?': (ev) => {
+	'@': (ev) => {
+		ev.preventDefault();
 		logKey('SXS 2');
-		ev.preventDefault();
 	},
-	'[': (ev) => {
+	'ctrl-shift-@': (ev) => {
 		ev.preventDefault();
 		logKey('SXS 3');
+	},
+	'ctrl-@': (ev) => {
+		ev.preventDefault();
+		logKey('SXS 4');
 	},
 });
 
