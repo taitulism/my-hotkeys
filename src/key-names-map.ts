@@ -6,7 +6,7 @@ export const ModifierAliases = {
 	META: 'Meta',
 } as const;
 
-export const SymbolAlias = {
+const SymbolAlias = {
 	'space': ' ',
 	'plus': '+',
 	'minus': '-',
@@ -15,14 +15,21 @@ export const SymbolAlias = {
 	'quotes': '"',
 	'tilde': '`',
 	'backslash': '\\',
-};
+} as const;
 
-export const ArrowAlias = {
+const ArrowAlias = {
 	'up': 'ArrowUp',
 	'down': 'ArrowDown',
 	'left': 'ArrowLeft',
 	'right': 'ArrowRight',
-};
+} as const;
+
+export const Aliases = {
+	...ArrowAlias,
+	...SymbolAlias,
+} as const;
+
+export type AliasValue = typeof Aliases[keyof typeof Aliases];
 
 export const SymbolIDs = {
 	'[': 'BracketLeft',
@@ -41,6 +48,7 @@ export const SymbolIDs = {
 	*/
 } as const;
 
+export type ISymbol = keyof typeof SymbolIDs;
 export type SymbolKeyID = typeof SymbolIDs[keyof typeof SymbolIDs];
 
 // export const ImplicitShiftQwertyAliases = {

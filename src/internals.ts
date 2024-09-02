@@ -1,4 +1,4 @@
-import {ArrowAlias, ModifierAliases, SymbolAlias, SymbolIDs, type SymbolKeyID} from './key-names-map';
+import {Aliases, ModifierAliases, ISymbol, SymbolIDs} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -15,6 +15,7 @@ import {
 	type UniModSum,
 	type ParsedHotKey,
 	CombinationHandlers,
+	ParsedTargetKey,
 } from './types';
 
 const isCapitalLetter = (str: string) => str.length === 1 && /[A-Z]/.test(str);
@@ -36,6 +37,22 @@ function unifyHotkeyModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum];
 }
 
+function parseTargetKey (targetKey: string, upperKey: string): ParsedTargetKey {
+	if (isCapitalLetter(upperKey)) {
+		return upperKey;
+	}
+
+	if (targetKey in SymbolIDs) {
+		return SymbolIDs[targetKey as ISymbol];
+	}
+
+	const lowerKey = targetKey.toLowerCase();
+
+	if (lowerKey in Aliases) return Aliases[lowerKey as keyof typeof Aliases];
+
+	return targetKey;
+}
+
 export function parseHotKey (hotkey: string): ParsedHotKey {
 	if (hotkey === '-') {
 		// TODO:!? 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
@@ -47,7 +64,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 	const keys = hotkey.split('-');
 	const modifiers = new Set<Modifier>();
-	let targetKey: string | SymbolKeyID | undefined;
+	let targetKey: ParsedTargetKey = '';
 
 	for (let i = 0; i < keys.length; i++) {
 		const key = keys[i];
@@ -60,27 +77,11 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 			continue;
 		}
 
-		const lowerKey = key.toLowerCase();
-
-		if (isCapitalLetter(upperKey)) {
-			targetKey = upperKey;
-		}
-		else if (key in SymbolIDs) {
-			targetKey = SymbolIDs[key as keyof typeof SymbolIDs];
-		}
-		else if (lowerKey in SymbolAlias) {
-			targetKey = SymbolAlias[lowerKey as keyof typeof SymbolAlias];
-		}
-		else if (lowerKey in ArrowAlias) {
-			targetKey = ArrowAlias[lowerKey as keyof typeof ArrowAlias];
-		}
-		else {
-			targetKey = key;
-		}
+		targetKey = parseTargetKey(key, upperKey);
 	}
 
-	// TODO:test. This can only happen when hotkey.split(-) fails somehow.
-	if (typeof targetKey === 'undefined') throw new Error('No Target Key');
+	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow.
+	if (targetKey === '') throw new Error('No Target Key');
 
 	return {
 		targetKey,

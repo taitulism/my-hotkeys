@@ -1,4 +1,4 @@
-import {SymbolKeyID} from './key-names-map';
+import {AliasValue, SymbolKeyID} from './key-names-map';
 
 export type ContextElement = HTMLElement | Document;
 
@@ -69,7 +69,9 @@ export type CombinationHandlers = {
 	[K in UnifiedModifier]?: KeyHandler
 }
 
+export type ParsedTargetKey = string | AliasValue | SymbolKeyID
+
 export type ParsedHotKey = {
-	targetKey: string | SymbolKeyID
+	targetKey: ParsedTargetKey
 	unifiedModifier: UnifiedModifier
 }
