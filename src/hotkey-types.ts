@@ -29,7 +29,7 @@ export type AllHotkeys =
 	| FnHotkeys
 	| OtherHotkeys
 
-type OneModifier = Lowercase<RawModifier>
+type OneModifier = RawModifier
 type TwoModifiers = `${OneModifier}-${OneModifier}`
 type ThreeModifiers = `${TwoModifiers}-${OneModifier}`
 type FourModifiers = `${ThreeModifiers}-${OneModifier}`

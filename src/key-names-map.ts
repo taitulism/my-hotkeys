@@ -1,9 +1,9 @@
 export const ModifierAliases = {
-	CONTROL: 'Control',
-	CTRL: 'Control',
-	ALT: 'Alt',
-	SHIFT: 'Shift',
-	META: 'Meta',
+	control: 'Control',
+	ctrl: 'Control',
+	alt: 'Alt',
+	shift: 'Shift',
+	meta: 'Meta',
 } as const;
 
 const SymbolAlias = {
@@ -29,7 +29,8 @@ export const Aliases = {
 	...SymbolAlias,
 } as const;
 
-export type AliasValue = typeof Aliases[keyof typeof Aliases];
+export type Alias = keyof typeof Aliases;
+export type AliasValue = typeof Aliases[Alias];
 
 export const SymbolIDs = {
 	'[': 'BracketLeft',

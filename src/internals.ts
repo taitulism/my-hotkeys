@@ -1,4 +1,4 @@
-import {Aliases, ModifierAliases, ISymbol, SymbolIDs} from './key-names-map';
+import {Aliases, ModifierAliases, ISymbol, SymbolIDs, Alias} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -18,7 +18,6 @@ import {
 	ParsedTargetKey,
 } from './types';
 
-const isCapitalLetter = (str: string) => str.length === 1 && /[A-Z]/.test(str);
 const extractDigit = (evKey: string) => evKey[evKey.length - 1];
 
 const isDigitKey = (evKey: string) =>
@@ -37,19 +36,16 @@ function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum];
 }
 
-function parseModifiers (rawModifierKeys: Array<string>) {
+function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 	if (rawModifierKeys.length === 0) return [];
 
 	const modifiersSet = new Set<Modifier>();
 
 	for (let i = 0; i < rawModifierKeys.length; i++) {
-		const modifier = rawModifierKeys[i];
-		const uppercased = modifier.toUpperCase();
+		const rawModifier = rawModifierKeys[i];
 
-		if (isRawModifier(uppercased)) {
-			const modifier = ModifierAliases[uppercased];
-
-			modifiersSet.add(modifier);
+		if (isRawModifier(rawModifier)) {
+			modifiersSet.add(ModifierAliases[rawModifier]);
 		}
 		// TODO: else throw
 	}
@@ -57,16 +53,12 @@ function parseModifiers (rawModifierKeys: Array<string>) {
 	return Array.from(modifiersSet);
 }
 
-function parseTargetKey (targetKey?: string): ParsedTargetKey {
+function parseTargetKey (targetKey?: Lowercase<string>): ParsedTargetKey {
 	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow.
 	if (targetKey === undefined) throw new Error('No Target Key');
 
-	const upperKey = targetKey.toUpperCase();
-	const lowerKey = targetKey.toLowerCase();
-
-	if (isCapitalLetter(upperKey)) return upperKey;
 	if (targetKey in SymbolIDs) return SymbolIDs[targetKey as ISymbol];
-	if (lowerKey in Aliases) return Aliases[lowerKey as keyof typeof Aliases];
+	if (targetKey in Aliases) return Aliases[targetKey as Alias];
 
 	return targetKey;
 }
@@ -80,7 +72,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		};
 	}
 
-	const allKeys = hotkey.split('-');
+	const allKeys = hotkey.toLowerCase().split('-') as Array<Lowercase<string>>;
 	const targetKey = allKeys.pop();
 	const modifiers = parseModifiers(allKeys); // after pop
 
@@ -91,17 +83,17 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 }
 
 export function getMapKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
-	const {key: kValue, code: kId} = ev;
+	const {key, code} = ev;
+	const kValue = key.toLowerCase();
+	// const kId = code.toLowerCase();
 
 	if (map.has(kValue)) return kValue;
-	if (map.has(kId)) return kId;
+	if (map.has(code)) return code;
 
-	const upperKeyValue = kValue.toUpperCase();
+	// TODO: add check if shift is involved (4 vs. $)
+	if (isDigitKey(code)) return extractDigit(code);
 
-	if (isCapitalLetter(upperKeyValue)) return upperKeyValue;
-	if (isDigitKey(kId)) return extractDigit(kId);
-
-	return;
+	return key;
 }
 
 export const isSingleChar = (ev: KeyboardEvent) => {

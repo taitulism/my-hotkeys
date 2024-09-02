@@ -54,14 +54,14 @@ export const Modifiers = [
 ] as const;
 
 export type Modifier = 'Control' | 'Alt' | 'Shift' | 'Meta'
-export type RawModifier = Uppercase<Modifier>
+export type RawModifier = Lowercase<Modifier>
 
 export const RawModifiers = [
-	'CONTROL',
-	'CTRL',
-	'SHIFT',
-	'ALT',
-	'META',
+	'control',
+	'ctrl',
+	'shift',
+	'alt',
+	'meta',
 ] as const;
 
 
@@ -71,7 +71,7 @@ export type CombinationHandlers = {
 
 // TODO:ts To remove the string type I need to type the string
 // in the hotkeys Map<string, CombinationHandlers>
-export type ParsedTargetKey = string | AliasValue | SymbolKeyID
+export type ParsedTargetKey = Lowercase<string> | AliasValue | SymbolKeyID
 
 export type ParsedHotKey = {
 	targetKey: ParsedTargetKey

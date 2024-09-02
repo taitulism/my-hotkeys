@@ -17,6 +17,10 @@ kb1.bindKeys({
 		logKey('SXS 2');
 		ev.preventDefault();
 	},
+	'[': (ev) => {
+		ev.preventDefault();
+		logKey('SXS 3');
+	},
 });
 
 console.log(kb1.hotkeys);

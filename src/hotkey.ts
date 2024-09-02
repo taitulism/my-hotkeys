@@ -114,6 +114,7 @@ export class Hotkey {
 			handlers[unifiedModifier]!(ev);
 		}
 		else {
+			// TODO:! huh?
 			const uniMod = isSingleChar(ev) && unifiedModifier === 'S' ? '_' : unifiedModifier;
 			const handler = handlers[uniMod];
 

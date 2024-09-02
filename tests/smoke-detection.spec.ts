@@ -73,11 +73,11 @@ describe('Smoke Detection', () => {
 
 	it('Throws on duplicate', () => {
 		const failFunc = () => {
-			hk.bindKey('a', spy);
+			hk.bindKey('A', spy);
 			hk.bindKey('a', spy);
 		};
 
-		expect(failFunc).throw('Duplicated hotkey: "A"');
+		expect(failFunc).throw('Duplicated hotkey: "a"');
 	});
 
 	describe('Plain keys and Modifiers', () => {
