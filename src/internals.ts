@@ -27,7 +27,7 @@ const isDigitKey = (evKey: string) =>
 const isRawModifier = (rawKey: string): rawKey is RawModifier =>
 	RawModifiers.includes(rawKey as RawModifier);
 
-function unifyHotkeyModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
+function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
 	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
 		const modNumVal = ModifiersNumValues[modifier];
 
@@ -37,17 +37,35 @@ function unifyHotkeyModifiers (...modifiers: Array<Modifier>): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum];
 }
 
-function parseTargetKey (targetKey: string, upperKey: string): ParsedTargetKey {
-	if (isCapitalLetter(upperKey)) {
-		return upperKey;
+function parseModifiers (rawModifierKeys: Array<string>) {
+	if (rawModifierKeys.length === 0) return [];
+
+	const modifiersSet = new Set<Modifier>();
+
+	for (let i = 0; i < rawModifierKeys.length; i++) {
+		const modifier = rawModifierKeys[i];
+		const uppercased = modifier.toUpperCase();
+
+		if (isRawModifier(uppercased)) {
+			const modifier = ModifierAliases[uppercased];
+
+			modifiersSet.add(modifier);
+		}
+		// TODO: else throw
 	}
 
-	if (targetKey in SymbolIDs) {
-		return SymbolIDs[targetKey as ISymbol];
-	}
+	return Array.from(modifiersSet);
+}
 
+function parseTargetKey (targetKey?: string): ParsedTargetKey {
+	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow.
+	if (targetKey === undefined) throw new Error('No Target Key');
+
+	const upperKey = targetKey.toUpperCase();
 	const lowerKey = targetKey.toLowerCase();
 
+	if (isCapitalLetter(upperKey)) return upperKey;
+	if (targetKey in SymbolIDs) return SymbolIDs[targetKey as ISymbol];
 	if (lowerKey in Aliases) return Aliases[lowerKey as keyof typeof Aliases];
 
 	return targetKey;
@@ -62,30 +80,13 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		};
 	}
 
-	const keys = hotkey.split('-');
-	const modifiers = new Set<Modifier>();
-	let targetKey: ParsedTargetKey = '';
-
-	for (let i = 0; i < keys.length; i++) {
-		const key = keys[i];
-		const upperKey = key.toUpperCase();
-
-		if (isRawModifier(upperKey)) {
-			const modifier = ModifierAliases[upperKey];
-
-			modifiers.add(modifier);
-			continue;
-		}
-
-		targetKey = parseTargetKey(key, upperKey);
-	}
-
-	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow.
-	if (targetKey === '') throw new Error('No Target Key');
+	const allKeys = hotkey.split('-');
+	const targetKey = allKeys.pop();
+	const modifiers = parseModifiers(allKeys); // after pop
 
 	return {
-		targetKey,
-		unifiedModifier: unifyHotkeyModifiers(...Array.from(modifiers)),
+		targetKey: parseTargetKey(targetKey),
+		unifiedModifier: unifyHotkeyModifiers(modifiers),
 	};
 }
 

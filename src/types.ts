@@ -69,6 +69,8 @@ export type CombinationHandlers = {
 	[K in UnifiedModifier]?: KeyHandler
 }
 
+// TODO:ts To remove the string type I need to type the string
+// in the hotkeys Map<string, CombinationHandlers>
 export type ParsedTargetKey = string | AliasValue | SymbolKeyID
 
 export type ParsedHotKey = {

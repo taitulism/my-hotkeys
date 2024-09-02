@@ -49,7 +49,7 @@ export const SymbolIDs = {
 } as const;
 
 export type ISymbol = keyof typeof SymbolIDs;
-export type SymbolKeyID = typeof SymbolIDs[keyof typeof SymbolIDs];
+export type SymbolKeyID = typeof SymbolIDs[ISymbol];
 
 // export const ImplicitShiftQwertyAliases = {
 // 	'{': 'BracketLeft',
