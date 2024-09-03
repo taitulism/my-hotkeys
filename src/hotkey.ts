@@ -1,4 +1,4 @@
-import type {ContextElement, CombinationHandlers, KeyHandler} from './types';
+import type {ContextElement, CombinationHandlers, KeyHandler, UnifiedModifier} from './types';
 import {logKbEvent} from './log-keyboard-event';
 import {
 	unifyEventModifiers,
@@ -19,30 +19,44 @@ export class Hotkey {
 
 	constructor (public ctxElm: ContextElement = document) {}
 
+	private addHotkey = (tKey: string, unifiedModifier: UnifiedModifier, handlerFn: KeyHandler) => {
+		if (this.hotkeys.has(tKey)) {
+			const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
+
+			if (hotKeys[unifiedModifier]) {
+				throw new Error(`Duplicated hotkey: "${tKey}"`);
+			}
+
+			hotKeys[unifiedModifier] = handlerFn;
+		}
+		else {
+			this.hotkeys.set(tKey, {[unifiedModifier]: handlerFn});
+		}
+	};
+
+	private removeHotkey = (tKey: string, unifiedModifier: UnifiedModifier) => {
+		if (this.hotkeys.has(tKey)) {
+			const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
+
+			if (hotKeys[unifiedModifier]) {
+				delete hotKeys[unifiedModifier];
+			}
+		}
+		else {
+			throw new Error('No Such Hotkey');
+		}
+	};
+
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
-		// TODO: move out
-		const addHotkey = (tKey: string) => {
-			if (this.hotkeys.has(tKey)) {
-				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
-
-				if (hotKeys[unifiedModifier]) {
-					throw new Error(`Duplicated hotkey: "${tKey}"`);
-				}
-
-				hotKeys[unifiedModifier] = handlerFn;
-			}
-			else {
-				this.hotkeys.set(tKey, {[unifiedModifier]: handlerFn});
-			}
-		};
-
 		if (Array.isArray(targetKey)) {
-			targetKey.forEach(addHotkey);
+			targetKey.forEach((tKey: string) => {
+				this.addHotkey(tKey, unifiedModifier, handlerFn);
+			});
 		}
 		else {
-			addHotkey(targetKey as string);
+			this.addHotkey(targetKey as string, unifiedModifier, handlerFn);
 		}
 
 		return this;
@@ -69,25 +83,13 @@ export class Hotkey {
 	public unbindKey (hotkey: string) {
 		const {targetKey, unifiedModifier} = parseHotKey(hotkey);
 
-		// TODO: move out
-		const removeHotkey = (tKey: string) => {
-			if (this.hotkeys.has(tKey)) {
-				const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
-
-				if (hotKeys[unifiedModifier]) {
-					delete hotKeys[unifiedModifier];
-				}
-			}
-			else {
-				throw new Error('No Such Hotkey');
-			}
-		};
-
 		if (Array.isArray(targetKey)) {
-			targetKey.forEach(removeHotkey);
+			targetKey.forEach((tKey: string) => {
+				this.removeHotkey(tKey, unifiedModifier);
+			});
 		}
 		else {
-			removeHotkey(targetKey as string);
+			this.removeHotkey(targetKey as string, unifiedModifier);
 		}
 	}
 
