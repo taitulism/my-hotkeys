@@ -4,7 +4,7 @@ import {
 	unifyEventModifiers,
 	isEventModifier,
 	parseHotKey,
-	getMapKey,
+	getTargetKey,
 	removeShift,
 	implicitShift,
 } from './internals';
@@ -106,7 +106,7 @@ export class Hotkey {
 
 		if (isEventModifier(kValue)) return;
 
-		const mapKey = getMapKey(ev, this.hotkeys);
+		const mapKey = getTargetKey(ev, this.hotkeys);
 
 		if (!mapKey || !this.hotkeys.has(mapKey)) return;
 
@@ -114,7 +114,7 @@ export class Hotkey {
 		const handlers = this.hotkeys.get(mapKey) as CombinationHandlers;
 
 		if (handlers[unifiedModifier]) {
-			handlers[unifiedModifier]!(ev);
+			handlers[unifiedModifier](ev);
 		}
 		else if (implicitShift(ev, unifiedModifier)) {
 			const alternativeUnifiedModifier = removeShift(unifiedModifier);

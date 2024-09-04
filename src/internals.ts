@@ -18,11 +18,6 @@ import {
 	ParsedTargetKey,
 } from './types';
 
-const extractDigit = (evKey: string) => evKey[evKey.length - 1];
-
-const isDigitKey = (evKey: string) =>
-	evKey.startsWith('Dig') || evKey.startsWith('Num') && /\d$/.test(evKey);
-
 const isRawModifier = (rawKey: string): rawKey is RawModifier =>
 	RawModifiers.includes(rawKey as RawModifier);
 
@@ -47,7 +42,10 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 		if (isRawModifier(rawModifier)) {
 			modifiersSet.add(ModifierAliases[rawModifier]);
 		}
-		// TODO: else throw
+		else {
+			// TODO:test Invalid input.
+			throw new Error('A non-modifier cannot be used as a modifier');
+		}
 	}
 
 	return Array.from(modifiersSet);
@@ -84,20 +82,26 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 // ------------------------------------------------------------------------------
 
+const isDigitKey = (keyId: string) =>
+	keyId.startsWith('Dig') || keyId.startsWith('Num') && /\d$/.test(keyId);
+
+const extractDigit = (evKey: string) => evKey[evKey.length - 1];
+
 export function isEventModifier (evKey: string): evKey is Modifier {
 	return Modifiers.includes(evKey as Modifier);
 }
 
-export function getMapKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
-	const {key, code} = ev;
-	const kValue = key.toLowerCase();
-	// const kId = code.toLowerCase();
+// TODO:! return CombinationHandlers instof the map key
+export function getTargetKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
+	const {key, code: keyId, shiftKey} = ev;
+	const value = key.toLowerCase();
+	// const id = code.toLowerCase();
 
-	if (map.has(kValue)) return kValue;
-	if (map.has(code)) return code;
+	if (map.has(value)) return value;
+	if (map.has(keyId)) return keyId;
 
-	// TODO: add check if shift is involved (4 vs. $)
-	if (isDigitKey(code)) return extractDigit(code);
+	// e.g. bind 'shift-2'. When 'shift-2' event has '@', return '2'.
+	if (shiftKey && isDigitKey(keyId)) return extractDigit(keyId);
 
 	return key;
 }
@@ -115,18 +119,15 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }
 
-const isSingleChar = (ev: KeyboardEvent) => {
-	const {key: kValue, code: kId} = ev;
-
-	// TODO: understand & doc the second part: `.startsWith('Num')`
-	return kValue.length === 1 && !kId.startsWith('Num'); // Numpad_
-};
+const isSingleChar = (ev: KeyboardEvent) =>
+	ev.key.length === 1 && !ev.code.startsWith('Num'); // Excluede Numpad symbols
 
 const isShiftPressed = (unifiedModifier: UnifiedModifier) =>
 	unifiedModifier.includes('S');
 
+// e.g. bind '*'. When 'shift-8' event has '*' but unifiedModifier is 'S' so no match.
 export const implicitShift = (ev: KeyboardEvent, unifiedModifier: UnifiedModifier) =>
-	isSingleChar(ev) && isShiftPressed(unifiedModifier);
+	isShiftPressed(unifiedModifier) && isSingleChar(ev);
 
 export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier => (
 	uniModWithShift.replace('S', '') || '_'
