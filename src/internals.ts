@@ -82,6 +82,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 // ------------------------------------------------------------------------------
 
+// TODO:test the numpad part
 const isDigitKey = (keyId: string) =>
 	keyId.startsWith('Dig') || keyId.startsWith('Num') && /\d$/.test(keyId);
 
@@ -91,19 +92,25 @@ export function isEventModifier (evKey: string): evKey is Modifier {
 	return Modifiers.includes(evKey as Modifier);
 }
 
-// TODO:! return CombinationHandlers instof the map key
-export function getTargetKey (ev: KeyboardEvent, map: Map<string, CombinationHandlers>) {
+export function getHandlers (
+	ev: KeyboardEvent,
+	map: Map<string, CombinationHandlers>,
+): CombinationHandlers | undefined {
 	const {key, code: keyId, shiftKey} = ev;
 	const value = key.toLowerCase();
-	// const id = code.toLowerCase();
+	// const keyId = code.toLowerCase();
 
-	if (map.has(value)) return value;
-	if (map.has(keyId)) return keyId;
+	if (map.has(value)) return map.get(value)!;
+	if (map.has(keyId)) return map.get(keyId)!;
 
 	// e.g. bind 'shift-2'. When 'shift-2' event has '@', return '2'.
-	if (shiftKey && isDigitKey(keyId)) return extractDigit(keyId);
+	if (shiftKey && isDigitKey(keyId)) {
+		const digit = extractDigit(keyId);
 
-	return key;
+		if (map.has(digit)) {
+			return map.get(digit)!;
+		}
+	}
 }
 
 export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
@@ -119,6 +126,7 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }
 
+// TODO:test the numpad part
 const isSingleChar = (ev: KeyboardEvent) =>
 	ev.key.length === 1 && !ev.code.startsWith('Num'); // Excluede Numpad symbols
 
