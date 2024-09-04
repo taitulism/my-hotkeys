@@ -299,7 +299,7 @@ describe('Symbols', () => {
 		it('With Modifiers', () => {
 			hk.bindKeys({
 				'shift-underscore': spy,
-				'ctrl-plus': spy, // TODO:! 1. plus = implicit shift 2. NumpadPlus
+				'ctrl-plus': spy, // TODO:test 1. plus = implicit shift 2. NumpadPlus
 				'alt-space': spy,
 				'meta-tilde': spy,
 			});

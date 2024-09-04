@@ -52,18 +52,16 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 }
 
 function parseTargetKey (withShift: boolean, targetKey?: Lowercase<string>): ParsedTargetKey {
-	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow.
+	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow. 'ctrl--'
 	if (targetKey === undefined) throw new Error('No Target Key');
-
-	if (targetKey in SymbolIDs && withShift) return SymbolIDs[targetKey as ISymbol];
 	if (targetKey in Aliases) return Aliases[targetKey as Alias];
+	if (withShift && targetKey in SymbolIDs) return SymbolIDs[targetKey as ISymbol];
 
 	return targetKey;
 }
 
 export function parseHotKey (hotkey: string): ParsedHotKey {
 	if (hotkey === '-') {
-		// TODO:!? 'ctrl-minus' / 'ctrl--' / 'ctrl+-'
 		return {
 			targetKey: '-',
 			unifiedModifier: '_',
@@ -72,7 +70,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 	const allKeys = hotkey.toLowerCase().split('-') as Array<Lowercase<string>>;
 	const targetKey = allKeys.pop();
-	const modifiers = parseModifiers(allKeys); // after pop
+	const modifiers = parseModifiers(allKeys); // after poping the target
 
 	return {
 		targetKey: parseTargetKey(modifiers.includes(Shift), targetKey),
