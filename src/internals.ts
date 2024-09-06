@@ -126,7 +126,7 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 
 // TODO:test the numpad part
 const isSingleChar = (ev: KeyboardEvent) =>
-	ev.key.length === 1 && !ev.code.startsWith('Num'); // Excluede Numpad symbols
+	ev.key.length === 1 && !ev.code.startsWith('Num'); // Exclude Numpad symbols
 
 const isShiftPressed = (unifiedModifier: UnifiedModifier) =>
 	unifiedModifier.includes('S');
