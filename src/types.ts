@@ -4,7 +4,8 @@ export type ContextElement = HTMLElement | Document;
 
 export type KeyHandler = (ev: KeyboardEvent) => void
 
-// TODO: refactor all modifier types. Too many dups.
+// TODO:ts Add type: ModifierAlias
+// TODO:ts Refactor all modifier types. Too many dups.
 export const Control = 'Control';
 export const Alt = 'Alt';
 export const Shift = 'Shift';

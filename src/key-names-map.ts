@@ -14,6 +14,7 @@ const SymbolAlias = {
 	'quote': '\'',
 	'quotes': '"',
 	'tilde': '`',
+	'slash': '/',
 	'backslash': '\\',
 } as const;
 
@@ -27,6 +28,12 @@ const ArrowAlias = {
 export const Aliases = {
 	...ArrowAlias,
 	...SymbolAlias,
+	'ins': 'Insert',
+	'del': 'Delete',
+	// 'bs': 'Backspace',
+	'esc': 'Escape',
+	'pgup': 'PageUp',
+	'pgdn': 'PageDown',
 } as const;
 
 export type Alias = keyof typeof Aliases;
