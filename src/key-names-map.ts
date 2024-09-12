@@ -30,7 +30,6 @@ export const Aliases = {
 	...SymbolAlias,
 	'ins': 'Insert',
 	'del': 'Delete',
-	// 'bs': 'Backspace',
 	'esc': 'Escape',
 	'pgup': 'PageUp',
 	'pgdn': 'PageDown',

@@ -20,7 +20,8 @@ module.exports = {
 		'@typescript-eslint/no-inferrable-types': 0,
 		'@typescript-eslint/no-non-null-assertion': 0,
 		'@typescript-eslint/no-unused-vars': 'error',
-		'@typescript-eslint/type-annotation-spacing': 'error',
+		'@typescript-eslint/no-unused-expressions': ['error', {'allowShortCircuit': true}],
+		// '@typescript-eslint/type-annotation-spacing': 'error', // DEPRECATED/Moved
 		'@typescript-eslint/ban-ts-comment': 'warn',
 		'semi': 'error',
 		'comma-dangle': ['error', 'always-multiline'],
