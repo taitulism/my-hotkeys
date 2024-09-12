@@ -72,7 +72,19 @@ describe('Carret/Page Navigation', () => {
 		simulate.keyPress('ArrowRight');
 		expect(spy).toHaveBeenCalledTimes(4);
 
-		// TODO: numpad arrows (needs KeyboardSimulator update)
+		simulate.keyPress('NumLock');
+
+		simulate.keyPress('Np2'); // Down
+		expect(spy).toHaveBeenCalledTimes(5);
+
+		simulate.keyPress('Np4'); // Left
+		expect(spy).toHaveBeenCalledTimes(6);
+
+		simulate.keyPress('Np6'); // Right
+		expect(spy).toHaveBeenCalledTimes(7);
+
+		simulate.keyPress('Np8'); // Up
+		expect(spy).toHaveBeenCalledTimes(8);
 	});
 
 	it('Arrows Aliases (+ case insensitive)', () => {

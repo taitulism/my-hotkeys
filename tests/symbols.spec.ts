@@ -92,7 +92,6 @@ describe('Symbols', () => {
 		expect(spy).toHaveBeenCalledTimes(1);
 		simulate.keyPress('NumpadDecimal');
 		expect(spy).toHaveBeenCalledTimes(2);
-
 		simulate.keyPress('Comma');
 		expect(spy).toHaveBeenCalledTimes(3);
 	});
@@ -131,9 +130,9 @@ describe('Symbols', () => {
 			';': spy,
 		});
 
-		simulate.keyPress('SemiColon');
+		simulate.keyPress('Semicolon');
 		expect(spy).toHaveBeenCalledTimes(1);
-		simulate.keyDown('Shift', 'SemiColon');
+		simulate.keyDown('Shift', 'Semicolon');
 		expect(spy).toHaveBeenCalledTimes(2);
 	});
 
@@ -260,7 +259,7 @@ describe('Symbols', () => {
 			simulate.keyPress('Space');
 			expect(spy).toHaveBeenCalledTimes(3);
 
-			simulate.keyPress('BackQuote');
+			simulate.keyPress('Backquote');
 			expect(spy).toHaveBeenCalledTimes(4);
 
 			simulate.keyPress('Quote');
@@ -270,7 +269,7 @@ describe('Symbols', () => {
 			expect(spy).toHaveBeenCalledTimes(6);
 			simulate.releaseAll();
 
-			simulate.keyPress('BackSlash');
+			simulate.keyPress('Backslash');
 			expect(spy).toHaveBeenCalledTimes(7);
 
 			simulate.keyDown('Shift', 'Minus');
@@ -317,7 +316,7 @@ describe('Symbols', () => {
 			expect(spy).toHaveBeenCalledTimes(3);
 			simulate.releaseAll();
 
-			simulate.keyDown('Meta', 'BackQuote');
+			simulate.keyDown('Meta', 'Backquote');
 			expect(spy).toHaveBeenCalledTimes(4);
 			simulate.releaseAll();
 		});
