@@ -4,7 +4,7 @@ import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vite
 import {hotkey, Hotkey} from '../src';
 import {spyFn} from './utils';
 
-describe('unbinding keys', () => {
+describe('Unbinding Hotkeys', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;
@@ -29,12 +29,18 @@ describe('unbinding keys', () => {
 	});
 
 	it('Throw when key doesn\'t exsits', () => {
-		const errFunc = () => {
+		const errFunc1 = () => {
 			hk.bindKey('a', spy);
 			hk.unbindKey('b');
 		};
 
-		expect(errFunc).to.throw('No Such Hotkey');
+		const errFunc2 = () => {
+			hk.bindKey('x', spy);
+			hk.unbindKeys(['y', 'z']);
+		};
+
+		expect(errFunc1).to.throw('No Such Hotkey');
+		expect(errFunc2).to.throw('No Such Hotkey');
 	});
 
 	describe('.unbindKey()', () => {

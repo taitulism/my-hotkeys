@@ -91,6 +91,8 @@ export class Hotkey {
 		else {
 			this.removeHotkey(targetKey as string, unifiedModifier);
 		}
+
+		return this;
 	}
 
 	public unbindAll () {
@@ -141,5 +143,7 @@ export class Hotkey {
 	public destruct () {
 		this.unmount();
 		this.unbindAll();
+
+		return this;
 	}
 }
