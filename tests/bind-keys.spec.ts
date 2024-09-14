@@ -38,6 +38,15 @@ describe('Binding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(1);
 		});
 
+		it('Throws on duplicate', () => {
+			const failFunc = () => {
+				hk.bindKey('a', spy);
+				hk.bindKey('A', spy);
+			};
+
+			expect(failFunc).throw('Duplicated hotkey: "a"');
+		});
+
 		it('Returns the Hotkey instance', () => {
 			const instance = hk.bindKey('a', spy);
 

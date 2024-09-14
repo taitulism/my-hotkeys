@@ -2,7 +2,7 @@ import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, expect, Mock, describe} from 'vitest';
 import {hotkey, Hotkey} from '../src';
-import {spyFn} from './utils';
+import {spies, spyFn} from './utils';
 
 describe('Modifiers', () => {
 	let doc: Document | undefined;
@@ -28,28 +28,63 @@ describe('Modifiers', () => {
 		spy.mockClear();
 	});
 
+	describe('Basic Behavior', () => {
+		it('Called on target key down with modifier in the background', () => {
+			hk.bindKey('ctrl-a', spy);
+
+			expect(spy).not.toBeCalled();
+			simulate.keyPress('A');
+			expect(spy).not.toBeCalled();
+			simulate.keyPress('Ctrl');
+			expect(spy).not.toBeCalled();
+
+			simulate.keyDown('Ctrl');
+			expect(spy).not.toBeCalled();
+			simulate.keyDown('A');
+			expect(spy).toHaveBeenCalledTimes(1);
+			simulate.keyUp('A', 'Ctrl');
+		});
+
+		it('Doesn\'t trigger "A" on "Ctrl-A"', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'a': spy1,
+				'ctrl-a': spy2,
+			});
+
+			simulate.keyDown('Ctrl', 'A');
+			expect(spy2).toHaveBeenCalledTimes(1);
+			simulate.releaseAll();
+			expect(spy2).toHaveBeenCalledTimes(1);
+			expect(spy1).not.toBeCalled();
+		});
+	});
+
 	it('With Letters', () => {
+		const [spy1, spy2, spy3, spy4] = spies(4);
+
 		hk.bindKeys({
-			'ctrl-a': spy,
-			'alt-b': spy,
-			'shift-c': spy,
-			'meta-d': spy,
+			'ctrl-a': spy1,
+			'alt-b': spy2,
+			'shift-c': spy3,
+			'meta-d': spy4,
 		});
 
 		simulate.keyDown('Ctrl', 'A');
-		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy1).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 
 		simulate.keyDown('Alt', 'B');
-		expect(spy).toHaveBeenCalledTimes(2);
+		expect(spy2).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 
 		simulate.keyDown('Shift', 'C');
-		expect(spy).toHaveBeenCalledTimes(3);
+		expect(spy3).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 
 		simulate.keyDown('Meta', 'D');
-		expect(spy).toHaveBeenCalledTimes(4);
+		expect(spy4).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 	});
 
@@ -104,27 +139,70 @@ describe('Modifiers', () => {
 	});
 
 	it('Multiple Modifiers', () => {
+		const [spy1, spy2, spy3, spy4, spy5, spy6] = spies(6);
+
 		hk.bindKeys({
-			'ctrl-alt-F1': spy,
-			'alt-shift-[': spy,
-			'shift-meta-Enter': spy,
-			'meta-ctrl-PageUp': spy,
+			'ctrl-alt-a': spy1,
+			'alt-shift-b': spy2,
+			'shift-alt-c': spy3,
+			'alt-ctrl-d': spy4,
+			'meta-shift-ctrl-e': spy5,
+			'ctrl-alt-shift-meta-f': spy6,
 		});
 
-		simulate.keyDown('Ctrl', 'Alt', 'F1');
-		expect(spy).toHaveBeenCalledTimes(1);
+		simulate.keyDown('Ctrl', 'Alt', 'A');
+		expect(spy1).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 
-		simulate.keyDown('Alt', 'Shift', 'BracketLeft');
-		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.keyDown('Alt', 'Shift', 'B');
+		expect(spy2).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 
-		simulate.keyDown('Shift', 'Meta', 'Enter');
-		expect(spy).toHaveBeenCalledTimes(3);
+		simulate.keyDown('Shift', 'Alt', 'C');
+		expect(spy3).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
 
-		simulate.keyDown('Meta', 'Ctrl', 'PageUp');
-		expect(spy).toHaveBeenCalledTimes(4);
+		simulate.keyDown('Alt', 'Ctrl', 'D');
+		expect(spy4).toHaveBeenCalledTimes(1);
 		simulate.releaseAll();
+
+		simulate.keyDown('Meta', 'Shift', 'Ctrl', 'E');
+		expect(spy5).toHaveBeenCalledTimes(1);
+		simulate.releaseAll();
+
+		simulate.keyDown('Ctrl', 'Alt', 'Shift', 'Meta', 'F');
+		expect(spy6).toHaveBeenCalledTimes(1);
+		simulate.releaseAll();
+	});
+
+	it('Order doesn\'t matter', () => {
+		const [spy1, spy2] = spies(2);
+
+		hk.bindKeys({
+			'ctrl-alt-a': spy1,
+			'alt-ctrl-b': spy2,
+		});
+
+		simulate.keyDown('Ctrl', 'Alt', 'A');
+		expect(spy1).toHaveBeenCalledTimes(1);
+		simulate.releaseAll();
+
+		simulate.keyDown('Alt', 'Ctrl', 'A');
+		expect(spy1).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
+		simulate.keyDown('Ctrl', 'Alt', 'B');
+		expect(spy2).toHaveBeenCalledTimes(1);
+		simulate.releaseAll();
+
+		simulate.keyDown('Alt', 'Ctrl', 'B');
+		expect(spy2).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
+		const badFunc = () => {
+			hk.bindKey('alt-ctrl-a', spy);
+		};
+
+		expect(badFunc).to.throw('Duplicate');
 	});
 });

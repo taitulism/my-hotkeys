@@ -24,6 +24,7 @@ export class Hotkey {
 			const hotKeys = this.hotkeys.get(tKey) as CombinationHandlers;
 
 			if (hotKeys[unifiedModifier]) {
+				// TODO: The error only shows the target key. Maybe show the whole hotkey?
 				throw new Error(`Duplicated hotkey: "${tKey}"`);
 			}
 
