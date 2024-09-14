@@ -1,21 +1,19 @@
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
-import {it, beforeAll, beforeEach, afterEach, expect, Mock, describe} from 'vitest';
+import {it, beforeAll, beforeEach, afterEach, expect, describe} from 'vitest';
 import {hotkey, Hotkey} from '../src';
-import {spyFn} from './utils';
+import {spies} from './utils';
 
 describe('Arrows & Navigation', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;
-	let spy: Mock;
 
 	beforeAll(() => {
 		const dom = new JSDOM();
 
 		doc = dom.window.document;
 		simulate = new KeyboardSimulator(doc);
-		spy = spyFn();
 	});
 
 	beforeEach(() => {
@@ -23,88 +21,125 @@ describe('Arrows & Navigation', () => {
 	});
 
 	afterEach(() => {
-		hk.unmount();
+		hk.destruct();
 		simulate.reset();
-		spy.mockClear();
 	});
 
 	it('Arrows', () => {
+		const [spy1, spy2, spy3, spy4] = spies(4);
+
 		hk.bindKeys({
-			'ArrowUp': spy,
-			'ArrowDown': spy,
-			'ArrowLeft': spy,
-			'ArrowRight': spy,
+			'ArrowUp': spy1,
+			'ArrowDown': spy2,
+			'ArrowLeft': spy3,
+			'ArrowRight': spy4,
 		});
 
-		simulate.keyPress('ArrowUp');
-		expect(spy).toHaveBeenCalledTimes(1);
+		simulate.keyDown('ArrowUp');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('ArrowDown');
-		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.keyDown('ArrowDown');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('ArrowLeft');
-		expect(spy).toHaveBeenCalledTimes(3);
+		simulate.keyDown('ArrowLeft');
+		expect(spy3).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('ArrowRight');
-		expect(spy).toHaveBeenCalledTimes(4);
+		simulate.keyDown('ArrowRight');
+		expect(spy4).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('NumLock');
+		simulate.keyDown('NumLock'); // Off
 
-		simulate.keyPress('Np2'); // Down
-		expect(spy).toHaveBeenCalledTimes(5);
+		simulate.keyDown('Np8'); // Up
+		expect(spy1).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
 
-		simulate.keyPress('Np4'); // Left
-		expect(spy).toHaveBeenCalledTimes(6);
+		simulate.keyDown('Np2'); // Down
+		expect(spy2).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
 
-		simulate.keyPress('Np6'); // Right
-		expect(spy).toHaveBeenCalledTimes(7);
+		simulate.keyDown('Np4'); // Left
+		expect(spy3).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
 
-		simulate.keyPress('Np8'); // Up
-		expect(spy).toHaveBeenCalledTimes(8);
+		simulate.keyDown('Np6'); // Right
+		expect(spy4).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
 	});
 
 	it('Arrows Aliases (+ case insensitive)', () => {
+		const [spy1, spy2, spy3, spy4] = spies(4);
+
 		hk.bindKeys({
-			'Up': spy,
-			'down': spy,
-			'LEFT': spy,
-			'RighT': spy,
+			'Up': spy1,
+			'down': spy2,
+			'LEFT': spy3,
+			'RighT': spy4,
 		});
 
-		simulate.keyPress('ArrowUp');
-		expect(spy).toHaveBeenCalledTimes(1);
+		simulate.keyDown('ArrowUp');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('ArrowDown');
-		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.keyDown('ArrowDown');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('ArrowLeft');
-		expect(spy).toHaveBeenCalledTimes(3);
+		simulate.keyDown('ArrowLeft');
+		expect(spy3).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('ArrowRight');
-		expect(spy).toHaveBeenCalledTimes(4);
+		simulate.keyDown('ArrowRight');
+		expect(spy4).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 	});
 
-	it('PageUp & PageDown', () => {
+	it('Home/End & Page-Up/Down', () => {
+		const [spy1, spy2, spy3, spy4] = spies(4);
+
 		hk.bindKeys({
-			'PageUp': spy,
-			'PageDown': spy,
+			'Home': spy1,
+			'End': spy2,
+			'PageUp': spy3,
+			'PageDown': spy4,
 		});
 
-		simulate.keyPress('PageUp');
-		expect(spy).toHaveBeenCalledTimes(1);
-		simulate.keyPress('PageDown');
-		expect(spy).toHaveBeenCalledTimes(2);
-	});
+		simulate.keyDown('Home');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-	it('Home & End', () => {
-		hk.bindKeys({
-			'Home': spy,
-			'End': spy,
-		});
+		simulate.keyDown('End');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('Home');
-		expect(spy).toHaveBeenCalledTimes(1);
-		simulate.keyPress('End');
-		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.keyDown('PageUp');
+		expect(spy3).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('PageDown');
+		expect(spy4).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyPress('NumLock'); // Off
+
+		simulate.keyDown('Np7'); // Home
+		expect(spy1).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
+		simulate.keyDown('Np1'); // End
+		expect(spy2).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
+		simulate.keyDown('Np9'); // PageUp
+		expect(spy3).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
+		simulate.keyDown('Np3'); // PageDown
+		expect(spy4).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
 	});
 });

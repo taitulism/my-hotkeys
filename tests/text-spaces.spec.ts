@@ -2,7 +2,7 @@ import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, expect, Mock, describe} from 'vitest';
 import {hotkey, Hotkey} from '../src';
-import {spyFn} from './utils';
+import {spies, spyFn} from './utils';
 
 describe('Text Spaces', () => {
 	let doc: Document | undefined;
@@ -23,54 +23,71 @@ describe('Text Spaces', () => {
 	});
 
 	afterEach(() => {
-		hk.unmount();
+		hk.destruct();
 		simulate.reset();
 		spy.mockClear();
 	});
 
 	it('Space & BackSpace', () => {
+		const [spy1, spy2] = spies(2);
+
 		hk.bindKeys({
-			' ': spy,
-			'Backspace': spy,
+			' ': spy1,
+			'Backspace': spy2,
 		});
 
-		simulate.keyPress('Space');
-		expect(spy).toHaveBeenCalledTimes(1);
-		simulate.keyPress('Backspace');
-		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.keyDown('Space');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('Backspace');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 	});
 
 	it('Insert & Delete', () => {
+		const [spy1, spy2] = spies(2);
+
 		hk.bindKeys({
-			'Insert': spy,
-			'Delete': spy,
+			'Insert': spy1,
+			'Delete': spy2,
 		});
 
-		simulate.keyPress('Insert');
-		expect(spy).toHaveBeenCalledTimes(1);
+		simulate.keyDown('Insert');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
-		simulate.keyPress('Delete');
-		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.keyDown('Delete');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
 		simulate.keyPress('NumLock'); // Off
-		simulate.keyPress('NumpadDecimal'); // = Del
-		expect(spy).toHaveBeenCalledTimes(3);
+
+		simulate.keyDown('Numpad0'); // = Insert
+		expect(spy1).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
+
+		simulate.keyDown('NumpadDecimal'); // = Del
+		expect(spy2).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
 	});
 
 	it('Enter', () => {
 		hk.bindKey('Enter', spy);
 
 		simulate.keyPress('Enter');
-		expect(spy).toHaveBeenCalledTimes(1);
+		expect(spy).toHaveBeenCalledOnce();
 
-		simulate.keyPress('NumpadEnter');
+		simulate.keyDown('NumpadEnter');
 		expect(spy).toHaveBeenCalledTimes(2);
+		simulate.releaseAll();
 	});
 
 	it('Tab', () => {
 		hk.bindKey('Tab', spy);
 
-		simulate.keyPress('Tab');
-		expect(spy).toHaveBeenCalledTimes(1);
+		simulate.keyDown('Tab');
+		expect(spy).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 	});
 });

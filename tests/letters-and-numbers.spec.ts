@@ -4,13 +4,6 @@ import {it, beforeAll, beforeEach, afterEach, expect, Mock, describe} from 'vite
 import {hotkey, Hotkey} from '../src';
 import {spyFn} from './utils';
 
-const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as const;
-const LETTERS = [
-	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-	'U', 'V', 'W', 'X', 'Y', 'Z',
-] as const;
-
 describe('Letters & Numbers', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
@@ -40,7 +33,7 @@ describe('Letters & Numbers', () => {
 			hk.bindKey('a', spy);
 
 			simulate.keyDown('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 			simulate.keyUp('a');
 
 			simulate.keyDown('Shift', 'a');
@@ -63,31 +56,37 @@ describe('Letters & Numbers', () => {
 	});
 
 	it('Letters', () => {
-		LETTERS.forEach((letter, i) => {
+		const LETTERS = [
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z',
+		] as const;
+
+		LETTERS.forEach((letter) => {
+			const spy = spyFn();
+
 			hk.bindKey(letter, spy);
 
 			simulate.keyDown(letter);
-			expect(spy).toHaveBeenCalledTimes(i + 1);
+			expect(spy).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 		});
 	});
 
-	it('Digits', () => {
-		DIGITS.forEach((digit, i) => {
+	it('Numbers', () => {
+		const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as const;
+
+		DIGITS.forEach((digit) => {
+			const spy = spyFn();
+
 			hk.bindKey(String(digit), spy);
 
 			simulate.keyDown(`Digit${digit}`);
-			expect(spy).toHaveBeenCalledTimes(i + 1);
+			expect(spy).toHaveBeenCalledOnce();
 			simulate.releaseAll();
-		});
-	});
-
-	it('Numpad Numbers', () => {
-		DIGITS.forEach((digit, i) => {
-			hk.bindKey(String(digit), spy);
 
 			simulate.keyDown(`Numpad${digit}`);
-			expect(spy).toHaveBeenCalledTimes(i + 1);
+			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 		});
 	});
