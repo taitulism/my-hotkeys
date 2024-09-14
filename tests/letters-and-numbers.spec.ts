@@ -4,6 +4,13 @@ import {it, beforeAll, beforeEach, afterEach, expect, Mock, describe} from 'vite
 import {hotkey, Hotkey} from '../src';
 import {spyFn} from './utils';
 
+const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as const;
+const LETTERS = [
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+	'U', 'V', 'W', 'X', 'Y', 'Z',
+] as const;
+
 describe('Letters & Numbers', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
@@ -23,36 +30,65 @@ describe('Letters & Numbers', () => {
 	});
 
 	afterEach(() => {
-		hk.unmount();
+		hk.destruct();
 		simulate.reset();
 		spy.mockClear();
 	});
 
-	it('a', () => {
-		hk.bindKey('a', spy);
+	describe('Letters are case insensitive', () => {
+		it('Hotkey "a" is also triggered by pressing "A"', () => {
+			hk.bindKey('a', spy);
 
-		simulate.keyDown('A');
-		expect(spy).toHaveBeenCalledTimes(1);
+			simulate.keyDown('a');
+			expect(spy).toHaveBeenCalledTimes(1);
+			simulate.keyUp('a');
+
+			simulate.keyDown('Shift', 'a');
+			expect(spy).toHaveBeenCalledTimes(2);
+			simulate.releaseAll();
+
+			simulate.keyPress('CapsLock');
+			simulate.keyDown('a');
+			expect(spy).toHaveBeenCalledTimes(3);
+		});
+
+		it('Binding "a" is the same as binding "A"', () => {
+			const failFunc = () => {
+				hk.bindKey('a', spy);
+				hk.bindKey('A', spy);
+			};
+
+			expect(failFunc).throw('Duplicated hotkey: "a"');
+		});
 	});
 
-	it('A', () => {
-		hk.bindKey('a', spy);
+	it('Letters', () => {
+		LETTERS.forEach((letter, i) => {
+			hk.bindKey(letter, spy);
 
-		simulate.keyDown('A');
-		expect(spy).toHaveBeenCalledTimes(1);
+			simulate.keyDown(letter);
+			expect(spy).toHaveBeenCalledTimes(i + 1);
+			simulate.releaseAll();
+		});
 	});
 
-	it('Digit 1', () => {
-		hk.bindKey('1', spy);
+	it('Digits', () => {
+		DIGITS.forEach((digit, i) => {
+			hk.bindKey(String(digit), spy);
 
-		simulate.keyDown('Digit1');
-		expect(spy).toHaveBeenCalledTimes(1);
+			simulate.keyDown(`Digit${digit}`);
+			expect(spy).toHaveBeenCalledTimes(i + 1);
+			simulate.releaseAll();
+		});
 	});
 
-	it('Numpad 1', () => {
-		hk.bindKey('1', spy);
+	it('Numpad Numbers', () => {
+		DIGITS.forEach((digit, i) => {
+			hk.bindKey(String(digit), spy);
 
-		simulate.keyDown('Numpad1');
-		expect(spy).toHaveBeenCalledTimes(1);
+			simulate.keyDown(`Numpad${digit}`);
+			expect(spy).toHaveBeenCalledTimes(i + 1);
+			simulate.releaseAll();
+		});
 	});
 });

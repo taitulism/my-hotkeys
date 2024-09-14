@@ -40,11 +40,11 @@ describe('Binding Hotkeys', () => {
 
 		it('Throws on duplicate', () => {
 			const failFunc = () => {
-				hk.bindKey('a', spy);
-				hk.bindKey('A', spy);
+				hk.bindKey('1', spy);
+				hk.bindKey('1', spy);
 			};
 
-			expect(failFunc).throw('Duplicated hotkey: "a"');
+			expect(failFunc).throw('Duplicated hotkey: "1"');
 		});
 
 		it('Returns the Hotkey instance', () => {
