@@ -28,7 +28,7 @@ describe('Modifiers', () => {
 		spy.mockClear();
 	});
 
-	describe('Basic Behavior', () => {
+	describe('Expected Behavior', () => {
 		it('Called on target key down with modifier in the background', () => {
 			hk.bindKey('ctrl-a', spy);
 
@@ -58,6 +58,22 @@ describe('Modifiers', () => {
 			simulate.releaseAll();
 			expect(spy2).toHaveBeenCalledTimes(1);
 			expect(spy1).not.toBeCalled();
+		});
+
+		it('Can trigger two hotkeys with the same modifier, without releasing it after the first one', () => {
+			const [spy1, spy2] = spies(2);
+
+			hk.bindKeys({
+				'ctrl-a': spy1,
+				'ctrl-b': spy2,
+			});
+
+			simulate.keyDown('Ctrl', 'A');
+			expect(spy1).toHaveBeenCalledTimes(1);
+			simulate.keyUp('A');
+			expect(spy2).not.toBeCalled();
+			simulate.keyDown('B');
+			expect(spy2).toHaveBeenCalledTimes(1);
 		});
 	});
 
