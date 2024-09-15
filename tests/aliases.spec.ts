@@ -142,14 +142,14 @@ describe('Aliases', () => {
 			expect(spy1).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 			simulate.keyDown('Np0');
-			// expect(spy1).toHaveBeenCalledTimes(2);
+			expect(spy1).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 
 			simulate.keyDown('Delete');
 			expect(spy2).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 			simulate.keyDown('Decimal');
-			// expect(spy2).toHaveBeenCalledTimes(2);
+			expect(spy2).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 
 			simulate.keyDown('Esc');
@@ -160,14 +160,14 @@ describe('Aliases', () => {
 			expect(spy4).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 			simulate.keyDown('Np9');
-			expect(spy4).toHaveBeenCalledOnce();
+			expect(spy4).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 
 			simulate.keyDown('PageDown');
 			expect(spy5).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 			simulate.keyDown('Np3');
-			expect(spy5).toHaveBeenCalledOnce();
+			expect(spy5).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 		});
 	});

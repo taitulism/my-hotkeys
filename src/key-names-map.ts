@@ -28,11 +28,11 @@ const ArrowAlias = {
 export const Aliases = {
 	...ArrowAlias,
 	...SymbolAlias,
-	'ins': 'Insert', // TODO:! numpad not working
-	'del': 'Delete', // TODO:! numpad not working
-	'esc': 'Escape',
-	'pgup': 'PageUp',
-	'pgdn': 'PageDown',
+	'ins': 'insert',
+	'del': 'delete',
+	'esc': 'escape',
+	'pgup': 'pageup',
+	'pgdn': 'pagedown',
 } as const;
 
 export type Alias = keyof typeof Aliases;
