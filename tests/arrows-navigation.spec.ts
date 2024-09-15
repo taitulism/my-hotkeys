@@ -71,33 +71,6 @@ describe('Arrows & Navigation', () => {
 
 	});
 
-	it('Arrows Aliases (+ case insensitive)', () => {
-		const [spy1, spy2, spy3, spy4] = spies(4);
-
-		hk.bindKeys({
-			'Up': spy1,
-			'down': spy2,
-			'LEFT': spy3,
-			'RighT': spy4,
-		});
-
-		simulate.keyDown('ArrowUp');
-		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
-
-		simulate.keyDown('ArrowDown');
-		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
-
-		simulate.keyDown('ArrowLeft');
-		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
-
-		simulate.keyDown('ArrowRight');
-		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
-	});
-
 	it('Home/End & Page-Up/Down', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 

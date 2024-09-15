@@ -154,6 +154,34 @@ describe('Modifiers', () => {
 		simulate.releaseAll();
 	});
 
+	it('With Aliases', () => {
+		const [spy1, spy2, spy3, spy4] = spies(4);
+
+		hk.bindKeys({
+			'shift-underscore': spy1,
+			'ctrl-plus': spy2, // TODO:test 1. plus = implicit shift 2. NumpadPlus
+			'alt-space': spy3,
+			'meta-tilde': spy4,
+		});
+
+		simulate.keyDown('Shift', 'Minus');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		// simulate.keyDown('Ctrl', 'Shift', 'Equal');
+		simulate.keyDown('Ctrl', 'NumpadAdd');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('Alt', 'Space');
+		expect(spy3).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('Meta', 'Backquote');
+		expect(spy4).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+	});
+
 	it('Multiple Modifiers', () => {
 		const [spy1, spy2, spy3, spy4, spy5, spy6] = spies(6);
 

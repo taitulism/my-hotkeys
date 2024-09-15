@@ -14,7 +14,7 @@ const SymbolAlias = {
 	'quote': '\'',
 	'quotes': '"',
 	'tilde': '`',
-	'slash': '/',
+	'slash': '/', // TODO:test or remove
 	'backslash': '\\',
 } as const;
 
@@ -28,8 +28,8 @@ const ArrowAlias = {
 export const Aliases = {
 	...ArrowAlias,
 	...SymbolAlias,
-	'ins': 'Insert',
-	'del': 'Delete',
+	'ins': 'Insert', // TODO:! numpad not working
+	'del': 'Delete', // TODO:! numpad not working
 	'esc': 'Escape',
 	'pgup': 'PageUp',
 	'pgdn': 'PageDown',
