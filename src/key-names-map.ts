@@ -6,7 +6,14 @@ export const ModifierAliases = {
 	meta: 'Meta',
 } as const;
 
-const SymbolAlias = {
+export const Aliases = {
+	// Arrows
+	'up': 'arrowup',
+	'down': 'arrowdown',
+	'left': 'arrowleft',
+	'right': 'arrowright',
+
+	// Symbols
 	'space': ' ',
 	'plus': '+',
 	'minus': '-',
@@ -14,20 +21,10 @@ const SymbolAlias = {
 	'quote': '\'',
 	'quotes': '"',
 	'tilde': '`',
-	'slash': '/', // TODO:test or remove
 	'backslash': '\\',
-} as const;
+	// 'slash': '/', // Not ugly enough
 
-const ArrowAlias = {
-	'up': 'ArrowUp',
-	'down': 'ArrowDown',
-	'left': 'ArrowLeft',
-	'right': 'ArrowRight',
-} as const;
-
-export const Aliases = {
-	...ArrowAlias,
-	...SymbolAlias,
+	// Others
 	'ins': 'insert',
 	'del': 'delete',
 	'esc': 'escape',
