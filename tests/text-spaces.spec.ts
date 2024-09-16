@@ -75,8 +75,9 @@ describe('Text Spaces', () => {
 	it('Enter', () => {
 		hk.bindKey('Enter', spy);
 
-		simulate.keyPress('Enter');
+		simulate.keyDown('Enter');
 		expect(spy).toHaveBeenCalledOnce();
+		simulate.releaseAll();
 
 		simulate.keyDown('NumpadEnter');
 		expect(spy).toHaveBeenCalledTimes(2);
