@@ -72,17 +72,16 @@ describe('Symbols', () => {
 	});
 
 	it('Punctuation & Text', () => {
-		const [spy1, spy2, spy3, spy4, spy5, spy6, spy7, spy8] = spies(8);
+		const [spy1, spy2, spy3, spy4, spy5, spy6, spy7] = spies(8);
 
 		hk.bindKeys({
 			'.': spy1,
 			',': spy2,
-			'\\': spy3,
-			'\'': spy4,
-			'"': spy5,
-			'`': spy6,
-			';': spy7,
-			':': spy8,
+			'\'': spy3,
+			'"': spy4,
+			'`': spy5,
+			';': spy6,
+			':': spy7,
 		});
 
 		simulate.keyDown('Period');
@@ -97,28 +96,24 @@ describe('Symbols', () => {
 		expect(spy2).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		simulate.keyDown('Backslash');
+		simulate.keyDown('SingleQuote');
 		expect(spy3).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		simulate.keyDown('SingleQuote');
+		simulate.keyDown('Shift', 'SingleQuote');
 		expect(spy4).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		simulate.keyDown('Shift', 'SingleQuote');
+		simulate.keyDown('Backquote');
 		expect(spy5).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		simulate.keyDown('Backquote');
+		simulate.keyDown('Semicolon');
 		expect(spy6).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		simulate.keyDown('Semicolon');
-		expect(spy7).toHaveBeenCalledOnce();
-		simulate.releaseAll();
-
 		simulate.keyDown('Shift', 'Semicolon');
-		expect(spy8).toHaveBeenCalledOnce();
+		expect(spy7).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 	});
 
@@ -173,8 +168,8 @@ describe('Symbols', () => {
 	it('Other Shift Symbols', () => {
 		const [
 			spy1, spy2, spy3, spy4, spy5, spy6,
-			spy7, spy8, spy9, spy10, spy11,
-		] = spies(11);
+			spy7, spy8, spy9, spy10, spy11, spy12,
+		] = spies(12);
 
 		hk.bindKeys({
 			'~': spy1,
@@ -188,6 +183,7 @@ describe('Symbols', () => {
 			'_': spy9,
 			'|': spy10,
 			'?': spy11,
+			'\\': spy12,
 		});
 
 		simulate.keyDown('Shift', 'Backquote');
@@ -233,6 +229,15 @@ describe('Symbols', () => {
 		simulate.keyDown('Shift', 'Slash');
 		expect(spy11).toHaveBeenCalledOnce();
 		simulate.releaseAll();
+
+		simulate.keyDown('Backslash');
+		expect(spy12).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		// Missing in KbSim
+		// simulate.keyDown('IntlBackslash');
+		// expect(spy12).toHaveBeenCalledTimes(2);
+		// simulate.releaseAll();
 	});
 
 });
