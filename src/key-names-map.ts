@@ -17,10 +17,14 @@ export const Aliases = {
 	'space': ' ',
 	'plus': '+',
 	'minus': '-',
+	'equal': '=',
 	'underscore': '_',
 	'quote': '\'',
+	'singlequote': '\'',
 	'quotes': '"',
-	'tilde': '`',
+	'doublequotes': '"',
+	'backquote': '`',
+	'tilde': '~',
 	'backslash': '\\',
 	// 'slash': '/', // Not ugly enough
 
@@ -43,10 +47,12 @@ export const SymbolIDs = {
 	'\\': 'Backslash',
 	',': 'Comma',
 	'`': 'Backquote',
+	'=': 'Equal',
+	'-': ['Minus', 'NumpadSubtract'],
 	'.': ['Period', 'NumpadDecimal'],
 	'/': ['Slash', 'NumpadDivide'],
 	/* TODO:?
-		maybe Slash can be removed
+		maybe Slash can be removed (Numpad symbols don't have the shift issue)
 		If so, consider special treatment for period and remove it and
 		all the array handling
 	*/

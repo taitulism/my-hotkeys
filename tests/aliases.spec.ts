@@ -57,49 +57,85 @@ describe('Aliases', () => {
 		});
 
 		it('Symbol Aliases', () => {
-			const [spy1, spy2, spy3, spy4, spy5, spy6, spy7, spy8] = spies(8);
+			const [
+				spy1, spy2, spy3, spy4, spy5,
+				spy6, spy7, spy8, spy9, spy10,
+			] = spies(10);
 
 			hk.bindKeys({
-				'plus': spy1,
-				'minus': spy2,
-				'space': spy3,
-				'tilde': spy4,
-				'quote': spy5,
-				'quotes': spy6,
-				'backslash': spy7,
-				'underscore': spy8,
+				'minus': spy1,
+				'plus': spy2,
+				'equal': spy3,
+				'space': spy4,
+				'tilde': spy5,
+				'quote': spy6,
+				'quotes': spy7,
+				'backquote': spy8,
+				'backslash': spy9,
+				'underscore': spy10,
+				// More below (different instance)
 			});
 
-			simulate.keyDown('Shift', 'Equal');
+			simulate.keyDown('Minus');
 			expect(spy1).toHaveBeenCalledOnce();
 			simulate.releaseAll();
+			simulate.keyDown('Subtract');
+			expect(spy1).toHaveBeenCalledTimes(2);
+			simulate.releaseAll();
 
-			simulate.keyDown('Minus');
+			simulate.keyDown('Shift', 'Equal'); // +
 			expect(spy2).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 
-			simulate.keyDown('Space');
+			simulate.keyDown('Equal');
 			expect(spy3).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 
-			simulate.keyDown('Backquote');
+			simulate.keyDown('Space');
 			expect(spy4).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 
-			simulate.keyDown('Quote');
+			simulate.keyDown('Shift', 'Backquote'); // ~
 			expect(spy5).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 
-			simulate.keyDown('Shift', 'Quote');
+			simulate.keyDown('Quote');
 			expect(spy6).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 
-			simulate.keyDown('Backslash');
+			simulate.keyDown('Shift', 'Quote'); // "
 			expect(spy7).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 
-			simulate.keyDown('Shift', 'Minus');
+			simulate.keyDown('Backquote');
 			expect(spy8).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+
+			simulate.keyDown('Backslash');
+			expect(spy9).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+
+			simulate.keyDown('Shift', 'Minus'); // _
+			expect(spy10).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+
+			hk.destruct();
+
+			const hk2 = hotkey(doc);
+			const [spy21, spy22] = spies(2);
+
+			// A different instance for duplicated aliases
+			hk2.bindKeys({
+				'singlequote': spy21,
+				'doublequotes': spy22,
+			});
+
+			simulate.keyDown('Quote');
+			expect(spy21).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+
+			simulate.keyDown('Shift', 'Quote');
+			expect(spy22).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 		});
 

@@ -54,10 +54,12 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 function parseTargetKey (withShift: boolean, targetKey?: Lowercase<string>): ParsedTargetKey {
 	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow. 'ctrl--'
 	if (targetKey === undefined) throw new Error('No Target Key');
-	if (targetKey in Aliases) return Aliases[targetKey as Alias];
-	if (withShift && targetKey in SymbolIDs) return SymbolIDs[targetKey as ISymbol];
 
-	return targetKey;
+	const tKey = targetKey in Aliases ? Aliases[targetKey as Alias] : targetKey;
+
+	if (withShift && tKey in SymbolIDs) return SymbolIDs[tKey as ISymbol];
+
+	return tKey;
 }
 
 export function parseHotKey (hotkey: string): ParsedHotKey {
@@ -96,10 +98,9 @@ export function getHandlers (
 ): CombinationHandlers | undefined {
 	const {key, code: keyId, shiftKey} = ev;
 	const value = key.toLowerCase();
-	// const keyId = code.toLowerCase();
 
-	if (map.has(value)) return map.get(value)!;
-	if (map.has(keyId)) return map.get(keyId)!;
+	if (map.has(value)) return map.get(value);
+	if (map.has(keyId)) return map.get(keyId);
 
 	// e.g. bind 'shift-2'. When 'shift-2' event has '@', return '2'.
 	if (shiftKey && isDigitKey(keyId)) {
@@ -131,9 +132,10 @@ const isSingleChar = (ev: KeyboardEvent) =>
 const isShiftPressed = (unifiedModifier: UnifiedModifier) =>
 	unifiedModifier.includes('S');
 
-// e.g. bind '*'. When 'shift-8' event has '*' but unifiedModifier is 'S' so no match.
+// e.g. bind '@'. When 'shift-2' event has '@' but unifiedModifier is 'S' so no match.
 export const implicitShift = (ev: KeyboardEvent, unifiedModifier: UnifiedModifier) =>
 	isShiftPressed(unifiedModifier) && isSingleChar(ev);
+// TODO:! take shift state from ev
 
 export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier => (
 	uniModWithShift.replace('S', '') || '_'

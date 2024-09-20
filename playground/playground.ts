@@ -17,14 +17,6 @@ kb1.bindKeys({
 		ev.preventDefault();
 		logKey('SXS 2');
 	},
-	'ctrl-shift-@': (ev) => {
-		ev.preventDefault();
-		logKey('SXS 3');
-	},
-	'ctrl-@': (ev) => {
-		ev.preventDefault();
-		logKey('SXS 4');
-	},
 });
 
 console.log(kb1.hotkeys);

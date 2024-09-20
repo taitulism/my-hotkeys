@@ -74,6 +74,183 @@ describe('Modifiers', () => {
 		});
 	});
 
+	describe('Shift', () => {
+		describe('Shift + Symbols', () => {
+			it('Shift + Number', () => {
+				hk.bindKey('shift-4', spy);
+
+				simulate.keyDown('Shift', '4');
+				expect(spy).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Np4');
+				expect(spy).toHaveBeenCalledTimes(2);
+				simulate.releaseAll();
+			});
+
+			it('Shift + Number Symbol', () => {
+				hk.bindKey('shift-*', spy);
+
+				simulate.keyDown('Shift', '8');
+				expect(spy).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Multiply');
+				expect(spy).toHaveBeenCalledTimes(2);
+				simulate.releaseAll();
+			});
+
+			it('Shift + Non-Number Symbol', () => {
+				const [spy1, spy2, spy3, spy4, spy5, spy6, spy7, spy8] = spies(8);
+
+				hk.bindKeys({
+					'shift-[': spy1,
+					'shift-]': spy2,
+					'shift-;': spy3,
+					'shift-\'': spy4,
+					'shift-\\': spy5,
+					'shift-,': spy6,
+					'shift-`': spy7,
+					'shift-=': spy8,
+				});
+
+				simulate.keyDown('Shift', 'BracketLeft');
+				expect(spy1).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'BracketRight');
+				expect(spy2).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Semicolon');
+				expect(spy3).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'SingleQuote');
+				expect(spy4).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Backslash');
+				expect(spy5).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Comma');
+				expect(spy6).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Backtick');
+				expect(spy7).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Equal');
+				expect(spy8).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+			});
+
+			it('Shift + Minus', () => {
+				hk.bindKey('shift-minus', spy);
+
+				simulate.keyDown('Shift', 'Minus');
+				expect(spy).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Subtract');
+				expect(spy).toHaveBeenCalledTimes(2);
+				simulate.releaseAll();
+			});
+
+			it('Shift + Slash', () => {
+				hk.bindKey('shift-/', spy);
+
+				simulate.keyDown('Shift', 'Slash');
+				expect(spy).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Divide');
+				expect(spy).toHaveBeenCalledTimes(2);
+				simulate.releaseAll();
+			});
+
+			it('Shift + Period', () => {
+				hk.bindKey('shift-.', spy);
+
+				simulate.keyDown('Shift', 'Period');
+				expect(spy).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'Decimal');
+				expect(spy).toHaveBeenCalledTimes(2);
+				simulate.releaseAll();
+			});
+		});
+
+		describe('Implicit Shift', () => {
+			it('Implicit shift symbol', () => {
+				hk.bindKey('@', spy);
+
+				simulate.keyDown('Shift', '2');
+				expect(spy).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+			});
+
+			it('Priority: Explicit shift over implicit shift', () => {
+				const [spy1, spy2] = spies(2);
+
+				hk.bindKeys({
+					'shift-@': spy1, // <-- priority
+					'@': spy2,
+				});
+
+				simulate.keyDown('Shift', '2');
+				expect(spy1).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+				expect(spy2).not.toHaveBeenCalled();
+			});
+
+			it('Priority: Explicit shift over implicit shift (multiple modifiers)', () => {
+				const [spy1, spy2] = spies(2);
+
+				hk.bindKeys({
+					'ctrl-shift-@': spy1, // <-- priority
+					'ctrl-@': spy2,
+				});
+
+				simulate.keyDown('Ctrl', 'Shift', '2');
+				expect(spy1).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+				expect(spy2).not.toHaveBeenCalled();
+			});
+
+			it('Priority: Implicit shift over shift + lowercase character', () => {
+				const [spy1, spy2] = spies(2);
+
+				hk.bindKeys({
+					'@': spy1, // <-- priority
+					'shift-2': spy2,
+				});
+
+				simulate.keyDown('Shift', '2');
+				expect(spy1).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+				expect(spy2).not.toHaveBeenCalled();
+			});
+
+			it('Priority: Implicit shift over shift + lowercase character (multiple modifiers)', () => {
+				const [spy1, spy2] = spies(2);
+
+				hk.bindKeys({
+					'ctrl-@': spy1, // <-- priority
+					'ctrl-shift-2': spy2,
+				});
+
+				simulate.keyDown('Ctrl', 'Shift', '2');
+				expect(spy1).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+				expect(spy2).not.toHaveBeenCalled();
+			});
+		});
+	});
+
 	it('With Letters', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 
@@ -156,16 +333,18 @@ describe('Modifiers', () => {
 	});
 
 	it('With Aliases', () => {
-		const [spy1, spy2, spy3, spy4] = spies(4);
+		const [spy1, spy2, spy3, spy4, spy5, spy6] = spies(6);
 
 		hk.bindKeys({
-			'shift-underscore': spy1,
+			'shift-quote': spy1,
 			'ctrl-plus': spy2,
 			'alt-space': spy3,
-			'meta-tilde': spy4,
+			'meta-pgdn': spy4,
+			'shift-tilde': spy5,
+			'shift-minus': spy6,
 		});
 
-		simulate.keyDown('Shift', 'Minus');
+		simulate.keyDown('Shift', 'Quote');
 		expect(spy1).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
@@ -180,8 +359,19 @@ describe('Modifiers', () => {
 		expect(spy3).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		simulate.keyDown('Meta', 'Backquote');
+		simulate.keyDown('Meta', 'PageDown');
 		expect(spy4).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('Shift', 'Backquote');
+		expect(spy5).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('Shift', 'Minus');
+		expect(spy6).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+		simulate.keyDown('Shift', 'Subtract');
+		expect(spy6).toHaveBeenCalledTimes(2);
 		simulate.releaseAll();
 	});
 

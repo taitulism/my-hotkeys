@@ -234,7 +234,7 @@ describe('Symbols', () => {
 		expect(spy12).toHaveBeenCalledOnce();
 		simulate.releaseAll();
 
-		// Missing in KbSim
+		// TODO: Missing in KbSim
 		// simulate.keyDown('IntlBackslash');
 		// expect(spy12).toHaveBeenCalledTimes(2);
 		// simulate.releaseAll();

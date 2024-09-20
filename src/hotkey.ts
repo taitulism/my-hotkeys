@@ -119,13 +119,10 @@ export class Hotkey {
 			handlers[unifiedModifier]?.(ev);
 		}
 		else if (implicitShift(ev, unifiedModifier)) {
-			const alternativeUnifiedModifier = removeShift(unifiedModifier);
+			const uniModWithoutShift = removeShift(unifiedModifier);
+			const handler = handlers[uniModWithoutShift];
 
-			if (alternativeUnifiedModifier !== unifiedModifier) {
-				const handler = handlers[alternativeUnifiedModifier];
-
-				handler?.(ev);
-			}
+			handler?.(ev);
 		}
 	};
 
