@@ -51,7 +51,7 @@ describe('Letters & Numbers', () => {
 				hk.bindKey('A', spy);
 			};
 
-			expect(failFunc).throw('Duplicated hotkey: "a"');
+			expect(failFunc).throw('Duplicated hotkey: "A"');
 		});
 	});
 

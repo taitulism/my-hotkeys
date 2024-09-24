@@ -83,11 +83,13 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 // ------------------------------------------------------------------------------
 
-// TODO:test the numpad part
-const isDigitKey = (keyId: string) =>
-	keyId.startsWith('Dig') || keyId.startsWith('Num') && /\d$/.test(keyId);
+const isDigitKey = (keyId: string) => keyId.startsWith('Dig');
+const isNumpadKey = (keyId: string) => keyId.startsWith('Num');
+const isNumpadNumber = (keyId: string) => keyId.startsWith('Num') && /\d$/.test(keyId);
 
-const extractDigit = (evKey: string) => evKey[evKey.length - 1];
+// TODO:test the numpad part
+const isNumberKey = (keyId: string) => isDigitKey(keyId) || isNumpadNumber(keyId);
+const extractDigit = (keyId: string) => keyId[keyId.length - 1];
 
 export function isEventModifier (evKey: string): evKey is Modifier {
 	return Modifiers.includes(evKey as Modifier);
@@ -104,7 +106,7 @@ export function getHandlers (
 	if (map.has(keyId)) return map.get(keyId);
 
 	// e.g. bind 'shift-2'. When 'shift-2' event has '@', return '2'.
-	if (shiftKey && isDigitKey(keyId)) {
+	if (shiftKey && isNumberKey(keyId)) {
 		const digit = extractDigit(keyId);
 
 		if (map.has(digit)) {
@@ -128,20 +130,18 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 
 // TODO:test the numpad part
 const isSingleChar = (ev: KeyboardEvent) =>
-	ev.key.length === 1 && !ev.code.startsWith('Num'); // Exclude Numpad symbols
-
-const isShiftPressed = (unifiedModifier: UnifiedModifier) =>
-	unifiedModifier.includes('S');
+	ev.key.length === 1 && !isNumpadKey(ev.code); // Exclude Numpad symbols
 
 // e.g. bind '@'. When 'shift-2' event has '@' but unifiedModifier is 'S' so no match.
-export const implicitShift = (ev: KeyboardEvent, unifiedModifier: UnifiedModifier) =>
-	isShiftPressed(unifiedModifier) && isSingleChar(ev);
-// TODO:! take shift state from ev
+export const implicitShift = (ev: KeyboardEvent) => ev.shiftKey && isSingleChar(ev);
 
 export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier => (
 	uniModWithShift.replace('S', '') || '_'
 ) as UnifiedModifier;
 
+
+
+// const isShiftPressed = (unifiedModifier: UnifiedModifier) => unifiedModifier.includes('S');
 
 // export function isModifierPressed (ev: KeyboardEvent) {
 // 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;

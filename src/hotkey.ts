@@ -20,28 +20,30 @@ export class Hotkey {
 
 	constructor (public ctxElm: ContextElement = document) {}
 
-	private addHotkey = (parsedHotKey: ParsedHotKey, handlerFn: KeyHandler,
+	private addHotkey = (
+		parsedHotKey: ParsedHotKey,
+		handlerFn: KeyHandler,
+		hotkey: string,
 	) => {
 		const {targetKey, unifiedModifier, withShift} = parsedHotKey;
 
 		if (this.hotkeys.has(targetKey)) {
-			const hotKeys = this.hotkeys.get(targetKey) as CombinationHandlers;
+			const handlers = this.hotkeys.get(targetKey) as CombinationHandlers;
 
-			if (hotKeys[unifiedModifier]) {
-				// TODO: The error only shows the target key. Maybe show the whole hotkey?
-				throw new Error(`Duplicated hotkey: "${targetKey}"`);
+			if (handlers[unifiedModifier]) {
+				throw new Error(`Duplicated hotkey: "${hotkey}"`);
 			}
 
-			hotKeys[unifiedModifier] = handlerFn;
+			handlers[unifiedModifier] = handlerFn;
 		}
 		else {
 			this.hotkeys.set(targetKey, {[unifiedModifier]: handlerFn});
 		}
 
 		if (withShift && targetKey in SymbolIDs) {
-			const keyID = SymbolIDs[targetKey as ISymbol];
+			const keyId = SymbolIDs[targetKey as ISymbol];
 
-			this.addHotkey({targetKey: keyID, unifiedModifier}, handlerFn);
+			this.addHotkey({targetKey: keyId, unifiedModifier}, handlerFn, hotkey);
 		}
 	};
 
@@ -49,16 +51,21 @@ export class Hotkey {
 		const {targetKey, unifiedModifier, withShift} = parsedHotKey;
 
 		if (this.hotkeys.has(targetKey)) {
-			const hotKeys = this.hotkeys.get(targetKey) as CombinationHandlers;
+			const handlers = this.hotkeys.get(targetKey) as CombinationHandlers;
 
-			if (hotKeys[unifiedModifier]) {
-				delete hotKeys[unifiedModifier];
+			if (handlers[unifiedModifier]) {
+				delete handlers[unifiedModifier];
+
+				// If empty, no handlers, remove map key
+				if (Object.keys(handlers).length === 0) {
+					this.hotkeys.delete(targetKey);
+				}
 			}
 
 			if (withShift && targetKey in SymbolIDs) {
-				const keyID = SymbolIDs[targetKey as ISymbol];
+				const keyId = SymbolIDs[targetKey as ISymbol];
 
-				this.removeHotkey({targetKey: keyID, unifiedModifier});
+				this.removeHotkey({targetKey: keyId, unifiedModifier});
 			}
 		}
 		else {
@@ -69,7 +76,7 @@ export class Hotkey {
 	public bindKey (hotkey: string, handlerFn: KeyHandler) {
 		const parsedHotKey = parseHotKey(hotkey);
 
-		this.addHotkey(parsedHotKey, handlerFn);
+		this.addHotkey(parsedHotKey, handlerFn, hotkey);
 
 		return this;
 	}
@@ -122,7 +129,7 @@ export class Hotkey {
 		if (handlers[unifiedModifier]) {
 			handlers[unifiedModifier]?.(ev);
 		}
-		else if (implicitShift(ev, unifiedModifier)) {
+		else if (implicitShift(ev)) {
 			const uniModWithoutShift = removeShift(unifiedModifier);
 			const handler = handlers[uniModWithoutShift];
 
