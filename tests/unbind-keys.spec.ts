@@ -23,12 +23,12 @@ describe('Unbinding Hotkeys', () => {
 	});
 
 	afterEach(() => {
-		hk.unmount();
+		hk.destruct();
 		simulate.reset();
 		spy.mockClear();
 	});
 
-	it('Throw when key doesn\'t exsits', () => {
+	it('Throws when key doesn\'t exsits', () => {
 		const errFunc1 = () => {
 			hk.bindKey('a', spy);
 			hk.unbindKey('b');
@@ -44,7 +44,7 @@ describe('Unbinding Hotkeys', () => {
 	});
 
 	describe('.unbindKey()', () => {
-		it('Unbind a single key', () => {
+		it('Unbinds a single key', () => {
 			hk.bindKey('a', spy);
 
 			simulate.keyDown('A');
@@ -61,18 +61,35 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(2);
 		});
 
-		it('Unbind a double Key', () => {
-			hk.bindKey('/', spy);
+		it('Unbinds an alias', () => {
+			hk.bindKey('shift-pgdn', spy);
 
-			simulate.keyDown('Slash');
+			simulate.keyDown('Shift', 'PageDown');
 			expect(spy).toHaveBeenCalledTimes(1);
-			simulate.keyUp('Slash');
+			simulate.releaseAll();
 
-			simulate.keyDown('NumpadDivide');
+			simulate.keyDown('Shift', 'PageDown');
 			expect(spy).toHaveBeenCalledTimes(2);
-			simulate.keyUp('NumpadDivide');
+			simulate.releaseAll();
 
-			hk.unbindKey('/');
+			hk.unbindKey('shift-pgdn');
+
+			simulate.keyPress('Shift', 'PageDown');
+			expect(spy).toHaveBeenCalledTimes(2);
+		});
+
+		it('Unbinds a dup Key (Shift + Symbol)', () => {
+			hk.bindKey('shift-/', spy);
+
+			simulate.keyDown('Shift', 'Slash');
+			expect(spy).toHaveBeenCalledTimes(1);
+			simulate.releaseAll();
+
+			simulate.keyDown('Shift', 'NumpadDivide');
+			expect(spy).toHaveBeenCalledTimes(2);
+			simulate.releaseAll();
+
+			hk.unbindKey('shift-/');
 
 			simulate.keyPress('Slash');
 			expect(spy).toHaveBeenCalledTimes(2);
@@ -80,7 +97,7 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(2);
 		});
 
-		it('Unbind one key of', () => {
+		it('Unbinds one key of', () => {
 			hk.bindKeys({
 				'a': spy,
 				'ctrl-a': spy,
@@ -105,7 +122,7 @@ describe('Unbinding Hotkeys', () => {
 	});
 
 	describe('.unbindKeys()', () => {
-		it('Unbind multiple keys', () => {
+		it('Unbinds multiple keys', () => {
 			hk.bindKeys({
 				'a': spy,
 				'b': spy,
@@ -133,7 +150,7 @@ describe('Unbinding Hotkeys', () => {
 	});
 
 	describe('.unbindAll()', () => {
-		it('Unbind all keys', () => {
+		it('Unbinds all keys', () => {
 			hk.bindKeys({
 				'a': spy,
 				'b': spy,

@@ -48,14 +48,9 @@ export const SymbolIDs = {
 	',': 'Comma',
 	'`': 'Backquote',
 	'=': 'Equal',
-	'-': ['Minus', 'NumpadSubtract'],
-	'.': ['Period', 'NumpadDecimal'],
-	'/': ['Slash', 'NumpadDivide'],
-	/* TODO:?
-		maybe Slash can be removed (Numpad symbols don't have the shift issue)
-		If so, consider special treatment for period and remove it and
-		all the array handling
-	*/
+	'-': 'Minus',  // + NumpadSubtract - Numpad symbols don't have the shift issue
+	'.': 'Period', // + NumpadDecimal
+	'/': 'Slash',  // + NumpadDivide
 } as const;
 
 export type ISymbol = keyof typeof SymbolIDs;

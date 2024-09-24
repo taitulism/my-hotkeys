@@ -23,7 +23,7 @@ describe('Symbols', () => {
 	});
 
 	afterEach(() => {
-		hk.unmount();
+		hk.destruct();
 		simulate.reset();
 		spy.mockClear();
 	});

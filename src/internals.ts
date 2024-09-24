@@ -1,4 +1,4 @@
-import {Aliases, ModifierAliases, ISymbol, SymbolIDs, Alias} from './key-names-map';
+import {Aliases, ModifierAliases, Alias} from './key-names-map';
 import {
 	Control,
 	Alt,
@@ -51,15 +51,15 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 	return Array.from(modifiersSet);
 }
 
-function parseTargetKey (withShift: boolean, targetKey?: Lowercase<string>): ParsedTargetKey {
+function parseTargetKey (targetKey?: Lowercase<string>): ParsedTargetKey {
 	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow. 'ctrl--'
 	if (targetKey === undefined) throw new Error('No Target Key');
 
-	const tKey = targetKey in Aliases ? Aliases[targetKey as Alias] : targetKey;
-
-	if (withShift && tKey in SymbolIDs) return SymbolIDs[tKey as ISymbol];
-
-	return tKey;
+	return (
+		targetKey in Aliases
+			? Aliases[targetKey as Alias]
+			: targetKey
+	);
 }
 
 export function parseHotKey (hotkey: string): ParsedHotKey {
@@ -75,8 +75,9 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 	const modifiers = parseModifiers(allKeys); // after poping the target
 
 	return {
-		targetKey: parseTargetKey(modifiers.includes(Shift), targetKey),
+		targetKey: parseTargetKey(targetKey),
 		unifiedModifier: unifyHotkeyModifiers(modifiers),
+		withShift: modifiers.includes(Shift),
 	};
 }
 

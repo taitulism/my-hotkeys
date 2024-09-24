@@ -77,4 +77,5 @@ export type ParsedTargetKey = Lowercase<string> | AliasValue | SymbolKeyID
 export type ParsedHotKey = {
 	targetKey: ParsedTargetKey
 	unifiedModifier: UnifiedModifier
+	withShift?: boolean
 }
