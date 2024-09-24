@@ -207,4 +207,28 @@ describe('Aliases', () => {
 			simulate.releaseAll();
 		});
 	});
+
+	describe.skip('Key IDs', () => {
+		it('Key IDs', () => {
+			const [spy1, spy2, spy3] = spies(3);
+
+			hk.bindKeys({
+				'KeyA': spy1,
+				'BracketLeft': spy2,
+				'NumpadEnter': spy3,
+			});
+
+			simulate.keyDown('A');
+			expect(spy1).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+
+			simulate.keyDown('BracketLeft');
+			expect(spy2).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+
+			simulate.keyDown('NumpadEnter');
+			expect(spy3).toHaveBeenCalledOnce();
+			simulate.releaseAll();
+		});
+	});
 });
