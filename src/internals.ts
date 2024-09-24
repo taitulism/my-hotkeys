@@ -18,8 +18,21 @@ import {
 	ParsedTargetKey,
 } from './types';
 
+const isAlias = (targetKey: Lowercase<string>): targetKey is Alias =>
+	targetKey in Aliases;
+
 const isRawModifier = (rawKey: string): rawKey is RawModifier =>
 	RawModifiers.includes(rawKey as RawModifier);
+
+function validateHotkey (hotkey: string) {
+	if (!hotkey) {
+		throw new Error('Invalid Hotkey: Empty String');
+	}
+
+	if (hotkey.startsWith('-') || hotkey.endsWith('-') || /--/.test(hotkey)) {
+		throw new Error(`Invalid Hotkey: "${hotkey}"`);
+	}
+}
 
 function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
 	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
@@ -43,24 +56,18 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 			modifiersSet.add(ModifierAliases[rawModifier]);
 		}
 		else {
-			// TODO:test Invalid input.
-			throw new Error('A non-modifier cannot be used as a modifier');
+			throw new Error(`Unknown Modifier: "${rawModifier}"`);
 		}
 	}
 
 	return Array.from(modifiersSet);
 }
 
-function parseTargetKey (targetKey?: Lowercase<string>): ParsedTargetKey {
-	// TODO:test Invalid input. This can only happen when hotkey.split(-) fails somehow. 'ctrl--'
-	if (targetKey === undefined) throw new Error('No Target Key');
-
-	return (
-		targetKey in Aliases
-			? Aliases[targetKey as Alias]
-			: targetKey
-	);
-}
+const parseTargetKey = (targetKey: Lowercase<string>): ParsedTargetKey => (
+	isAlias(targetKey)
+		? Aliases[targetKey]
+		: targetKey
+);
 
 export function parseHotKey (hotkey: string): ParsedHotKey {
 	if (hotkey === '-') {
@@ -70,9 +77,11 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 		};
 	}
 
+	validateHotkey(hotkey);
+
 	const allKeys = hotkey.toLowerCase().split('-') as Array<Lowercase<string>>;
-	const targetKey = allKeys.pop();
-	const modifiers = parseModifiers(allKeys); // after poping the target
+	const targetKey = allKeys.pop()!;
+	const modifiers = parseModifiers(allKeys); // after popping the target
 
 	return {
 		targetKey: parseTargetKey(targetKey),

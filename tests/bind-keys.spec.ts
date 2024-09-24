@@ -47,6 +47,39 @@ describe('Binding Hotkeys', () => {
 			expect(failFunc).throw('Duplicated hotkey: "1"');
 		});
 
+		it('Throws on invalid hotkey', () => {
+			const failFunc1 = () => {
+				hk.bindKey('', spy);
+			};
+			const failFunc2 = () => {
+				hk.bindKey('--', spy);
+			};
+
+			expect(failFunc1).throw('Invalid Hotkey: Empty String');
+			expect(failFunc2).throw('Invalid Hotkey: "--"');
+		});
+
+		it('Throws on invalid target key', () => {
+			const failFunc = () => {
+				hk.bindKey('ctrl-', spy);
+			};
+
+			expect(failFunc).throw('Invalid Hotkey: "ctrl-"');
+		});
+
+		it('Throws on invalid modifier key', () => {
+			const failFunc1 = () => {
+				hk.bindKey('-A', spy);
+			};
+
+			const failFunc2 = () => {
+				hk.bindKey('bla-A', spy);
+			};
+
+			expect(failFunc1).throw('Invalid Hotkey: "-A"');
+			expect(failFunc2).throw('Unknown Modifier: "bla"');
+		});
+
 		it('Returns the Hotkey instance', () => {
 			const instance = hk.bindKey('a', spy);
 
