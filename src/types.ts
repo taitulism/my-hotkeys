@@ -72,7 +72,7 @@ export type CombinationHandlers = {
 
 // TODO:ts To remove the string type I need to type the string in the
 // 		  hotkeys Map<string, CombinationHandlers>
-export type ParsedTargetKey = Lowercase<string> | AliasValue | SymbolKeyID
+export type ParsedTargetKey = AliasValue | SymbolKeyID | string
 
 export type ParsedHotKey = {
 	targetKey: ParsedTargetKey

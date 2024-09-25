@@ -4,7 +4,7 @@ import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vite
 import {hotkey, Hotkey} from '../src';
 import {spies, spyFn} from './utils';
 
-describe('Aliases', () => {
+describe('Aliases & Key IDs', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;
@@ -28,7 +28,29 @@ describe('Aliases', () => {
 		spy.mockClear();
 	});
 
-	describe('Symbols Aliases', () => {
+	it('Key IDs', () => {
+		const [spy1, spy2, spy3] = spies(3);
+
+		hk.bindKeys({
+			'KeyA': spy1,
+			'BracketLeft': spy2,
+			'NumpadEnter': spy3,
+		});
+
+		simulate.keyDown('A');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('BracketLeft');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+
+		simulate.keyDown('NumpadEnter');
+		expect(spy3).toHaveBeenCalledOnce();
+		simulate.releaseAll();
+	});
+
+	describe('Aliases', () => {
 		it('Arrows Aliases (and case insensitivity)', () => {
 			const [spy1, spy2, spy3, spy4] = spies(4);
 
@@ -204,30 +226,6 @@ describe('Aliases', () => {
 			simulate.releaseAll();
 			simulate.keyDown('Np3');
 			expect(spy5).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
-		});
-	});
-
-	describe.skip('Key IDs', () => {
-		it('Key IDs', () => {
-			const [spy1, spy2, spy3] = spies(3);
-
-			hk.bindKeys({
-				'KeyA': spy1,
-				'BracketLeft': spy2,
-				'NumpadEnter': spy3,
-			});
-
-			simulate.keyDown('A');
-			expect(spy1).toHaveBeenCalledOnce();
-			simulate.releaseAll();
-
-			simulate.keyDown('BracketLeft');
-			expect(spy2).toHaveBeenCalledOnce();
-			simulate.releaseAll();
-
-			simulate.keyDown('NumpadEnter');
-			expect(spy3).toHaveBeenCalledOnce();
 			simulate.releaseAll();
 		});
 	});

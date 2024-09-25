@@ -8,10 +8,10 @@ export const ModifierAliases = {
 
 export const Aliases = {
 	// Arrows
-	'up': 'arrowup',
-	'down': 'arrowdown',
-	'left': 'arrowleft',
-	'right': 'arrowright',
+	'up': 'ArrowUp',
+	'down': 'ArrowDown',
+	'left': 'ArrowLeft',
+	'right': 'ArrowRight',
 
 	// Symbols
 	'space': ' ',
@@ -29,11 +29,11 @@ export const Aliases = {
 	// 'slash': '/', // Not ugly enough
 
 	// Others
-	'ins': 'insert',
-	'del': 'delete',
-	'esc': 'escape',
-	'pgup': 'pageup',
-	'pgdn': 'pagedown',
+	'ins': 'Insert',
+	'del': 'Delete',
+	'esc': 'Escape',
+	'pgup': 'PageUp',
+	'pgdn': 'PageDown',
 } as const;
 
 export type Alias = keyof typeof Aliases;

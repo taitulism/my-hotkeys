@@ -18,7 +18,9 @@ import {
 	ParsedTargetKey,
 } from './types';
 
-const isAlias = (targetKey: Lowercase<string>): targetKey is Alias =>
+const isLetter = (str: string) => str.length === 1 && /[a-zA-Z]/.test(str);
+
+const isAlias = (targetKey: string): targetKey is Alias =>
 	targetKey in Aliases;
 
 const isRawModifier = (rawKey: string): rawKey is RawModifier =>
@@ -44,13 +46,13 @@ function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum];
 }
 
-function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
+function parseModifiers (rawModifierKeys: Array<string>) {
 	if (rawModifierKeys.length === 0) return [];
 
 	const modifiersSet = new Set<Modifier>();
 
 	for (let i = 0; i < rawModifierKeys.length; i++) {
-		const rawModifier = rawModifierKeys[i];
+		const rawModifier = rawModifierKeys[i].toLowerCase();
 
 		if (isRawModifier(rawModifier)) {
 			modifiersSet.add(ModifierAliases[rawModifier]);
@@ -63,11 +65,15 @@ function parseModifiers (rawModifierKeys: Array<Lowercase<string>>) {
 	return Array.from(modifiersSet);
 }
 
-const parseTargetKey = (targetKey: Lowercase<string>): ParsedTargetKey => (
-	isAlias(targetKey)
-		? Aliases[targetKey]
-		: targetKey
-);
+const parseTargetKey = (targetKey: string): ParsedTargetKey => {
+	const lower = targetKey.toLowerCase();
+
+	return isLetter(targetKey)
+		? lower
+		: isAlias(lower)
+			? Aliases[lower]
+			: targetKey;
+};
 
 export function parseHotKey (hotkey: string): ParsedHotKey {
 	if (hotkey === '-') {
@@ -79,7 +85,7 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 
 	validateHotkey(hotkey);
 
-	const allKeys = hotkey.toLowerCase().split('-') as Array<Lowercase<string>>;
+	const allKeys = hotkey.split('-') as Array<string>;
 	const targetKey = allKeys.pop()!;
 	const modifiers = parseModifiers(allKeys); // after popping the target
 
@@ -106,8 +112,8 @@ export function getHandlers (
 	ev: KeyboardEvent,
 	map: Map<string, CombinationHandlers>,
 ): CombinationHandlers | undefined {
-	const {key, code: keyId, shiftKey} = ev;
-	const value = key.toLowerCase();
+	const {key: rawValue, code: keyId, shiftKey} = ev;
+	const value = isLetter(rawValue) ? rawValue.toLowerCase() : rawValue;
 
 	if (map.has(value)) return map.get(value);
 	if (map.has(keyId)) return map.get(keyId);
