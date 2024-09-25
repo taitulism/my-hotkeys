@@ -186,10 +186,27 @@ describe('Modifiers', () => {
 
 		describe('Implicit Shift', () => {
 			it('Implicit shift symbol', () => {
-				hk.bindKey('@', spy);
+				const [spy1, spy2] = spies(2);
+
+				hk.bindKeys({
+					'@': spy1,
+					'*': spy2,
+				});
 
 				simulate.keyDown('Shift', '2');
-				expect(spy).toHaveBeenCalledOnce();
+				expect(spy1).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', '8');
+				expect(spy2).toHaveBeenCalledOnce();
+				simulate.releaseAll();
+
+				simulate.keyDown('NumpadMultiply');
+				expect(spy2).toHaveBeenCalledTimes(2);
+				simulate.releaseAll();
+
+				simulate.keyDown('Shift', 'NumpadMultiply'); // should not trigger
+				expect(spy2).toHaveBeenCalledTimes(2);
 				simulate.releaseAll();
 			});
 

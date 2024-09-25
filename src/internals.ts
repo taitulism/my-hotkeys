@@ -95,8 +95,6 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 const isDigitKey = (keyId: string) => keyId.startsWith('Dig');
 const isNumpadKey = (keyId: string) => keyId.startsWith('Num');
 const isNumpadNumber = (keyId: string) => keyId.startsWith('Num') && /\d$/.test(keyId);
-
-// TODO:test the numpad part
 const isNumberKey = (keyId: string) => isDigitKey(keyId) || isNumpadNumber(keyId);
 const extractDigit = (keyId: string) => keyId[keyId.length - 1];
 
@@ -137,12 +135,12 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }
 
-// TODO:test the numpad part
-const isSingleChar = (ev: KeyboardEvent) =>
-	ev.key.length === 1 && !isNumpadKey(ev.code); // Exclude Numpad symbols
+const isSingleChar = (ev: KeyboardEvent) => ev.key.length === 1;
 
 // e.g. bind '@'. When 'shift-2' event has '@' but unifiedModifier is 'S' so no match.
-export const implicitShift = (ev: KeyboardEvent) => ev.shiftKey && isSingleChar(ev);
+export const implicitShift = (ev: KeyboardEvent) =>
+	ev.shiftKey && isSingleChar(ev) && !isNumpadKey(ev.code);
+	// Numpad symbols are not affected by shift
 
 export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier => (
 	uniModWithShift.replace('S', '') || '_'
