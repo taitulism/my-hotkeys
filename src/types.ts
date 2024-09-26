@@ -1,29 +1,31 @@
-import {AliasValue, SymbolKeyID} from './key-names-map';
+import type {AliasValue} from './aliases';
+import type {SymbolKeyID} from './symbols';
 
 export type ContextElement = HTMLElement | Document;
-
 export type KeyHandler = (ev: KeyboardEvent) => void
 
-// TODO:ts Add type: ModifierAlias
-// TODO:ts Refactor all modifier types. Too many dups.
 export const Control = 'Control';
 export const Alt = 'Alt';
 export const Shift = 'Shift';
 export const Meta = 'Meta';
 
-export const ModifiersNumValues = {
+export const Modifiers = {
 	Control: 1,
 	Alt: 2,
 	Shift: 4,
 	Meta: 8,
 } as const;
+export type Modifier = keyof typeof Modifiers
+// export type Modifier = typeof Control | typeof Alt | typeof Shift | typeof Meta
 
-export const EventModifierValues = {
-	ctrlKey: 1,
-	altKey: 2,
-	shiftKey: 4,
-	metaKey: 8,
+export const ModifierAliases = {
+	control: Control,
+	ctrl: Control,
+	alt: Alt,
+	shift: Shift,
+	meta: Meta,
 } as const;
+export type ModifierAlias = keyof typeof ModifierAliases;
 
 export const UnifiedModifiersMap = {
 	0: '_',
@@ -43,28 +45,8 @@ export const UnifiedModifiersMap = {
 	14: 'ASM',
 	15: 'CASM',
 } as const;
-
 export type UniModSum = keyof typeof UnifiedModifiersMap;
 export type UnifiedModifier = typeof UnifiedModifiersMap[UniModSum];
-
-export const Modifiers = [
-	'Control',
-	'Shift',
-	'Alt',
-	'Meta',
-] as const;
-
-export type Modifier = 'Control' | 'Alt' | 'Shift' | 'Meta'
-export type RawModifier = Lowercase<Modifier>
-
-export const RawModifiers = [
-	'control',
-	'ctrl',
-	'shift',
-	'alt',
-	'meta',
-] as const;
-
 
 export type CombinationHandlers = {
 	[K in UnifiedModifier]?: KeyHandler

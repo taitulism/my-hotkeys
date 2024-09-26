@@ -1,13 +1,13 @@
 import type {ContextElement, CombinationHandlers, KeyHandler, ParsedHotKey} from './types';
 import {logKbEvent} from './log-keyboard-event';
-import {ISymbol, SymbolIDs} from './key-names-map';
+import {ISymbol, SymbolIDs} from './symbols';
 import {
 	unifyEventModifiers,
-	isEventModifier,
 	parseHotKey,
 	getHandlers,
 	removeShift,
 	implicitShift,
+	isModifier,
 } from './internals';
 
 export function hotkey (ctxElm: ContextElement = document) {
@@ -118,7 +118,7 @@ export class Hotkey {
 
 		const {key: kValue} = ev;
 
-		if (isEventModifier(kValue)) return;
+		if (isModifier(kValue)) return;
 
 		const handlers = getHandlers(ev, this.hotkeys);
 

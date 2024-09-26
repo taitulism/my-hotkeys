@@ -1,4 +1,4 @@
-import {RawModifier} from '~types';
+import {Modifier} from '~types';
 
 export type LetterHotkeys =
 	| 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h'
@@ -29,7 +29,7 @@ export type AllHotkeys =
 	| FnHotkeys
 	| OtherHotkeys
 
-type OneModifier = RawModifier
+type OneModifier = Modifier
 type TwoModifiers = `${OneModifier}-${OneModifier}`
 type ThreeModifiers = `${TwoModifiers}-${OneModifier}`
 type FourModifiers = `${ThreeModifiers}-${OneModifier}`
@@ -42,7 +42,7 @@ type A = 'alt' | 'ALT' | 'Alt'
 type S = 'shift' | 'SHIFT' | 'Shift'
 type M = 'meta' | 'META' | 'Meta'
 
-type Modifiers =
+export type Modifiers =
 	| `${C}`
 	| `${A}`
 	| `${S}`

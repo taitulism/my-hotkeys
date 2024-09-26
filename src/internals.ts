@@ -1,21 +1,19 @@
-import {Aliases, ModifierAliases, Alias} from './key-names-map';
+import {Aliases, Alias} from './aliases';
 import {
 	Control,
 	Alt,
 	Shift,
 	Meta,
-	ModifiersNumValues,
 	UnifiedModifiersMap,
-	EventModifierValues,
 	Modifiers,
-	RawModifiers,
-	RawModifier,
 	type Modifier,
 	type UnifiedModifier,
 	type UniModSum,
 	type ParsedHotKey,
-	CombinationHandlers,
-	ParsedTargetKey,
+	type CombinationHandlers,
+	type ParsedTargetKey,
+	type ModifierAlias,
+	ModifierAliases,
 } from './types';
 
 const isLetter = (str: string) => str.length === 1 && /[a-zA-Z]/.test(str);
@@ -23,8 +21,10 @@ const isLetter = (str: string) => str.length === 1 && /[a-zA-Z]/.test(str);
 const isAlias = (targetKey: string): targetKey is Alias =>
 	targetKey in Aliases;
 
-const isRawModifier = (rawKey: string): rawKey is RawModifier =>
-	RawModifiers.includes(rawKey as RawModifier);
+const isModifierAlias = (str: Lowercase<string>): str is ModifierAlias =>
+	str in ModifierAliases;
+
+export const isModifier = (str: string): str is Modifier => str in Modifiers;
 
 function validateHotkey (hotkey: string) {
 	if (!hotkey) {
@@ -36,33 +36,41 @@ function validateHotkey (hotkey: string) {
 	}
 }
 
-function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
-	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
-		const modNumVal = ModifiersNumValues[modifier];
+function uniqueObj <T extends string | number | symbol> () {
+	const o: Record<string | number | symbol, unknown> = {};
 
-		return acc + modNumVal;
-	}, 0) as UniModSum;
+	return function isUnique (thing: T) {
+		if (thing as T in o) return false;
 
-	return UnifiedModifiersMap[modifiersSum];
+		o[thing as T] = undefined;
+
+		return true;
+	};
 }
 
-function parseModifiers (rawModifierKeys: Array<string>) {
-	if (rawModifierKeys.length === 0) return [];
+function parseModifiers (rawModifierKeys: Array<string>): UnifiedModifier {
+	if (rawModifierKeys.length === 0) return '_';
 
-	const modifiersSet = new Set<Modifier>();
+	const isUnique = uniqueObj<number>();
+	let modifiersSum = 0 as UniModSum;
 
 	for (let i = 0; i < rawModifierKeys.length; i++) {
-		const rawModifier = rawModifierKeys[i].toLowerCase();
+		const rawModifier = rawModifierKeys[i].toLowerCase() as Lowercase<string>;
 
-		if (isRawModifier(rawModifier)) {
-			modifiersSet.add(ModifierAliases[rawModifier]);
+		if (isModifierAlias(rawModifier)) {
+			const modifier = ModifierAliases[rawModifier];
+			const modifierNum = Modifiers[modifier];
+
+			if (isUnique(modifierNum)) {
+				modifiersSum += modifierNum;
+			}
 		}
 		else {
 			throw new Error(`Unknown Modifier: "${rawModifier}"`);
 		}
 	}
 
-	return Array.from(modifiersSet);
+	return UnifiedModifiersMap[modifiersSum];
 }
 
 const parseTargetKey = (targetKey: string): ParsedTargetKey => {
@@ -86,13 +94,13 @@ export function parseHotKey (hotkey: string): ParsedHotKey {
 	validateHotkey(hotkey);
 
 	const allKeys = hotkey.split('-') as Array<string>;
-	const targetKey = allKeys.pop()!;
-	const modifiers = parseModifiers(allKeys); // after popping the target
+	const targetKey = parseTargetKey(allKeys.pop()!);
+	const unifiedModifier = parseModifiers(allKeys); // after popping the target
 
 	return {
-		targetKey: parseTargetKey(targetKey),
-		unifiedModifier: unifyHotkeyModifiers(modifiers),
-		withShift: modifiers.includes(Shift),
+		targetKey,
+		unifiedModifier,
+		withShift: unifiedModifier.includes('S'),
 	};
 }
 
@@ -103,10 +111,6 @@ const isNumpadKey = (keyId: string) => keyId.startsWith('Num');
 const isNumpadNumber = (keyId: string) => keyId.startsWith('Num') && /\d$/.test(keyId);
 const isNumberKey = (keyId: string) => isDigitKey(keyId) || isNumpadNumber(keyId);
 const extractDigit = (keyId: string) => keyId[keyId.length - 1];
-
-export function isEventModifier (evKey: string): evKey is Modifier {
-	return Modifiers.includes(evKey as Modifier);
-}
 
 export function getHandlers (
 	ev: KeyboardEvent,
@@ -133,10 +137,10 @@ export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
 
 	let modifiersSum = 0;
 
-	if (ctrlKey && key !== Control) modifiersSum += EventModifierValues.ctrlKey;
-	if (altKey && key !== Alt) modifiersSum += EventModifierValues.altKey;
-	if (shiftKey && key !== Shift) modifiersSum += EventModifierValues.shiftKey;
-	if (metaKey && key !== Meta) modifiersSum += EventModifierValues.metaKey;
+	if (ctrlKey && key !== Control) modifiersSum += Modifiers.Control;
+	if (altKey && key !== Alt) modifiersSum += Modifiers.Alt;
+	if (shiftKey && key !== Shift) modifiersSum += Modifiers.Shift;
+	if (metaKey && key !== Meta) modifiersSum += Modifiers.Meta;
 
 	return UnifiedModifiersMap[modifiersSum as UniModSum];
 }
@@ -154,7 +158,19 @@ export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier =
 
 
 
+// function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
+// 	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
+// 		const modNumVal = ModifiersNumValues[modifier];
+
+// 		return acc + modNumVal;
+// 	}, 0) as UniModSum;
+
+// 	return UnifiedModifiersMap[modifiersSum];
+// }
+
+
 // const isShiftPressed = (unifiedModifier: UnifiedModifier) => unifiedModifier.includes('S');
+
 
 // export function isModifierPressed (ev: KeyboardEvent) {
 // 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
