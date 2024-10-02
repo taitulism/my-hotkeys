@@ -31,7 +31,7 @@ describe('Text Spaces', () => {
 	it('Space & BackSpace', () => {
 		const [spy1, spy2] = spies(2);
 
-		hk.bindKeys({
+		hk.bind({
 			' ': spy1,
 			'Backspace': spy2,
 		});
@@ -48,7 +48,7 @@ describe('Text Spaces', () => {
 	it('Insert & Delete', () => {
 		const [spy1, spy2] = spies(2);
 
-		hk.bindKeys({
+		hk.bind({
 			'Insert': spy1,
 			'Delete': spy2,
 		});
@@ -73,7 +73,7 @@ describe('Text Spaces', () => {
 	});
 
 	it('Enter', () => {
-		hk.bindKey('Enter', spy);
+		hk.bind('Enter', spy);
 
 		simulate.keyDown('Enter');
 		expect(spy).toHaveBeenCalledOnce();
@@ -85,7 +85,7 @@ describe('Text Spaces', () => {
 	});
 
 	it('Tab', () => {
-		hk.bindKey('Tab', spy);
+		hk.bind('Tab', spy);
 
 		simulate.keyDown('Tab');
 		expect(spy).toHaveBeenCalledOnce();

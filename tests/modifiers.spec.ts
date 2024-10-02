@@ -30,7 +30,7 @@ describe('Modifiers', () => {
 
 	describe('Expected Behavior', () => {
 		it('Called on a target-key keydown with a modifier in the background', () => {
-			hk.bindKey('ctrl-a', spy);
+			hk.bind('ctrl-a', spy);
 
 			simulate.keyPress('A');
 			simulate.keyPress('Ctrl');
@@ -45,7 +45,7 @@ describe('Modifiers', () => {
 		it('Doesn\'t trigger "A" on "Ctrl-A"', () => {
 			const [spy1, spy2] = spies(2);
 
-			hk.bindKeys({
+			hk.bind({
 				'a': spy1,
 				'ctrl-a': spy2,
 			});
@@ -60,7 +60,7 @@ describe('Modifiers', () => {
 		it('Can trigger two hotkeys with the same modifier without releasing it after the first one', () => {
 			const [spy1, spy2] = spies(2);
 
-			hk.bindKeys({
+			hk.bind({
 				'ctrl-a': spy1,
 				'ctrl-b': spy2,
 			});
@@ -77,7 +77,7 @@ describe('Modifiers', () => {
 	describe('Shift', () => {
 		describe('Shift + Symbols', () => {
 			it('Shift + Number', () => {
-				hk.bindKey('shift-4', spy);
+				hk.bind('shift-4', spy);
 
 				simulate.keyDown('Shift', '4');
 				expect(spy).toHaveBeenCalledOnce();
@@ -89,7 +89,7 @@ describe('Modifiers', () => {
 			});
 
 			it('Shift + Number Symbol', () => {
-				hk.bindKey('shift-*', spy);
+				hk.bind('shift-*', spy);
 
 				simulate.keyDown('Shift', '8');
 				expect(spy).toHaveBeenCalledOnce();
@@ -103,7 +103,7 @@ describe('Modifiers', () => {
 			it('Shift + Non-Number Symbol', () => {
 				const [spy1, spy2, spy3, spy4, spy5, spy6, spy7, spy8] = spies(8);
 
-				hk.bindKeys({
+				hk.bind({
 					'shift-[': spy1,
 					'shift-]': spy2,
 					'shift-;': spy3,
@@ -148,7 +148,7 @@ describe('Modifiers', () => {
 			});
 
 			it('Shift + Minus', () => {
-				hk.bindKey('shift-minus', spy);
+				hk.bind('shift-minus', spy);
 
 				simulate.keyDown('Shift', 'Minus');
 				expect(spy).toHaveBeenCalledOnce();
@@ -160,7 +160,7 @@ describe('Modifiers', () => {
 			});
 
 			it('Shift + Slash', () => {
-				hk.bindKey('shift-/', spy);
+				hk.bind('shift-/', spy);
 
 				simulate.keyDown('Shift', 'Slash');
 				expect(spy).toHaveBeenCalledOnce();
@@ -172,7 +172,7 @@ describe('Modifiers', () => {
 			});
 
 			it('Shift + Period', () => {
-				hk.bindKey('shift-.', spy);
+				hk.bind('shift-.', spy);
 
 				simulate.keyDown('Shift', 'Period');
 				expect(spy).toHaveBeenCalledOnce();
@@ -188,7 +188,7 @@ describe('Modifiers', () => {
 			it('Implicit shift symbol', () => {
 				const [spy1, spy2] = spies(2);
 
-				hk.bindKeys({
+				hk.bind({
 					'@': spy1,
 					'*': spy2,
 				});
@@ -213,7 +213,7 @@ describe('Modifiers', () => {
 			it('Priority: Explicit shift over implicit shift', () => {
 				const [spy1, spy2] = spies(2);
 
-				hk.bindKeys({
+				hk.bind({
 					'shift-@': spy1, // <-- priority
 					'@': spy2,
 				});
@@ -227,7 +227,7 @@ describe('Modifiers', () => {
 			it('Priority: Explicit shift over implicit shift (multiple modifiers)', () => {
 				const [spy1, spy2] = spies(2);
 
-				hk.bindKeys({
+				hk.bind({
 					'ctrl-shift-@': spy1, // <-- priority
 					'ctrl-@': spy2,
 				});
@@ -241,7 +241,7 @@ describe('Modifiers', () => {
 			it('Priority: Implicit shift over shift + lowercase character', () => {
 				const [spy1, spy2] = spies(2);
 
-				hk.bindKeys({
+				hk.bind({
 					'@': spy1, // <-- priority
 					'shift-2': spy2,
 				});
@@ -255,7 +255,7 @@ describe('Modifiers', () => {
 			it('Priority: Implicit shift over shift + lowercase character (multiple modifiers)', () => {
 				const [spy1, spy2] = spies(2);
 
-				hk.bindKeys({
+				hk.bind({
 					'ctrl-@': spy1, // <-- priority
 					'ctrl-shift-2': spy2,
 				});
@@ -271,7 +271,7 @@ describe('Modifiers', () => {
 	it('With Letters', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 
-		hk.bindKeys({
+		hk.bind({
 			'ctrl-a': spy1,
 			'alt-b': spy2,
 			'shift-c': spy3,
@@ -298,7 +298,7 @@ describe('Modifiers', () => {
 	it('With Numbers', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 
-		hk.bindKeys({
+		hk.bind({
 			'ctrl-1': spy1,
 			'alt-2': spy2,
 			'shift-3': spy3,
@@ -325,7 +325,7 @@ describe('Modifiers', () => {
 	it('With Other keys', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 
-		hk.bindKeys({
+		hk.bind({
 			'ctrl-F1': spy1,
 			'alt-.': spy2,
 			'shift-Enter': spy3,
@@ -352,7 +352,7 @@ describe('Modifiers', () => {
 	it('With Aliases', () => {
 		const [spy1, spy2, spy3, spy4, spy5, spy6] = spies(6);
 
-		hk.bindKeys({
+		hk.bind({
 			'shift-quote': spy1,
 			'ctrl-plus': spy2,
 			'alt-space': spy3,
@@ -395,7 +395,7 @@ describe('Modifiers', () => {
 	it('Multiple Modifiers', () => {
 		const [spy1, spy2, spy3, spy4, spy5, spy6] = spies(6);
 
-		hk.bindKeys({
+		hk.bind({
 			'ctrl-alt-a': spy1,
 			'alt-shift-b': spy2,
 			'shift-alt-c': spy3,
@@ -430,7 +430,7 @@ describe('Modifiers', () => {
 	});
 
 	it('Order doesn\'t matter', () => {
-		hk.bindKeys({
+		hk.bind({
 			'alt-ctrl-a': spy,
 		});
 
@@ -443,7 +443,7 @@ describe('Modifiers', () => {
 		simulate.releaseAll();
 
 		const badFunc = () => {
-			hk.bindKey('ctrl-alt-a', spy);
+			hk.bind('ctrl-alt-a', spy);
 		};
 
 		expect(badFunc).to.throw('Duplicate');

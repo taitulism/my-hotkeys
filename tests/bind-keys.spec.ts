@@ -28,9 +28,9 @@ describe('Binding Hotkeys', () => {
 		spy.mockClear();
 	});
 
-	describe('.bindKey()', () => {
+	describe('.bind(hotkey, handler)', () => {
 		it('Adds a hotkey on `keydown` event', () => {
-			hk.bindKey('a', spy);
+			hk.bind('a', spy);
 			expect(spy).not.toBeCalled();
 			simulate.keyDown('a');
 			expect(spy).toHaveBeenCalledTimes(1);
@@ -40,8 +40,8 @@ describe('Binding Hotkeys', () => {
 
 		it('Throws on duplicate', () => {
 			const failFunc = () => {
-				hk.bindKey('1', spy);
-				hk.bindKey('1', spy);
+				hk.bind('1', spy);
+				hk.bind('1', spy);
 			};
 
 			expect(failFunc).throw('Duplicated hotkey: "1"');
@@ -49,10 +49,10 @@ describe('Binding Hotkeys', () => {
 
 		it('Throws on invalid hotkey', () => {
 			const failFunc1 = () => {
-				hk.bindKey('', spy);
+				hk.bind('', spy);
 			};
 			const failFunc2 = () => {
-				hk.bindKey('--', spy);
+				hk.bind('--', spy);
 			};
 
 			expect(failFunc1).throw('Invalid Hotkey: Empty String');
@@ -61,7 +61,7 @@ describe('Binding Hotkeys', () => {
 
 		it('Throws on invalid target key', () => {
 			const failFunc = () => {
-				hk.bindKey('ctrl-', spy);
+				hk.bind('ctrl-', spy);
 			};
 
 			expect(failFunc).throw('Invalid Hotkey: "ctrl-"');
@@ -69,11 +69,11 @@ describe('Binding Hotkeys', () => {
 
 		it('Throws on invalid modifier key', () => {
 			const failFunc1 = () => {
-				hk.bindKey('-A', spy);
+				hk.bind('-A', spy);
 			};
 
 			const failFunc2 = () => {
-				hk.bindKey('bla-A', spy);
+				hk.bind('bla-A', spy);
 			};
 
 			expect(failFunc1).throw('Invalid Hotkey: "-A"');
@@ -81,17 +81,17 @@ describe('Binding Hotkeys', () => {
 		});
 
 		it('Returns the Hotkey instance', () => {
-			const instance = hk.bindKey('a', spy);
+			const instance = hk.bind('a', spy);
 
 			expect(instance).toBe(hk);
 		});
 	});
 
-	describe('.bindKeys()', () => {
+	describe('.bind({hotkeys})', () => {
 		it('Adds multiple hotkeys on `keydown` event', () => {
 			const [spy1, spy2] = spies(2);
 
-			hk.bindKeys({
+			hk.bind({
 				'a': spy1,
 				'b': spy2,
 			});
@@ -114,7 +114,7 @@ describe('Binding Hotkeys', () => {
 		});
 
 		it('Returns the Hotkey instance', () => {
-			const instance = hk.bindKeys({
+			const instance = hk.bind({
 				'a': spy,
 				'b': spy,
 			});

@@ -8,7 +8,7 @@ const kb1 = hotkey();
 kb1.debugMode = true;
 // kb2.debugMode = true;
 
-kb1.bindKeys({
+kb1.bind({
 	'@': (ev) => {
 		ev.preventDefault();
 		logKey('SXS 1');

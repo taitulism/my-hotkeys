@@ -31,7 +31,7 @@ describe('Symbols', () => {
 	it('Open / Close', () => {
 		const [spy1, spy2, spy3, spy4, spy5, spy6, spy7, spy8] = spies(8);
 
-		hk.bindKeys({
+		hk.bind({
 			'[': spy1,
 			']': spy2,
 			'{': spy3,
@@ -74,7 +74,7 @@ describe('Symbols', () => {
 	it('Punctuation & Text', () => {
 		const [spy1, spy2, spy3, spy4, spy5, spy6, spy7] = spies(8);
 
-		hk.bindKeys({
+		hk.bind({
 			'.': spy1,
 			',': spy2,
 			'\'': spy3,
@@ -120,7 +120,7 @@ describe('Symbols', () => {
 	it('Calculator Symbols', () => {
 		const [spy1, spy2, spy3, spy4, spy5] = spies(5);
 
-		hk.bindKeys({
+		hk.bind({
 			'+': spy1,
 			'-': spy2,
 			'*': spy3,
@@ -171,7 +171,7 @@ describe('Symbols', () => {
 			spy7, spy8, spy9, spy10, spy11, spy12,
 		] = spies(12);
 
-		hk.bindKeys({
+		hk.bind({
 			'~': spy1,
 			'!': spy2,
 			'@': spy3,

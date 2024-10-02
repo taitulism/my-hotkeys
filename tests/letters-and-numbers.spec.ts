@@ -30,7 +30,7 @@ describe('Letters & Numbers', () => {
 
 	describe('Letters are case insensitive', () => {
 		it('Hotkey "a" is also triggered by pressing "A"', () => {
-			hk.bindKey('a', spy);
+			hk.bind('a', spy);
 
 			simulate.keyDown('a');
 			expect(spy).toHaveBeenCalledOnce();
@@ -47,8 +47,8 @@ describe('Letters & Numbers', () => {
 
 		it('Binding "a" is the same as binding "A"', () => {
 			const failFunc = () => {
-				hk.bindKey('a', spy);
-				hk.bindKey('A', spy);
+				hk.bind('a', spy);
+				hk.bind('A', spy);
 			};
 
 			expect(failFunc).throw('Duplicated hotkey: "A"');
@@ -65,7 +65,7 @@ describe('Letters & Numbers', () => {
 		LETTERS.forEach((letter) => {
 			const spy = spyFn();
 
-			hk.bindKey(letter, spy);
+			hk.bind(letter, spy);
 
 			simulate.keyDown(letter);
 			expect(spy).toHaveBeenCalledOnce();
@@ -79,7 +79,7 @@ describe('Letters & Numbers', () => {
 		DIGITS.forEach((digit) => {
 			const spy = spyFn();
 
-			hk.bindKey(String(digit), spy);
+			hk.bind(String(digit), spy);
 
 			simulate.keyDown(`Digit${digit}`);
 			expect(spy).toHaveBeenCalledOnce();

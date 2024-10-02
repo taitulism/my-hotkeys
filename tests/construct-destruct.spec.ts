@@ -30,7 +30,7 @@ describe('Construction / Destruction', () => {
 
 	describe('.mount()', () => {
 		it('Adds the event listener to the context element', () => {
-			hk.bindKey('a', spy);
+			hk.bind('a', spy);
 			expect(spy).not.toBeCalled();
 			simulate.keyPress('a');
 			expect(spy).not.toBeCalled();
@@ -42,7 +42,7 @@ describe('Construction / Destruction', () => {
 		});
 
 		it('Adds one event listener even when called multiple times', () => {
-			hk.bindKey('a', spy);
+			hk.bind('a', spy);
 			hk.mount().mount().mount();
 
 			expect(spy).not.toBeCalled();
@@ -53,7 +53,7 @@ describe('Construction / Destruction', () => {
 
 	describe('.unmount()', () => {
 		it('Removes the event listener from the context element', () => {
-			hk.mount().bindKey('a', spy);
+			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
 			expect(spy).toHaveBeenCalledTimes(1);
 
@@ -63,7 +63,7 @@ describe('Construction / Destruction', () => {
 		});
 
 		it('Does not remove all hotkeys', () => {
-			hk.mount().bindKey('a', spy);
+			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
 			expect(spy).toHaveBeenCalledTimes(1);
 
@@ -77,7 +77,7 @@ describe('Construction / Destruction', () => {
 		it('Safe to call multiple times', () => {
 			const okFn = () => {
 				hk.mount();
-				hk.bindKey('a', spy);
+				hk.bind('a', spy);
 				hk.unmount().unmount().unmount();
 			};
 
@@ -87,7 +87,7 @@ describe('Construction / Destruction', () => {
 
 	describe('.destruct()', () => {
 		it('Removes the event listener from the context element', () => {
-			hk.mount().bindKey('a', spy);
+			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
 			expect(spy).toHaveBeenCalledTimes(1);
 
@@ -97,7 +97,7 @@ describe('Construction / Destruction', () => {
 		});
 
 		it('Removes all hotkeys', () => {
-			hk.mount().bindKey('a', spy);
+			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
 			expect(spy).toHaveBeenCalledTimes(1);
 
@@ -111,7 +111,7 @@ describe('Construction / Destruction', () => {
 		it('Safe to call multiple times', () => {
 			const okFn = () => {
 				hk.mount();
-				hk.bindKey('a', spy);
+				hk.bind('a', spy);
 				hk.destruct().destruct().destruct();
 			};
 

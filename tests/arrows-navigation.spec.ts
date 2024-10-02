@@ -28,7 +28,7 @@ describe('Arrows & Navigation', () => {
 	it('Arrows', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 
-		hk.bindKeys({
+		hk.bind({
 			'ArrowUp': spy1,
 			'ArrowDown': spy2,
 			'ArrowLeft': spy3,
@@ -74,7 +74,7 @@ describe('Arrows & Navigation', () => {
 	it('Home/End & Page-Up/Down', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 
-		hk.bindKeys({
+		hk.bind({
 			'Home': spy1,
 			'End': spy2,
 			'PageUp': spy3,

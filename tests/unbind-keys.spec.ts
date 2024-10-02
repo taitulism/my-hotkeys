@@ -30,22 +30,22 @@ describe('Unbinding Hotkeys', () => {
 
 	it('Throws when key doesn\'t exsits', () => {
 		const errFunc1 = () => {
-			hk.bindKey('a', spy);
-			hk.unbindKey('b');
+			hk.bind('a', spy);
+			hk.unbind('b');
 		};
 
 		const errFunc2 = () => {
-			hk.bindKey('x', spy);
-			hk.unbindKeys(['y', 'z']);
+			hk.bind('x', spy);
+			hk.unbind(['y', 'z']);
 		};
 
 		expect(errFunc1).to.throw('No Such Hotkey');
 		expect(errFunc2).to.throw('No Such Hotkey');
 	});
 
-	describe('.unbindKey()', () => {
+	describe('.unbind()', () => {
 		it('Unbinds a single key', () => {
-			hk.bindKey('a', spy);
+			hk.bind('a', spy);
 
 			simulate.keyDown('A');
 			expect(spy).toHaveBeenCalledTimes(1);
@@ -55,14 +55,14 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.keyUp('A');
 
-			hk.unbindKey('a');
+			hk.unbind('a');
 
 			simulate.keyPress('A');
 			expect(spy).toHaveBeenCalledTimes(2);
 		});
 
 		it('Unbinds an alias', () => {
-			hk.bindKey('shift-pgdn', spy);
+			hk.bind('shift-pgdn', spy);
 
 			simulate.keyDown('Shift', 'PageDown');
 			expect(spy).toHaveBeenCalledTimes(1);
@@ -72,14 +72,14 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 
-			hk.unbindKey('shift-pgdn');
+			hk.unbind('shift-pgdn');
 
 			simulate.keyPress('Shift', 'PageDown');
 			expect(spy).toHaveBeenCalledTimes(2);
 		});
 
 		it('Unbinds a dup Key (Shift + Symbol)', () => {
-			hk.bindKey('shift-/', spy);
+			hk.bind('shift-/', spy);
 
 			simulate.keyDown('Shift', 'Slash');
 			expect(spy).toHaveBeenCalledTimes(1);
@@ -89,7 +89,7 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 
-			hk.unbindKey('shift-/');
+			hk.unbind('shift-/');
 
 			simulate.keyPress('Slash');
 			expect(spy).toHaveBeenCalledTimes(2);
@@ -98,7 +98,7 @@ describe('Unbinding Hotkeys', () => {
 		});
 
 		it('Unbinds one key of', () => {
-			hk.bindKeys({
+			hk.bind({
 				'a': spy,
 				'ctrl-a': spy,
 			});
@@ -110,7 +110,7 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.releaseAll();
 
-			hk.unbindKey('ctrl-a');
+			hk.unbind('ctrl-a');
 
 			simulate.keyDown('A');
 			expect(spy).toHaveBeenCalledTimes(3);
@@ -119,11 +119,9 @@ describe('Unbinding Hotkeys', () => {
 			expect(spy).toHaveBeenCalledTimes(3);
 			simulate.releaseAll();
 		});
-	});
 
-	describe('.unbindKeys()', () => {
 		it('Unbinds multiple keys', () => {
-			hk.bindKeys({
+			hk.bind({
 				'a': spy,
 				'b': spy,
 				'c': spy,
@@ -138,7 +136,7 @@ describe('Unbinding Hotkeys', () => {
 			simulate.keyPress('C');
 			expect(spy).toHaveBeenCalledTimes(3);
 
-			hk.unbindKeys(['a', 'b']);
+			hk.unbind(['a', 'b']);
 
 			simulate.keyPress('A');
 			expect(spy).toHaveBeenCalledTimes(3);
@@ -151,7 +149,7 @@ describe('Unbinding Hotkeys', () => {
 
 	describe('.unbindAll()', () => {
 		it('Unbinds all keys', () => {
-			hk.bindKeys({
+			hk.bind({
 				'a': spy,
 				'b': spy,
 			});

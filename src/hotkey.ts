@@ -73,36 +73,34 @@ export class Hotkey {
 		}
 	};
 
-	public bindKey (hotkey: string, handlerFn: KeyHandler) {
-		const parsedHotKey = parseHotKey(hotkey);
+	public bind (hotkey: string, handlerFn: KeyHandler): Hotkey;
+	public bind (hotkey: Record<string, KeyHandler>): Hotkey;
+	public bind (hotkey: string | Record<string, KeyHandler>, handlerFn?: KeyHandler) {
+		if (typeof hotkey === 'string') {
+			const parsedHotKey = parseHotKey(hotkey);
 
-		this.addHotkey(parsedHotKey, handlerFn, hotkey);
+			this.addHotkey(parsedHotKey, handlerFn!, hotkey);
+		}
+		else {
+			const entries = Object.entries(hotkey) as Array<[string, KeyHandler]>;
 
-		return this;
-	}
-
-	public bindKeys (hotkeysObj: Partial<Record<string, KeyHandler>>) {
-		const entries = Object.entries(hotkeysObj) as Array<[string, KeyHandler]>;
-
-		for (const [hotkey, keyHandler] of entries) {
-			this.bindKey(hotkey, keyHandler);
+			for (const [hotkey, keyHandler] of entries) {
+				this.bind(hotkey, keyHandler);
+			}
 		}
 
 		return this;
 	}
 
-	public unbindKeys (hotkeys: Array<string>) {
-		hotkeys.forEach((hotkey) => {
-			this.unbindKey(hotkey);
-		});
+	public unbind (hotkey: string | Array<string>) {
+		if (typeof hotkey === 'string') {
+			const parsedHotKey = parseHotKey(hotkey);
 
-		return this;
-	}
-
-	public unbindKey (hotkey: string) {
-		const parsedHotKey = parseHotKey(hotkey);
-
-		this.removeHotkey(parsedHotKey);
+			this.removeHotkey(parsedHotKey);
+		}
+		else {
+			hotkey.forEach((hk) => this.unbind(hk));
+		}
 
 		return this;
 	}

@@ -31,7 +31,7 @@ describe('Aliases & Key IDs', () => {
 	it('Key IDs', () => {
 		const [spy1, spy2, spy3] = spies(3);
 
-		hk.bindKeys({
+		hk.bind({
 			'KeyA': spy1,
 			'BracketLeft': spy2,
 			'NumpadEnter': spy3,
@@ -54,7 +54,7 @@ describe('Aliases & Key IDs', () => {
 		it('Arrows Aliases (and case insensitivity)', () => {
 			const [spy1, spy2, spy3, spy4] = spies(4);
 
-			hk.bindKeys({
+			hk.bind({
 				'Up': spy1,
 				'down': spy2,
 				'LEFT': spy3,
@@ -84,7 +84,7 @@ describe('Aliases & Key IDs', () => {
 				spy6, spy7, spy8, spy9, spy10,
 			] = spies(10);
 
-			hk.bindKeys({
+			hk.bind({
 				'minus': spy1,
 				'plus': spy2,
 				'equal': spy3,
@@ -147,7 +147,7 @@ describe('Aliases & Key IDs', () => {
 			const [spy21, spy22] = spies(2);
 
 			// A different instance for duplicated aliases
-			hk2.bindKeys({
+			hk2.bind({
 				'singlequote': spy21,
 				'doublequotes': spy22,
 			});
@@ -164,7 +164,7 @@ describe('Aliases & Key IDs', () => {
 		it('Case Insensitive', () => {
 			const [spy1, spy2, spy3] = spies(3);
 
-			hk.bindKeys({
+			hk.bind({
 				'Plus': spy1,
 				'MINUS': spy2,
 				'spacE': spy3,
@@ -186,7 +186,7 @@ describe('Aliases & Key IDs', () => {
 		it('Other Aliases', () => {
 			const [spy1, spy2, spy3, spy4, spy5] = spies(5);
 
-			hk.bindKeys({
+			hk.bind({
 				'ins': spy1,
 				'del': spy2,
 				'esc': spy3,

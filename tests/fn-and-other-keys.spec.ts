@@ -29,7 +29,7 @@ describe('Fn & Other Keys', () => {
 		for (let i = 1; i <= 24; i++) {
 			const spy = spyFn();
 
-			hk.bindKey(`F${i}`, spy);
+			hk.bind(`F${i}`, spy);
 			simulate.keyDown(`F${i}` as KeyName);
 			expect(spy).toHaveBeenCalledOnce();
 			simulate.releaseAll();
@@ -50,7 +50,7 @@ describe('Fn & Other Keys', () => {
 		OTHER_KEYS.forEach((key) => {
 			const spy = spyFn();
 
-			hk.bindKey(key, spy);
+			hk.bind(key, spy);
 
 			simulate.keyDown(key);
 			expect(spy).toHaveBeenCalledOnce();

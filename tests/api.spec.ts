@@ -34,44 +34,26 @@ describe('Instance', () => {
 		expect(instance.debugMode).toBe(false);
 	});
 
-	it('.bindKey()', () => {
-		expect(instance.bindKey).to.be.a('function');
+	it('.bind()', () => {
+		expect(instance.bind).to.be.a('function');
 
-		const inst = instance.bindKey('a', spy);
-
-		expect(inst).toBe(instance);
-	});
-
-	it('.bindKeys()', () => {
-		expect(instance.bindKeys).to.be.a('function');
-
-		const inst = instance.bindKeys({'a': spy});
+		const inst = instance.bind('a', spy);
 
 		expect(inst).toBe(instance);
 	});
 
-	it('.unbindKey()', () => {
-		expect(instance.unbindKey).to.be.a('function');
-		instance.bindKey('a', spy);
+	it('.unbind()', () => {
+		expect(instance.unbind).to.be.a('function');
+		instance.bind('a', spy);
 
-		const inst = instance.unbindKey('a');
-
-		expect(inst).toBe(instance);
-	});
-
-	it('.unbindKeys()', () => {
-		expect(instance.unbindKeys).to.be.a('function');
-
-		instance.bindKeys({'a': spy, 'b': spy, 'c': spy});
-
-		const inst = instance.unbindKeys(['a', 'b']);
+		const inst = instance.unbind('a');
 
 		expect(inst).toBe(instance);
 	});
 
 	it('.unbindAll()', () => {
 		expect(instance.unbindAll).to.be.a('function');
-		instance.bindKeys({'a': spy, 'b': spy});
+		instance.bind({'a': spy, 'b': spy});
 
 		const inst = instance.unbindAll();
 
