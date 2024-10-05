@@ -4,6 +4,28 @@ import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vite
 import {Hotkey} from '../src';
 import {spyFn} from './utils';
 
+const HTML = `<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div id="the-div"></div>
+		<div id="the-editable" tabindex="1" contenteditable="true">
+			Editable:
+		</div>
+		<form>
+			<input id="the-input" type="text" tabindex="1" />
+			<textarea id="the-textarea" type="text" tabindex="1"></textarea>
+			<select id="the-select" type="text" tabindex="1">
+				<option value="1">A</option>
+				<option value="2">B</option>
+				<option value="3">C</option>
+			</select>
+		</form>
+	</body>
+</html>`;
+
 describe('Construction / Destruction', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
@@ -11,7 +33,7 @@ describe('Construction / Destruction', () => {
 	let spy: Mock;
 
 	beforeAll(() => {
-		const dom = new JSDOM();
+		const dom = new JSDOM(HTML);
 
 		doc = dom.window.document;
 		simulate = new KeyboardSimulator(doc);
@@ -25,7 +47,169 @@ describe('Construction / Destruction', () => {
 	afterEach(() => {
 		hk.destruct();
 		simulate.reset();
+		simulate.setContextElm(doc!);
 		spy.mockClear();
+	});
+
+	describe('constructor', () => {
+		describe('arg 1 - Context Element', () => {
+			it('Binds event listeners on the context element', () => {
+				let called = false;
+				let isDiv = false;
+
+				const div = doc?.getElementById('the-div');
+
+				simulate.setContextElm(div!);
+
+				const hk1 = new Hotkey(div!);
+
+
+				hk1.mount();
+				hk1.bind('a', (ev: KeyboardEvent) => {
+					called = true;
+					isDiv = ev.currentTarget === div;
+				});
+
+				simulate.keyPress('a');
+				expect(called).toBe(true);
+				expect(isDiv).toBe(true);
+				hk1.destruct();
+			});
+
+			it('Default Context Element = `document`', () => {
+				let called = false;
+				let isDoc = false;
+
+				const div = doc?.getElementById('the-div');
+
+				simulate.setContextElm(div!);
+
+				hk.mount();
+				hk.bind('a', (ev: KeyboardEvent) => {
+					called = true;
+					isDoc = ev.currentTarget === doc;
+				});
+
+				simulate.keyPress('a');
+				expect(called).toBe(true);
+				expect(isDoc).toBe(true);
+			});
+		});
+
+		describe('arg 2: ignoreFn', () => {
+			describe('Default function', () => {
+				it('Blocks a handler when `ev.target` is an <input> tag', () => {
+					const input = doc?.getElementById('the-input');
+
+					simulate.setContextElm(input!);
+
+					hk.mount();
+					hk.bind('a', spy);
+
+					simulate.keyPress('a');
+
+					// Don't move down after `expect`.
+					// If will not unmount on fail, following tests will fail for extra spy calls.
+					hk.destruct();
+
+					expect(spy).not.toBeCalled();
+				});
+
+				it('Blocks a handler when `ev.target` is an <select> tag', () => {
+					const select = doc?.getElementById('the-select');
+
+					simulate.setContextElm(select!);
+
+					hk.mount();
+					hk.bind('a', spy);
+
+					simulate.keyPress('a');
+
+					// Don't move down after `expect`.
+					// If will not unmount on fail, following tests will fail for extra spy calls.
+					hk.destruct();
+
+					expect(spy).not.toBeCalled();
+				});
+
+				it('Blocks a handler when `ev.target` is an <textarea> tag', () => {
+					const textarea = doc?.getElementById('the-textarea');
+
+					simulate.setContextElm(textarea!);
+
+					hk.mount();
+					hk.bind('a', spy);
+
+					simulate.keyPress('a');
+
+					// Don't move down after `expect`.
+					// If will not unmount on fail, following tests will fail for extra spy calls.
+					hk.destruct();
+
+					expect(spy).not.toBeCalled();
+				});
+
+				it.skip('Blocks a handler when `ev.target` is contenteditable', () => {
+					/*
+						Looks like JSDOM doesn't support contentEditable API
+					*/
+				});
+			});
+
+			it('Blocks a handler when returns `true`', () => {
+				const hk1 = new Hotkey(doc, () => true);
+
+				hk1.mount();
+				hk1.bind('a', spy);
+
+				simulate.keyPress('a');
+
+				// Don't move down after `expect`.
+				// If will not unmount on fail, following tests will fail for extra spy calls.
+				hk1.destruct();
+
+				expect(spy).not.toBeCalled();
+			});
+
+			it('Does not block a handler when returns `false`', () => {
+				const hk1 = new Hotkey(doc, () => false);
+
+				hk1.mount();
+				hk1.bind('a', spy);
+
+				simulate.keyPress('a');
+
+				// Don't move down after `expect`.
+				// If will not unmount on fail, following tests will fail for extra spy calls.
+				hk1.destruct();
+
+				expect(spy).toHaveBeenCalledOnce();
+			});
+
+			it('Accepts one argument: (ev: KeyboardEvent)', () => {
+				let called = false;
+				let evt: KeyboardEvent | null = null;
+
+				const hk1 = new Hotkey(doc, (ev: KeyboardEvent) => {
+					called = true;
+					evt = ev;
+
+					return true;
+				});
+
+				hk1.mount();
+				hk1.bind('a', spy);
+
+				simulate.keyPress('a');
+
+				// Don't move down after `expect`.
+				// If will not unmount on fail, following tests will fail for extra spy calls.
+				hk1.destruct();
+
+				expect(called).toBe(true);
+				expect(evt).toBeInstanceOf(KeyboardEvent);
+			});
+		});
 	});
 
 	describe('.mount()', () => {
@@ -37,7 +221,7 @@ describe('Construction / Destruction', () => {
 
 			hk.mount();
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 			expect(spy.mock.calls[0][0].target).toBe(doc);
 		});
 
@@ -47,7 +231,7 @@ describe('Construction / Destruction', () => {
 
 			expect(spy).not.toBeCalled();
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 		});
 	});
 
@@ -55,17 +239,17 @@ describe('Construction / Destruction', () => {
 		it('Removes the event listener from the context element', () => {
 			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 
 			hk.unmount();
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 		});
 
 		it('Does not remove all hotkeys', () => {
 			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 
 			hk.unmount();
 			hk.mount();
@@ -89,23 +273,23 @@ describe('Construction / Destruction', () => {
 		it('Removes the event listener from the context element', () => {
 			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 
 			hk.destruct();
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 		});
 
 		it('Removes all hotkeys', () => {
 			hk.mount().bind('a', spy);
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 
 			hk.destruct();
 			hk.mount();
 
 			simulate.keyPress('a');
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spy).toHaveBeenCalledOnce();
 		});
 
 		it('Safe to call multiple times', () => {

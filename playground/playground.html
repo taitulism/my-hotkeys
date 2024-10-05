@@ -8,12 +8,34 @@
 			padding: 0;
 			box-sizing: border-box;
 		}
+
+		#super-container {
+			border: 1px solid black;
+			width: 200px;
+			height: 200px;
+		}
+
+		:focus-visible {
+			outline: 5px solid yellow;
+		}
 	</style>
 </head>
 <body>
 	<div id="super-container" tabindex="1">
-		Hot!
+		Hotkeyz!
 	</div>
+	<div id="the-editable" tabindex="1" contenteditable="true">
+		Editable:
+	</div>
+	<form>
+		<input id="the-input" type="text" tabindex="1" />
+		<textarea id="the-textarea" type="text" tabindex="1"></textarea>
+		<select id="the-select" type="text" tabindex="1">
+			<option value="1">A</option>
+			<option value="2">B</option>
+			<option value="3">C</option>
+		</select>
+	</form>
 
 	<script src="../dev-bundles/playground.js"></script>
 </script>

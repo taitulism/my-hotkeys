@@ -14,11 +14,34 @@ export function hotkey (ctxElm: ContextElement = document) {
 	return new Hotkey(ctxElm).mount();
 }
 
+export type IgnoreFn = (ev: KeyboardEvent) => boolean
+
+const ignoredInputTags = [
+	'INPUT',
+	'TEXTAREA',
+	'SELECT',
+] as const;
+
+const defaultIgnoreFn = (ev: KeyboardEvent) => {
+	const {target} = ev;
+
+	// TODO:test - Checking instanceof HTMLElement fails in JSDOM when not in sandbox
+	if (!target || !('tagName' in target)) return false;
+
+	const elm = target as HTMLElement;
+	const isIgnoredTag = ignoredInputTags.includes(elm.tagName as typeof ignoredInputTags[number]);
+
+	return isIgnoredTag || elm.isContentEditable;
+};
+
 export class Hotkey {
 	public hotkeys = new Map<string, CombinationHandlers>();
 	public debugMode: boolean = false;
 
-	constructor (public ctxElm: ContextElement = document) {}
+	constructor (
+		public ctxElm: ContextElement = document,
+		private ignoreFn: IgnoreFn = defaultIgnoreFn,
+	) {}
 
 	private addHotkey = (
 		parsedHotKey: ParsedHotKey,
@@ -117,6 +140,7 @@ export class Hotkey {
 		const {key: kValue} = ev;
 
 		if (isModifier(kValue)) return;
+		if (this.ignoreFn?.(ev)) return;
 
 		const handlers = getHandlers(ev, this.hotkeys);
 
