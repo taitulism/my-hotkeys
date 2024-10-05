@@ -23,13 +23,13 @@ const ignoredInputTags = [
 ] as const;
 
 const defaultIgnoreFn = (ev: KeyboardEvent) => {
-	const {target} = ev;
+	const {target: elm} = ev;
 
-	// TODO:test - Checking instanceof HTMLElement fails in JSDOM when not in sandbox
-	if (!target || !('tagName' in target)) return false;
+	if (!elm || !(elm instanceof HTMLElement)) return false;
+	// if (!elm || !('tagName' in elm)) return false;
 
-	const elm = target as HTMLElement;
-	const isIgnoredTag = ignoredInputTags.includes(elm.tagName as typeof ignoredInputTags[number]);
+	const isIgnoredTag = ignoredInputTags.includes(
+		elm.tagName as typeof ignoredInputTags[number]);
 
 	return isIgnoredTag || elm.isContentEditable;
 };

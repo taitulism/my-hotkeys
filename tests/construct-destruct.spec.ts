@@ -35,6 +35,8 @@ describe('Construction / Destruction', () => {
 	beforeAll(() => {
 		const dom = new JSDOM(HTML);
 
+		// TODO:test - Checking instanceof HTMLElement fails in JSDOM when not in sandbox
+		globalThis.HTMLElement = dom.window.HTMLElement;
 		doc = dom.window.document;
 		simulate = new KeyboardSimulator(doc);
 		spy = spyFn();
