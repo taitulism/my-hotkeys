@@ -66,11 +66,11 @@ describe('Unbinding Hotkeys', () => {
 
 			simulate.keyDown('Shift', 'PageDown');
 			expect(spy).toHaveBeenCalledTimes(1);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'PageDown');
 			expect(spy).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			hk.unbind('shift-pgdn');
 
@@ -83,11 +83,11 @@ describe('Unbinding Hotkeys', () => {
 
 			simulate.keyDown('Shift', 'Slash');
 			expect(spy).toHaveBeenCalledTimes(1);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'NumpadDivide');
 			expect(spy).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			hk.unbind('shift-/');
 
@@ -108,7 +108,7 @@ describe('Unbinding Hotkeys', () => {
 			simulate.keyUp('A');
 			simulate.keyDown('Ctrl', 'A');
 			expect(spy).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			hk.unbind('ctrl-a');
 
@@ -117,7 +117,7 @@ describe('Unbinding Hotkeys', () => {
 			simulate.keyUp('A');
 			simulate.keyDown('Ctrl', 'A');
 			expect(spy).toHaveBeenCalledTimes(3);
-			simulate.releaseAll();
+			simulate.release();
 		});
 
 		it('Unbinds multiple keys', () => {

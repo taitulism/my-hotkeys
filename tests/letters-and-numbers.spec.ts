@@ -38,7 +38,7 @@ describe('Letters & Numbers', () => {
 
 			simulate.keyDown('Shift', 'a');
 			expect(spy).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyPress('CapsLock');
 			simulate.keyDown('a');
@@ -69,7 +69,7 @@ describe('Letters & Numbers', () => {
 
 			simulate.keyDown(letter);
 			expect(spy).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 		});
 	});
 
@@ -83,11 +83,11 @@ describe('Letters & Numbers', () => {
 
 			simulate.keyDown(`Digit${digit}`);
 			expect(spy).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown(`Numpad${digit}`);
 			expect(spy).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 		});
 	});
 });

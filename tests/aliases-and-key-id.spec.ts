@@ -39,15 +39,15 @@ describe('Aliases & Key IDs', () => {
 
 		simulate.keyDown('A');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('BracketLeft');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('NumpadEnter');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	describe('Aliases', () => {
@@ -63,19 +63,19 @@ describe('Aliases & Key IDs', () => {
 
 			simulate.keyDown('ArrowUp');
 			expect(spy1).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('ArrowDown');
 			expect(spy2).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('ArrowLeft');
 			expect(spy3).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('ArrowRight');
 			expect(spy4).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 		});
 
 		it('Symbol Aliases', () => {
@@ -100,46 +100,46 @@ describe('Aliases & Key IDs', () => {
 
 			simulate.keyDown('Minus');
 			expect(spy1).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 			simulate.keyDown('Subtract');
 			expect(spy1).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'Equal'); // +
 			expect(spy2).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Equal');
 			expect(spy3).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Space');
 			expect(spy4).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'Backquote'); // ~
 			expect(spy5).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Quote');
 			expect(spy6).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'Quote'); // "
 			expect(spy7).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Backquote');
 			expect(spy8).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Backslash');
 			expect(spy9).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'Minus'); // _
 			expect(spy10).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			hk.destruct();
 
@@ -154,11 +154,11 @@ describe('Aliases & Key IDs', () => {
 
 			simulate.keyDown('Quote');
 			expect(spy21).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Shift', 'Quote');
 			expect(spy22).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 		});
 
 		it('Case Insensitive', () => {
@@ -172,15 +172,15 @@ describe('Aliases & Key IDs', () => {
 
 			simulate.keyDown('Shift', 'Equal');
 			expect(spy1).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Minus');
 			expect(spy2).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Space');
 			expect(spy3).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 		});
 
 		it('Other Aliases', () => {
@@ -198,35 +198,35 @@ describe('Aliases & Key IDs', () => {
 
 			simulate.keyDown('Insert');
 			expect(spy1).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 			simulate.keyDown('Np0');
 			expect(spy1).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Delete');
 			expect(spy2).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 			simulate.keyDown('Decimal');
 			expect(spy2).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('Esc');
 			expect(spy3).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('PageUp');
 			expect(spy4).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 			simulate.keyDown('Np9');
 			expect(spy4).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 
 			simulate.keyDown('PageDown');
 			expect(spy5).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 			simulate.keyDown('Np3');
 			expect(spy5).toHaveBeenCalledTimes(2);
-			simulate.releaseAll();
+			simulate.release();
 		});
 	});
 });

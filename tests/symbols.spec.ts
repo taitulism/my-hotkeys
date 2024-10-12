@@ -44,31 +44,31 @@ describe('Symbols', () => {
 
 		simulate.keyDown('BracketLeft');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 		simulate.keyDown('BracketRight');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'BracketLeft');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 		simulate.keyDown('Shift', 'BracketRight');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit9');
 		expect(spy5).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 		simulate.keyDown('Shift', 'Digit0');
 		expect(spy6).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Comma');
 		expect(spy7).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 		simulate.keyDown('Shift', 'Period');
 		expect(spy8).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Punctuation & Text', () => {
@@ -86,35 +86,35 @@ describe('Symbols', () => {
 
 		simulate.keyDown('Period');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Decimal');
 		expect(spy1).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Comma');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('SingleQuote');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'SingleQuote');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Backquote');
 		expect(spy5).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Semicolon');
 		expect(spy6).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Semicolon');
 		expect(spy7).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Calculator Symbols', () => {
@@ -130,39 +130,39 @@ describe('Symbols', () => {
 
 		simulate.keyDown('NumpadAdd');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Equal');
 		expect(spy1).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('NumpadSubtract');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Minus');
 		expect(spy2).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('NumpadMultiply');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit8');
 		expect(spy3).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('NumpadDivide');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Slash');
 		expect(spy4).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Equal');
 		expect(spy5).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Other Shift Symbols', () => {
@@ -188,56 +188,54 @@ describe('Symbols', () => {
 
 		simulate.keyDown('Shift', 'Backquote');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit1');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit2');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit3');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit4');
 		expect(spy5).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit5');
 		expect(spy6).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit6');
 		expect(spy7).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Digit7');
 		expect(spy8).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Minus');
 		expect(spy9).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Backslash');
 		expect(spy10).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Slash');
 		expect(spy11).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Backslash');
 		expect(spy12).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
-		// TODO: Missing in KbSim
-		// simulate.keyDown('IntlBackslash');
-		// expect(spy12).toHaveBeenCalledTimes(2);
-		// simulate.releaseAll();
+		simulate.keyDown('IntlBackslash');
+		expect(spy12).toHaveBeenCalledTimes(2);
+		simulate.release();
 	});
-
 });

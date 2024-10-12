@@ -38,11 +38,11 @@ describe('Text Spaces', () => {
 
 		simulate.keyDown('Space');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Backspace');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Insert & Delete', () => {
@@ -55,21 +55,21 @@ describe('Text Spaces', () => {
 
 		simulate.keyDown('Insert');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Delete');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyPress('NumLock'); // Off
 
 		simulate.keyDown('Numpad0'); // = Insert
 		expect(spy1).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('NumpadDecimal'); // = Del
 		expect(spy2).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Enter', () => {
@@ -77,11 +77,11 @@ describe('Text Spaces', () => {
 
 		simulate.keyDown('Enter');
 		expect(spy).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('NumpadEnter');
 		expect(spy).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Tab', () => {
@@ -89,6 +89,6 @@ describe('Text Spaces', () => {
 
 		simulate.keyDown('Tab');
 		expect(spy).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 });

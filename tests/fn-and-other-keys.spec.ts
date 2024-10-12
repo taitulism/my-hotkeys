@@ -5,7 +5,7 @@ import {hotkey, Hotkey} from '../src';
 import {spyFn} from './utils';
 
 describe('Fn & Other Keys', () => {
-	let doc: Document | undefined;
+	let doc: Document;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;
 
@@ -32,7 +32,7 @@ describe('Fn & Other Keys', () => {
 			hk.bind(`F${i}`, spy);
 			simulate.keyDown(`F${i}` as KeyName);
 			expect(spy).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 		}
 	});
 
@@ -54,7 +54,7 @@ describe('Fn & Other Keys', () => {
 
 			simulate.keyDown(key);
 			expect(spy).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 
 			if (key.endsWith('Lock')) {
 				simulate.keyPress(key); // toggle back

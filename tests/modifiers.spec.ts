@@ -52,7 +52,7 @@ describe('Modifiers', () => {
 
 			simulate.keyDown('Ctrl', 'A');
 			expect(spy2).toHaveBeenCalledOnce();
-			simulate.releaseAll();
+			simulate.release();
 			expect(spy2).toHaveBeenCalledOnce();
 			expect(spy1).not.toBeCalled();
 		});
@@ -81,11 +81,11 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', '4');
 				expect(spy).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Np4');
 				expect(spy).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 			});
 
 			it('Shift + Number Symbol', () => {
@@ -93,11 +93,11 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', '8');
 				expect(spy).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Multiply');
 				expect(spy).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 			});
 
 			it('Shift + Non-Number Symbol', () => {
@@ -116,35 +116,35 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', 'BracketLeft');
 				expect(spy1).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'BracketRight');
 				expect(spy2).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Semicolon');
 				expect(spy3).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'SingleQuote');
 				expect(spy4).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Backslash');
 				expect(spy5).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Comma');
 				expect(spy6).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Backtick');
 				expect(spy7).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Equal');
 				expect(spy8).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 			});
 
 			it('Shift + Minus', () => {
@@ -152,11 +152,11 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', 'Minus');
 				expect(spy).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Subtract');
 				expect(spy).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 			});
 
 			it('Shift + Slash', () => {
@@ -164,11 +164,11 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', 'Slash');
 				expect(spy).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Divide');
 				expect(spy).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 			});
 
 			it('Shift + Period', () => {
@@ -176,11 +176,11 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', 'Period');
 				expect(spy).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'Decimal');
 				expect(spy).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 			});
 		});
 
@@ -195,19 +195,19 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', '2');
 				expect(spy1).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', '8');
 				expect(spy2).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('NumpadMultiply');
 				expect(spy2).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 
 				simulate.keyDown('Shift', 'NumpadMultiply'); // should not trigger
 				expect(spy2).toHaveBeenCalledTimes(2);
-				simulate.releaseAll();
+				simulate.release();
 			});
 
 			it('Priority: Explicit shift over implicit shift', () => {
@@ -220,7 +220,7 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', '2');
 				expect(spy1).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 				expect(spy2).not.toHaveBeenCalled();
 			});
 
@@ -234,7 +234,7 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Ctrl', 'Shift', '2');
 				expect(spy1).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 				expect(spy2).not.toHaveBeenCalled();
 			});
 
@@ -248,7 +248,7 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Shift', '2');
 				expect(spy1).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 				expect(spy2).not.toHaveBeenCalled();
 			});
 
@@ -262,7 +262,7 @@ describe('Modifiers', () => {
 
 				simulate.keyDown('Ctrl', 'Shift', '2');
 				expect(spy1).toHaveBeenCalledOnce();
-				simulate.releaseAll();
+				simulate.release();
 				expect(spy2).not.toHaveBeenCalled();
 			});
 		});
@@ -280,19 +280,19 @@ describe('Modifiers', () => {
 
 		simulate.keyDown('Ctrl', 'A');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', 'B');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'C');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Meta', 'D');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('With Numbers', () => {
@@ -307,19 +307,19 @@ describe('Modifiers', () => {
 
 		simulate.keyDown('Ctrl', '1');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', '2');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', '3');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Meta', '4');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('With Other keys', () => {
@@ -334,19 +334,19 @@ describe('Modifiers', () => {
 
 		simulate.keyDown('Ctrl', 'F1');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', 'Period');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Enter');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Meta', 'PageUp');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('With Aliases', () => {
@@ -363,33 +363,33 @@ describe('Modifiers', () => {
 
 		simulate.keyDown('Shift', 'Quote');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Ctrl', 'Shift', 'Equal'); // +
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 		simulate.keyDown('Ctrl', 'NumpadAdd');
 		expect(spy2).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', 'Space');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Meta', 'PageDown');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Backquote');
 		expect(spy5).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Minus');
 		expect(spy6).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 		simulate.keyDown('Shift', 'Subtract');
 		expect(spy6).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Multiple Modifiers', () => {
@@ -406,27 +406,27 @@ describe('Modifiers', () => {
 
 		simulate.keyDown('Ctrl', 'Alt', 'A');
 		expect(spy1).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', 'Shift', 'B');
 		expect(spy2).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Shift', 'Alt', 'C');
 		expect(spy3).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', 'Ctrl', 'D');
 		expect(spy4).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Meta', 'Shift', 'Ctrl', 'E');
 		expect(spy5).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Ctrl', 'Alt', 'Meta', 'Shift', 'F');
 		expect(spy6).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 	});
 
 	it('Order doesn\'t matter', () => {
@@ -436,11 +436,11 @@ describe('Modifiers', () => {
 
 		simulate.keyDown('Ctrl', 'Alt', 'A');
 		expect(spy).toHaveBeenCalledOnce();
-		simulate.releaseAll();
+		simulate.release();
 
 		simulate.keyDown('Alt', 'Ctrl', 'A');
 		expect(spy).toHaveBeenCalledTimes(2);
-		simulate.releaseAll();
+		simulate.release();
 
 		const badFunc = () => {
 			hk.bind('ctrl-alt-a', spy);

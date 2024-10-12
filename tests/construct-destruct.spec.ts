@@ -10,7 +10,7 @@ const HTML = `<!DOCTYPE html>
 		<meta charset="UTF-8">
 	</head>
 	<body>
-		<div id="the-div"></div>
+		<div id="the-div" tabindex="1"></div>
 		<div id="the-editable" tabindex="1" contenteditable="true">
 			Editable:
 		</div>
@@ -27,7 +27,7 @@ const HTML = `<!DOCTYPE html>
 </html>`;
 
 describe('Construction / Destruction', () => {
-	let doc: Document | undefined;
+	let doc: Document;
 	let simulate: KeyboardSimulator;
 	let hk: Hotkey;
 	let spy: Mock;
@@ -47,24 +47,22 @@ describe('Construction / Destruction', () => {
 	});
 
 	afterEach(() => {
+		(doc.activeElement as HTMLElement).blur();
 		hk.destruct();
 		simulate.reset();
-		simulate.setContextElm(doc!);
 		spy.mockClear();
 	});
 
-	describe('constructor', () => {
+	describe('Constructor', () => {
 		describe('arg 1 - Context Element', () => {
 			it('Binds event listeners on the context element', () => {
 				let called = false;
 				let isDiv = false;
 
-				const div = doc?.getElementById('the-div');
+				const div = doc.getElementById('the-div')!;
+				const hk1 = new Hotkey(div);
 
-				simulate.setContextElm(div!);
-
-				const hk1 = new Hotkey(div!);
-
+				div.focus();
 
 				hk1.mount();
 				hk1.bind('a', (ev: KeyboardEvent) => {
@@ -82,9 +80,9 @@ describe('Construction / Destruction', () => {
 				let called = false;
 				let isDoc = false;
 
-				const div = doc?.getElementById('the-div');
+				const div = doc.getElementById('the-div')!;
 
-				simulate.setContextElm(div!);
+				div.focus();
 
 				hk.mount();
 				hk.bind('a', (ev: KeyboardEvent) => {
@@ -101,9 +99,9 @@ describe('Construction / Destruction', () => {
 		describe('arg 2: ignoreFn', () => {
 			describe('Default function', () => {
 				it('Blocks a handler when `ev.target` is an <input> tag', () => {
-					const input = doc?.getElementById('the-input');
+					const input = doc.getElementById('the-input')!;
 
-					simulate.setContextElm(input!);
+					input.focus();
 
 					hk.mount();
 					hk.bind('a', spy);
@@ -118,9 +116,9 @@ describe('Construction / Destruction', () => {
 				});
 
 				it('Blocks a handler when `ev.target` is an <select> tag', () => {
-					const select = doc?.getElementById('the-select');
+					const select = doc.getElementById('the-select')!;
 
-					simulate.setContextElm(select!);
+					select.focus();
 
 					hk.mount();
 					hk.bind('a', spy);
@@ -135,9 +133,9 @@ describe('Construction / Destruction', () => {
 				});
 
 				it('Blocks a handler when `ev.target` is an <textarea> tag', () => {
-					const textarea = doc?.getElementById('the-textarea');
+					const textarea = doc.getElementById('the-textarea')!;
 
-					simulate.setContextElm(textarea!);
+					textarea.focus();
 
 					hk.mount();
 					hk.bind('a', spy);
@@ -224,7 +222,7 @@ describe('Construction / Destruction', () => {
 			hk.mount();
 			simulate.keyPress('a');
 			expect(spy).toHaveBeenCalledOnce();
-			expect(spy.mock.calls[0][0].target).toBe(doc);
+			expect(spy.mock.calls[0][0].target).toBe(doc.body);
 		});
 
 		it('Adds one event listener even when called multiple times', () => {
