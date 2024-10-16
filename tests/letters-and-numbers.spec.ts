@@ -29,20 +29,22 @@ describe('Letters & Numbers', () => {
 	});
 
 	describe('Letters are case insensitive', () => {
-		it('Hotkey "a" is also triggered by pressing "A"', () => {
+		it('Hotkey "a" is also triggered by `CapsLock` is on but not with `Shift`', () => {
 			hk.bind('a', spy);
 
 			simulate.keyDown('a');
 			expect(spy).toHaveBeenCalledOnce();
-			simulate.keyUp('a');
+			simulate.release();
+
+			simulate.keyPress('CapsLock'); // On
+			simulate.keyDown('a');
+			expect(spy).toHaveBeenCalledTimes(2);
+			simulate.release();
+			simulate.keyPress('CapsLock'); // Off
 
 			simulate.keyDown('Shift', 'a');
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.release();
-
-			simulate.keyPress('CapsLock');
-			simulate.keyDown('a');
-			expect(spy).toHaveBeenCalledTimes(3);
 		});
 
 		it('Binding "a" is the same as binding "A"', () => {

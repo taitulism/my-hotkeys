@@ -57,6 +57,18 @@ describe('Modifiers', () => {
 			expect(spy1).not.toBeCalled();
 		});
 
+		it('Doesn\'t trigger "2" on "Shift-2"', () => {
+			hk.bind('2', spy);
+
+			simulate.keyDown('2');
+			expect(spy).toHaveBeenCalledOnce();
+			simulate.release();
+
+			simulate.keyDown('Shift', '2');
+			simulate.release();
+			expect(spy).toHaveBeenCalledOnce();
+		});
+
 		it('Can trigger two hotkeys with the same modifier without releasing it after the first one', () => {
 			const [spy1, spy2] = spies(2);
 

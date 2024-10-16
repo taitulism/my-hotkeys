@@ -151,7 +151,7 @@ export class Hotkey {
 		if (handlers[unifiedModifier]) {
 			handlers[unifiedModifier]?.(ev);
 		}
-		else if (implicitShift(ev)) {
+		else if (handlers === this.hotkeys.get(kValue) && implicitShift(ev)) {
 			const uniModWithoutShift = removeShift(unifiedModifier);
 			const handler = handlers[uniModWithoutShift];
 

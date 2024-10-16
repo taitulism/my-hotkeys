@@ -149,8 +149,9 @@ const isSingleChar = (ev: KeyboardEvent) => ev.key.length === 1;
 
 // e.g. bind '@'. When 'shift-2' event has '@' but unifiedModifier is 'S' so no match.
 export const implicitShift = (ev: KeyboardEvent) =>
-	ev.shiftKey && isSingleChar(ev) && !isNumpadKey(ev.code);
-	// Numpad symbols are not affected by shift
+	ev.shiftKey &&
+	isSingleChar(ev) &&
+	!isNumpadKey(ev.code); // Numpad symbols are not affected by shift
 
 export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier => (
 	uniModWithShift.replace('S', '') || '_'
