@@ -6,6 +6,7 @@ import {
 	Meta,
 	UnifiedModifiersMap,
 	Modifiers,
+	ModifierAliases,
 	type Modifier,
 	type UnifiedModifier,
 	type UniModSum,
@@ -13,7 +14,6 @@ import {
 	type CombinationHandlers,
 	type ParsedTargetKey,
 	type ModifierAlias,
-	ModifierAliases,
 } from './types';
 
 const isLetter = (str: string) => str.length === 1 && /[a-zA-Z]/.test(str);

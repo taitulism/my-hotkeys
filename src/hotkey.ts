@@ -1,6 +1,12 @@
-import type {ContextElement, CombinationHandlers, KeyHandler, ParsedHotKey} from './types';
 import {logKbEvent} from './log-keyboard-event';
 import {ISymbol, SymbolIDs} from './symbols';
+import type {
+	ContextElement,
+	CombinationHandlers,
+	KeyHandler,
+	ParsedHotKey,
+	IgnoreFn,
+} from './types';
 import {
 	unifyEventModifiers,
 	parseHotKey,
@@ -13,8 +19,6 @@ import {
 export function hotkey (ctxElm: ContextElement = document) {
 	return new Hotkey(ctxElm).mount();
 }
-
-export type IgnoreFn = (ev: KeyboardEvent) => boolean
 
 const ignoredInputTags = [
 	'INPUT',

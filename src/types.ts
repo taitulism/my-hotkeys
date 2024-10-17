@@ -3,6 +3,7 @@ import type {SymbolKeyID} from './symbols';
 
 export type ContextElement = HTMLElement | Document;
 export type KeyHandler = (ev: KeyboardEvent) => void
+export type IgnoreFn = (ev: KeyboardEvent) => boolean
 
 export const Control = 'Control';
 export const Alt = 'Alt';
