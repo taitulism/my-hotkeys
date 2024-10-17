@@ -280,6 +280,48 @@ describe('Modifiers', () => {
 		});
 	});
 
+	it('Modifier Aliases', () => {
+		const [spy1, spy2, spy3, spy4, spy5, spy6, spy7] = spies(7);
+
+		hk.bind({
+			'Ctrl-a': spy1,
+			'control-b': spy2,
+			'ALT-C': spy3,
+			'Shift-d': spy4,
+			'meta-e': spy5,
+			'cmd-f': spy6,
+			'Command-G': spy7,
+		});
+
+		simulate.keyDown('Ctrl', 'A');
+		expect(spy1).toHaveBeenCalledOnce();
+		simulate.release();
+
+		simulate.keyDown('Ctrl', 'b');
+		expect(spy2).toHaveBeenCalledOnce();
+		simulate.release();
+
+		simulate.keyDown('Alt', 'C');
+		expect(spy3).toHaveBeenCalledOnce();
+		simulate.release();
+
+		simulate.keyDown('Shift', 'D');
+		expect(spy4).toHaveBeenCalledOnce();
+		simulate.release();
+
+		simulate.keyDown('Meta', 'E');
+		expect(spy5).toHaveBeenCalledOnce();
+		simulate.release();
+
+		simulate.keyDown('Meta', 'F');
+		expect(spy6).toHaveBeenCalledOnce();
+		simulate.release();
+
+		simulate.keyDown('Meta', 'G');
+		expect(spy7).toHaveBeenCalledOnce();
+		simulate.release();
+	});
+
 	it('With Letters', () => {
 		const [spy1, spy2, spy3, spy4] = spies(4);
 

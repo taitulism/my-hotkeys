@@ -24,6 +24,8 @@ export const ModifierAliases = {
 	alt: Alt,
 	shift: Shift,
 	meta: Meta,
+	cmd: Meta,
+	command: Meta,
 } as const;
 export type ModifierAlias = keyof typeof ModifierAliases;
 
