@@ -1,4 +1,3 @@
-import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
@@ -11,10 +10,9 @@ describe('Construction / Destruction', () => {
 	let hk: Hotkey;
 	let spy: Mock;
 
-	beforeAll(() => {
-		// Path from project's root:
-		const HTML = readFileSync('./tests/test-html.html');
-		const dom = new JSDOM(HTML);
+	beforeAll(async () => {
+		// Path relative to CWD:
+		const dom = await JSDOM.fromFile('./tests/test-html.html');
 
 		// TODO:test - Checking instanceof HTMLElement fails in JSDOM when not in sandbox
 		globalThis.HTMLElement = dom.window.HTMLElement;
