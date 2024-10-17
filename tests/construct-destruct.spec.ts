@@ -1,30 +1,9 @@
+import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
 import {Hotkey} from '../src';
 import {spyFn} from './utils';
-
-const HTML = `<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-	</head>
-	<body>
-		<div id="the-div" tabindex="1"></div>
-		<div id="the-editable" tabindex="1" contenteditable="true">
-			Editable:
-		</div>
-		<form>
-			<input id="the-input" type="text" tabindex="1" />
-			<textarea id="the-textarea" type="text" tabindex="1"></textarea>
-			<select id="the-select" type="text" tabindex="1">
-				<option value="1">A</option>
-				<option value="2">B</option>
-				<option value="3">C</option>
-			</select>
-		</form>
-	</body>
-</html>`;
 
 describe('Construction / Destruction', () => {
 	let doc: Document;
@@ -33,6 +12,8 @@ describe('Construction / Destruction', () => {
 	let spy: Mock;
 
 	beforeAll(() => {
+		// Path from project's root:
+		const HTML = readFileSync('./tests/test-html.html');
 		const dom = new JSDOM(HTML);
 
 		// TODO:test - Checking instanceof HTMLElement fails in JSDOM when not in sandbox
