@@ -1,14 +1,13 @@
-import type {AliasValue} from './aliases';
-import type {SymbolKeyID} from './symbols';
+import type {AliasValue, SymbolKeyID} from './symbols-and-aliases';
 
 export type ContextElement = HTMLElement | Document;
 export type KeyHandler = (ev: KeyboardEvent) => void
 export type IgnoreFn = (ev: KeyboardEvent) => boolean
 
-export const Control = 'Control';
-export const Alt = 'Alt';
-export const Shift = 'Shift';
-export const Meta = 'Meta';
+const Control = 'Control';
+const Alt = 'Alt';
+const Shift = 'Shift';
+const Meta = 'Meta';
 
 export const Modifiers = {
 	Control: 1,
@@ -17,7 +16,6 @@ export const Modifiers = {
 	Meta: 8,
 } as const;
 export type Modifier = keyof typeof Modifiers
-// export type Modifier = typeof Control | typeof Alt | typeof Shift | typeof Meta
 
 export const ModifierAliases = {
 	control: Control,

@@ -1,9 +1,5 @@
-import {Aliases, Alias} from './aliases';
+import {Aliases, Alias} from './symbols-and-aliases';
 import {
-	Control,
-	Alt,
-	Shift,
-	Meta,
 	UnifiedModifiersMap,
 	Modifiers,
 	ModifierAliases,
@@ -132,19 +128,6 @@ export function getHandlers (
 	}
 }
 
-export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
-	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
-
-	let modifiersSum = 0;
-
-	if (ctrlKey && key !== Control) modifiersSum += Modifiers.Control;
-	if (altKey && key !== Alt) modifiersSum += Modifiers.Alt;
-	if (shiftKey && key !== Shift) modifiersSum += Modifiers.Shift;
-	if (metaKey && key !== Meta) modifiersSum += Modifiers.Meta;
-
-	return UnifiedModifiersMap[modifiersSum as UniModSum];
-}
-
 const isSingleChar = (ev: KeyboardEvent) => ev.key.length === 1;
 
 // e.g. bind '@'. When 'shift-2' event has '@' but unifiedModifier is 'S' so no match.
@@ -157,25 +140,15 @@ export const removeShift = (uniModWithShift: UnifiedModifier): UnifiedModifier =
 	uniModWithShift.replace('S', '') || '_'
 ) as UnifiedModifier;
 
+export function unifyEventModifiers (ev: KeyboardEvent): UnifiedModifier {
+	const {ctrlKey, altKey, shiftKey, metaKey} = ev;
 
+	let modifiersSum = 0;
 
-// function unifyHotkeyModifiers (modifiers: Array<Modifier>): UnifiedModifier {
-// 	const modifiersSum = modifiers.reduce<number>((acc, modifier) => {
-// 		const modNumVal = ModifiersNumValues[modifier];
+	if (ctrlKey) modifiersSum += Modifiers.Control;
+	if (altKey) modifiersSum += Modifiers.Alt;
+	if (shiftKey) modifiersSum += Modifiers.Shift;
+	if (metaKey) modifiersSum += Modifiers.Meta;
 
-// 		return acc + modNumVal;
-// 	}, 0) as UniModSum;
-
-// 	return UnifiedModifiersMap[modifiersSum];
-// }
-
-
-// const isShiftPressed = (unifiedModifier: UnifiedModifier) => unifiedModifier.includes('S');
-
-
-// export function isModifierPressed (ev: KeyboardEvent) {
-// 	const {key, ctrlKey, altKey, shiftKey, metaKey} = ev;
-// 	const modifiers = Number(ctrlKey) + Number(altKey) + Number(shiftKey) + Number(metaKey);
-
-// 	return isEventModifier(key) ? modifiers > 1 : modifiers > 0;
-// }
+	return UnifiedModifiersMap[modifiersSum as UniModSum];
+}

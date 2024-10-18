@@ -33,16 +33,19 @@ describe('Letters & Numbers', () => {
 			hk.bind('a', spy);
 
 			simulate.keyDown('a');
+			expect(spy.mock.lastCall?.[0].key).toBe('a');
 			expect(spy).toHaveBeenCalledOnce();
 			simulate.release();
 
 			simulate.keyPress('CapsLock'); // On
 			simulate.keyDown('a');
+			expect(spy.mock.lastCall?.[0].key).toBe('A');
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.release();
 			simulate.keyPress('CapsLock'); // Off
 
 			simulate.keyDown('Shift', 'a');
+			expect(spy.mock.lastCall?.[0].key).toBe('A');
 			expect(spy).toHaveBeenCalledTimes(2);
 			simulate.release();
 		});

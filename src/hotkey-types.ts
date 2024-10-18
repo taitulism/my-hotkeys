@@ -316,7 +316,11 @@ export type IHotkey =
 	| `${UpperCasedModifiers}-${AllHotkeys}`
 	| `${CapitalizedModifiers}-${AllHotkeys}`
 
-export const hk1: IHotkey = 'CTRL-a';
+
+
+// TRY:
+// ----
+// export const hk1: IHotkey = 'CTRL-a';
 
 // export const hkObj: Record<IHotkey, 1> = {
 // 	'a': 1,

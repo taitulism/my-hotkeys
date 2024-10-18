@@ -87,6 +87,7 @@ describe('Construction / Destruction', () => {
 
 					simulate.keyPress('a');
 
+					// TODO:test remove these comments (x6)
 					// Don't move down after `expect`.
 					// If will not unmount on fail, following tests will fail for extra spy calls.
 					hk.destruct();

@@ -1,5 +1,5 @@
 import {logKbEvent} from './log-keyboard-event';
-import {ISymbol, SymbolIDs} from './symbols';
+import {ISymbol, SymbolIDs} from './symbols-and-aliases';
 import type {
 	ContextElement,
 	CombinationHandlers,
@@ -30,7 +30,6 @@ const defaultIgnoreFn = (ev: KeyboardEvent) => {
 	const {target: elm} = ev;
 
 	if (!elm || !(elm instanceof HTMLElement)) return false;
-	// if (!elm || !('tagName' in elm)) return false;
 
 	const isIgnoredTag = ignoredInputTags.includes(
 		elm.tagName as typeof ignoredInputTags[number]);
