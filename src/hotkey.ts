@@ -38,6 +38,7 @@ const defaultIgnoreFn = (ev: KeyboardEvent) => {
 };
 
 export class Hotkey {
+	// TODO: make private
 	public hotkeys = new Map<string, CombinationHandlers>();
 	public debugMode: boolean = false;
 
@@ -93,8 +94,11 @@ export class Hotkey {
 
 				this.removeHotkey({targetKey: keyId, unifiedModifier});
 			}
+
+			// TODO: throw "No such Hotkey modifier" (unimod?)
 		}
 		else {
+			// TODO: say which key + test (target key)
 			throw new Error('No Such Hotkey');
 		}
 	};
