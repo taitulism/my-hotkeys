@@ -2,77 +2,179 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 
-First Thing's First
-===================
-### Rename all pkg-name strings:
-* package.json
-* README.md
-* src/pkg-name.ts (use vs-code refactor)
-* src/index.ts
-* rollup.prod.config.js
-* playground/playground.ts
-* playground/playground.html
-* tests/index.spec.ts
-* tests/api.spec.ts
+Hotkeyz
+=======
+Keyboard shorcuts.
 
-### Then:
-* Read the "version" note below
+Install
+-------
+```sh
+$ npm install hotkeyz
+```
 
-&nbsp;
-
-Development
-===========
-
-TDD
----
-`npm run dev` - Vitest + watch
-
-&nbsp;
-
-Browser Playground
-------------------
-1. `npm run play`
-2. Open file in the browser:
-	* `./playground/playground.html` 
-
-&nbsp;
-
-Check Stuff
+Basic Usage
 -----------
-* `npm run lint`   - Eslint check issues
-* `npm run types`  - TypeScript type checking
-* `npm run test`   - Vitest (for build)
-* `npm run checks` - lint + types + test (all)
 
-&nbsp;
+```js
+import {hotkeyz} from 'hotkeyz`;
+```
+```js
+const hk = hotkeyz();
 
-Publish a new version
----------------------
-> **`version` script Note:**  
-> If something from `dist` folder is git tracked - add `" && git add dist"` to end of the script 
+// bind one:
+hk.bind('a', doSomething);
 
-&nbsp;
+// or multiple:
+hk.bind({
+	'a': doSomething,
+	'ctrl-a': doSomethingElse,
+	'ctrl-alt-3': doAnotherThing,
+});
 
-1.
-	```sh
-	$ npm version major|minor|patch
-	```  
-	triggers:
+hk.unbind('a'); // removes a hotkey
 
-	* `preversion`  - Runs the `checks` script
-	* `version`     - Runs the `build` script
-		* `prebuild`  - Delete `"dist"` folder
-		* `build`     - Rollup build for production
-		* `postbuild` - Delete temporary declaration folder inside `"dist"`
-	* `postversion` - Git push + tags
+hk.unmount(); // removes the instance's event listener
+hk.mount(); // adds the instance's event listener
 
-	&nbsp;
-	
-2.
-	```sh
-	$ npm publish
-	``` 
-	triggers:
+hk.destruct(); // removes all hotkeys and the event listener
+```
 
-	* `prepublishOnly` - Runs the `checks` script
+API
+---
+* [Create an instance](#create-an-instance)
+* [Binding / Unbinding Keys](#binding--unbinding-keys)
+* [Mount/Unmount the event listener](#mountunmount-the-event-listener)
+* [Destruction](#destruction)
 
+
+
+### Create an instance
+There are two ways to get a `Hotkeyz` instance:
+1. By calling `hotkeys` creator function (lowercased "h")
+2. By the `Hotkeyz` constructor (uppercased "H")
+
+```js
+import {hotkeyz} from 'hotkeyz`;
+
+const hk = hotkeyz();
+```
+or:
+```js
+import {Hotkeyz} from 'hotkeyz`;
+
+const hk = new Hotkeyz();
+```
+
+The difference between them is that `hotkeyz` creator function also mounts the event listener on creation when the using the constructor you need to call `.mount()` manually. See [`.mount()`](#mount) below.
+
+Both accept an optional argument as the context element (`HTMLElement | Document`). This would be the element that listens to the keyboard events. Defaults to `document`.
+
+> **⚠ Non-browser environments:** You might need to pass in the runtime's `document` object as the constructor argument.
+
+
+### Binding / Unbinding Keys
+
+#### .bind()
+* `.bind(hotkey, callback)` - hotkey string, callback
+* `.bind({hotkey: callback})` - an object of `{hotkey:callback}`
+
+Adds keyboard shortcuts. Does **not** add an event listener.
+
+```js
+hk.bind('a', doSomething);
+hk.bind('b', doSomethingElse);
+
+// or:
+
+hk.bind({
+  'a': doSomething,
+  'b': doSomethingElse,
+});
+```
+
+Each hotkey can be bound once:
+```js
+hk.bind('a', doSomething);
+hk.bind('a', doSomethingElse); // -> throws Error
+```
+
+Callback functions are called with the keyboard event as their only argument:
+```js
+function doSomething (ev: KeyboardEvent) {...}
+```
+
+#### .unbind()
+* `.unbind(hotkey)` - hotkey string
+* `.unbind([hotkey...])` - an array of hotkey strings
+
+Removes keyboard shortcuts. Does **not** remove the event listener.
+
+```js
+hk.unbind('a');
+hk.unbind('b');
+
+// or:
+
+hk.unbind(['a', 'b']);
+```
+
+#### .unbindAll()
+Unbinds all hotkeys. Does **not** remove the event listener.
+
+```js
+hk.bind('A', doSomething);
+
+hk.unbindAll();
+
+hk.bind('B', doSomethingElse);
+```
+
+### Mount/Unmount the event listener
+Each `Hotkeyz` instance can only have one `keydown` keyboard event listener.
+
+* `.mount()` - Attaches the event listener to the context element.
+* `.unmount()` - Dettaches the event listener from the context element.
+
+```js
+const hk = new Hotkeyz();
+
+hk.bind('Q', doSomething);
+
+// user presses "Q" but nothing happens
+
+hk.mount();
+
+// user presses "Q" and `doSomething` is called
+
+hk.unmount();
+
+// user presses "Q" but nothing happens
+```
+
+Using the creator function mounts the event listener for you:
+```js
+const hk = hotkeyz(); //  <---- also mounts
+
+hk.bind('Q', doSomething);
+
+// user presses "Q" and `doSomething` is called
+
+hk.unmount();
+
+// user presses "Q" but nothing happens
+```
+
+
+### Destruction
+Call `.destruct()` when its context element leaves the DOM. It will remove all of the instance's hotkeys and event listeners by calling `.unmount()` and `.unbindAll()`. 
+
+```js
+const hk = new Hotkeyz();
+
+hk.bind('A', doSomething);
+hk.mount();
+
+// ...
+
+hk.destruct();
+```
