@@ -48,10 +48,7 @@
 		"vitest": "2.1.3"
 	},
 	"homepage": "https://github.com/taitulism/hotkeyz#readme",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/taitulism/hotkeyz.git"
-	},
+	"repository": "github:taitulism/hotkeyz",
 	"author": {
 		"name": "Itai Tenenbaum",
 		"email": "taitu.dev@gmail.com",
