@@ -7,6 +7,7 @@ type KeyHandler = (
     ev: KeyboardEvent,
 ) => void
 
+// Future me: look here
 export class KeyboardLayer {
 	public debugMode: boolean = false;
 	public keysDown = new Set<KeyCode>();
