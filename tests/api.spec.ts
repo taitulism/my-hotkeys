@@ -1,19 +1,19 @@
 import {it, describe, expect, afterAll, afterEach} from 'vitest';
-import {hotkey, Hotkey} from '../src';
+import {hotkeyz, Hotkeyz} from '../src';
 import {spyFn} from './utils';
 
 describe('Module Exports', () => {
-	it('hotkey', () => {
-		expect(hotkey).to.be.a('function');
+	it('hotkeyz', () => {
+		expect(hotkeyz).to.be.a('function');
 	});
 
-	it('Hotkey', () => {
-		expect(hotkey()).to.be.an.instanceOf(Hotkey);
+	it('Hotkeyz', () => {
+		expect(hotkeyz()).to.be.an.instanceOf(Hotkeyz);
 	});
 });
 
 describe('Instance', () => {
-	const instance = new Hotkey();
+	const instance = new Hotkeyz();
 	const spy = spyFn();
 
 	afterEach(() => {

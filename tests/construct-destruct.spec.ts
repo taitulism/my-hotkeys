@@ -1,13 +1,13 @@
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
-import {Hotkey} from '../src';
+import {Hotkeyz} from '../src';
 import {spyFn} from './utils';
 
 describe('Construction / Destruction', () => {
 	let doc: Document;
 	let simulate: KeyboardSimulator;
-	let hk: Hotkey;
+	let hk: Hotkeyz;
 	let spy: Mock;
 
 	beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('Construction / Destruction', () => {
 	});
 
 	beforeEach(() => {
-		hk = new Hotkey(doc);
+		hk = new Hotkeyz(doc);
 	});
 
 	afterEach(() => {
@@ -39,7 +39,7 @@ describe('Construction / Destruction', () => {
 				let isDiv = false;
 
 				const div = doc.getElementById('the-div')!;
-				const hk1 = new Hotkey(div);
+				const hk1 = new Hotkeyz(div);
 
 				div.focus();
 
@@ -137,7 +137,7 @@ describe('Construction / Destruction', () => {
 			});
 
 			it('Blocks a handler when returns `true`', () => {
-				const hk1 = new Hotkey(doc, () => true);
+				const hk1 = new Hotkeyz(doc, () => true);
 
 				hk1.mount();
 				hk1.bind('a', spy);
@@ -152,7 +152,7 @@ describe('Construction / Destruction', () => {
 			});
 
 			it('Does not block a handler when returns `false`', () => {
-				const hk1 = new Hotkey(doc, () => false);
+				const hk1 = new Hotkeyz(doc, () => false);
 
 				hk1.mount();
 				hk1.bind('a', spy);
@@ -170,7 +170,7 @@ describe('Construction / Destruction', () => {
 				let called = false;
 				let evt: KeyboardEvent | null = null;
 
-				const hk1 = new Hotkey(doc, (ev: KeyboardEvent) => {
+				const hk1 = new Hotkeyz(doc, (ev: KeyboardEvent) => {
 					called = true;
 					evt = ev;
 

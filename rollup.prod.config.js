@@ -25,7 +25,7 @@ const esm = {
 		banner,
 		dir: './dist/esm',
 		format: 'es',
-		entryFileNames:'hotkey.esm.js',
+		entryFileNames:'hotkeyz.esm.js',
 	},
 };
 
@@ -46,7 +46,7 @@ const browserMini = {
 		esModule: false,
 		file: pkg.browser,
 		format: 'iife',
-		name: 'pkgName',
+		name: 'hotkeyz',
 	},
 };
 

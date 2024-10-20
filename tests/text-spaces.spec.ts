@@ -1,13 +1,13 @@
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, expect, Mock, describe} from 'vitest';
-import {hotkey, Hotkey} from '../src';
+import {hotkeyz, Hotkeyz} from '../src';
 import {spies, spyFn} from './utils';
 
 describe('Text Spaces', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
-	let hk: Hotkey;
+	let hk: Hotkeyz;
 	let spy: Mock;
 
 	beforeAll(() => {
@@ -19,7 +19,7 @@ describe('Text Spaces', () => {
 	});
 
 	beforeEach(() => {
-		hk = hotkey(doc);
+		hk = hotkeyz(doc);
 	});
 
 	afterEach(() => {

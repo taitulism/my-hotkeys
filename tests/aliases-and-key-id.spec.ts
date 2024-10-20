@@ -1,13 +1,13 @@
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, Mock, describe, expect} from 'vitest';
-import {hotkey, Hotkey} from '../src';
+import {hotkeyz, Hotkeyz} from '../src';
 import {spies, spyFn} from './utils';
 
 describe('Aliases & Key IDs', () => {
 	let doc: Document | undefined;
 	let simulate: KeyboardSimulator;
-	let hk: Hotkey;
+	let hk: Hotkeyz;
 	let spy: Mock;
 
 	beforeAll(() => {
@@ -19,7 +19,7 @@ describe('Aliases & Key IDs', () => {
 	});
 
 	beforeEach(() => {
-		hk = hotkey(doc);
+		hk = hotkeyz(doc);
 	});
 
 	afterEach(() => {
@@ -143,7 +143,7 @@ describe('Aliases & Key IDs', () => {
 
 			hk.destruct();
 
-			const hk2 = hotkey(doc);
+			const hk2 = hotkeyz(doc);
 			const [spy21, spy22] = spies(2);
 
 			// A different instance for duplicated aliases
