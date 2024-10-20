@@ -3,7 +3,6 @@
 	"description": "Keyboard shorcuts",
 	"version": "0.0.0",
 	"license": "MIT",
-	"private": true,
 	"main": "./src/index.ts",
 	"module": "./dist/esm/hotkeyz.esm.js",
 	"browser": "./dist/browser/hotkeyz.min.js",
