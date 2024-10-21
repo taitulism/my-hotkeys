@@ -16,8 +16,8 @@ import {
 	isModifier,
 } from './internals';
 
-export function hotkeyz (ctxElm: ContextElement = document) {
-	return new Hotkeyz(ctxElm).mount();
+export function hotkeys (ctxElm: ContextElement = document) {
+	return new Hotkeys(ctxElm).mount();
 }
 
 const ignoredInputTags = [
@@ -37,7 +37,7 @@ const defaultIgnoreFn = (ev: KeyboardEvent) => {
 	return isIgnoredTag || elm.isContentEditable;
 };
 
-export class Hotkeyz {
+export class Hotkeys {
 	// TODO: make private
 	public hotkeys = new Map<string, CombinationHandlers>();
 	public debugMode: boolean = false;
@@ -103,8 +103,8 @@ export class Hotkeyz {
 		}
 	};
 
-	public bind (hotkey: string, handlerFn: KeyHandler): Hotkeyz;
-	public bind (hotkey: Record<string, KeyHandler>): Hotkeyz;
+	public bind (hotkey: string, handlerFn: KeyHandler): Hotkeys;
+	public bind (hotkey: Record<string, KeyHandler>): Hotkeys;
 	public bind (hotkey: string | Record<string, KeyHandler>, handlerFn?: KeyHandler) {
 		if (typeof hotkey === 'string') {
 			const parsedHotKey = parseHotKey(hotkey);

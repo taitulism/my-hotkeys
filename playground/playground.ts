@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import {hotkeyz} from '../src';
+import {hotkeys} from '../src';
 
 const logKey = (keyName: string) => console.log(`${' '.repeat(30)}*** ${keyName.toUpperCase()} ***`);
 
 const {body} = document;
 // const div = document.getElementById('super-container')!;
 
-const kb1 = hotkeyz(body);
-// const kb2 = hotkeyz(div);
+const kb1 = hotkeys(body);
+// const kb2 = hotkeys(div);
 
 // body.addEventListener('keydown', (ev: KeyboardEvent) => console.log('body'), false);
 // div.addEventListener('keydown', (ev: KeyboardEvent) => console.log('div'), true);

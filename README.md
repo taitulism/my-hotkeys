@@ -2,24 +2,24 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 
-Hotkeyz
-=======
+my-hotkeys
+==========
 Keyboard shorcuts.
 
 Install
 -------
 ```sh
-$ npm install hotkeyz
+$ npm install my-hotkeys
 ```
 
 Basic Usage
 -----------
 
 ```js
-import {hotkeyz} from 'hotkeyz`;
+import {hotkeys} from 'my-hotkeys`;
 ```
 ```js
-const hk = hotkeyz();
+const hk = hotkeys();
 
 // bind one:
 hk.bind('a', doSomething);
@@ -49,34 +49,34 @@ Index
 
 
 ## Creating an instance
-There are two ways to get a `Hotkeyz` instance:
+There are two ways to get a `Hotkeys` instance:
 1. By calling `hotkeys` creator function (lowercased "h")
-2. By the `Hotkeyz` constructor (uppercased "H")
+2. By the `Hotkeys` constructor (uppercased "H")
 
 ```js
-import {hotkeyz} from 'hotkeyz`;
+import {hotkeys} from 'my-hotkeys`;
 
-const hk = hotkeyz();
+const hk = hotkeys();
 ```
 or:
 ```js
-import {Hotkeyz} from 'hotkeyz`;
+import {Hotkeys} from 'my-hotkeys`;
 
-const hk = new Hotkeyz();
+const hk = new Hotkeys();
 ```
 
-The difference between them is that `hotkeyz` creator function also mounts the event listener on creation and doesn't have the ignore function argument (yet). When using the constructor you need to call `.mount()` manually (see [`.mount()`](#mount) below) and you can also set an ignore function.
+The difference between them is that `hotkeys` creator function also mounts the event listener on creation and doesn't have the ignore function argument (yet). When using the constructor you need to call `.mount()` manually (see [`.mount()`](#mount) below) and you can also set an ignore function.
 
 Both accept an optional argument as the context element (`HTMLElement | Document`). This would be the element that listens to the keyboard events. Defaults to `document`.
 ```js
-const hk = hotkeyz(elmOrDoc);
+const hk = hotkeys(elmOrDoc);
 // => internally: elmOrDoc.addEventListener()...
 ```
 
 > **⚠ Non-browser environments:** You might need to pass in the runtime's `document` object as the constructor argument.
 
 ### Ignore Function
-By default, the `Hotkeyz` instance ignores key presses if the `event.target` element is:
+By default, the `Hotkeys` instance ignores key presses if the `event.target` element is:
 * `<input>`
 * `<select>`
 * `<textarea>`
@@ -85,7 +85,7 @@ By default, the `Hotkeyz` instance ignores key presses if the `event.target` ele
 You can pass the constructor your own ignore function as the second argument. This function gets called on every `keydown` event with the `event` object. Return a truthy value to ignore the key press or a falsy value for continue executing the hotkey.
 
 ```js
-const hk = new Hotkeyz(document, (ev: KeyboardEvent) =>
+const hk = new Hotkeys(document, (ev: KeyboardEvent) =>
 	ev.target === mySpecialElement);
 ```
 
@@ -148,13 +148,13 @@ hk.bind('B', doSomethingElse);
 ```
 
 ## Mount/Unmount the event listener
-Each `Hotkeyz` instance can only have one `keydown` keyboard event listener. The event listener is attached to the context element passed in construction. Defaults to `document`.
+Each `Hotkeys` instance can only have one `keydown` keyboard event listener. The event listener is attached to the context element passed in construction. Defaults to `document`.
 
 * `.mount()` - Attaches the event listener to the context element.
 * `.unmount()` - Dettaches the event listener from the context element.
 
 ```js
-const hk = new Hotkeyz(myMenu);
+const hk = new Hotkeys(myMenu);
 
 hk.bind('Q', doSomething);
 
@@ -171,7 +171,7 @@ hk.unmount();
 
 Using the creator function mounts the event listener for you:
 ```js
-const hk = hotkeyz(); //  <---- also mounts
+const hk = hotkeys(); //  <---- also mounts
 
 hk.bind('Q', doSomething);
 
@@ -184,7 +184,7 @@ hk.unmount();
 
 
 ## Hotkeys Strings
-Currently, `Hotkeyz` supports the classic/standard/canonical way of binding keys: there are modifier keys (`Control`, `Alt`, `Shift`, `Meta`) and all the rest ("regular" keys).
+Currently, `my-hotkeys` supports the classic/standard/canonical way of binding keys: there are modifier keys (`Control`, `Alt`, `Shift`, `Meta`) and all the rest ("regular" keys).
 
 A hotkey string can be a single regular key, with or without modifiers.
 
@@ -260,7 +260,7 @@ Some keys have aliases for better readability or just for convenience.
 Call `.destruct()` when its context element leaves the DOM. It will remove all of the instance's hotkeys and event listeners by calling `.unmount()` and `.unbindAll()`. 
 
 ```js
-const hk = new Hotkeyz();
+const hk = new Hotkeys();
 
 hk.bind('A', doSomething);
 hk.mount();

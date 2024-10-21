@@ -1,13 +1,13 @@
 import {JSDOM} from 'jsdom';
 import {KeyboardSimulator, KeyName} from 'keyboard-simulator';
 import {it, beforeAll, beforeEach, afterEach, expect, describe} from 'vitest';
-import {hotkeyz, Hotkeyz} from '../src';
+import {hotkeys, Hotkeys} from '../src';
 import {spyFn} from './utils';
 
 describe('Fn & Other Keys', () => {
 	let doc: Document;
 	let simulate: KeyboardSimulator;
-	let hk: Hotkeyz;
+	let hk: Hotkeys;
 
 	beforeAll(() => {
 		const dom = new JSDOM();
@@ -17,7 +17,7 @@ describe('Fn & Other Keys', () => {
 	});
 
 	beforeEach(() => {
-		hk = hotkeyz(doc);
+		hk = hotkeys(doc);
 	});
 
 	afterEach(() => {

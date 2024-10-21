@@ -1,2 +1,2 @@
-export {hotkeyz, Hotkeyz} from './hotkeyz';
+export {hotkeys, Hotkeys} from './hotkeys';
 export * from './types';
