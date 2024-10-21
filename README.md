@@ -4,7 +4,7 @@
 
 my-hotkeys
 ==========
-Keyboard shorcuts.
+Keyboard shortcuts.
 
 Install
 -------
