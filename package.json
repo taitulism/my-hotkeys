@@ -1,7 +1,7 @@
 {
 	"name": "my-hotkeys",
 	"description": "Keyboard shorcuts",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"license": "MIT",
 	"main": "./src/index.ts",
 	"module": "./dist/esm/hotkeys.esm.js",
